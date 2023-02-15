@@ -11,7 +11,7 @@ export default function App() {
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
   const [password, setPassword] = useState('');
-  var [username] = useState('');
+  var [username, setUsername] = useState('');
 
   return (
     <View style={styles.container}>
@@ -25,7 +25,7 @@ export default function App() {
           secureTextEntry={false}
           value={username}
           enablesReturnKeyAutomatically
-          onChangeText={text => {username = text;}}
+          onChangeText={text => setUsername(text)}
         />
       </View>
       <View style={styles.inputContainer}>
