@@ -7,6 +7,7 @@ import { useTogglePasswordVisibility } from './hooks/useTogglePasswordVisibility
 
 
 
+
 export default function App() {
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
