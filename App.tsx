@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Pressable, TextInput, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { styles } from './styles';
 
 import { useTogglePasswordVisibility } from './hooks/useTogglePasswordVisibility';
 
@@ -12,10 +13,15 @@ export default function App() {
     useTogglePasswordVisibility();
   const [password, setPassword] = useState('');
   var [username, setUsername] = useState('');
+  
 
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
+      <image href={require('./assets/logos/blue.png')}
+        className = "h-7 w-7 bg-gray-800"
+        />
+        
         <TextInput
           style={styles.inputField}
           placeholder='Enter username'
@@ -48,7 +54,7 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
+const ssStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5EEDC',

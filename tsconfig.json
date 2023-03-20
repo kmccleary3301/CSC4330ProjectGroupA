@@ -1,6 +1,15 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "./tsconfig.base",
   "compilerOptions": {
     "strict": true
+    ,"resolveJsonModule": true
+    ,"esModuleInterop": true
+    ,"outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ]
   }
+}
 }
