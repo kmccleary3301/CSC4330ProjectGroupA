@@ -1,27 +1,26 @@
-import { create } from 'tailwind-rn';
+import create from 'tailwind-rn';
 import generatedStyles from './styles.json';
+import { TailwindProvider } from 'tailwind-rn/dist';
+import { StyleSheet, Text, View } from 'react-native';
 
-const tailwind = create(generatedStyles as Record<string, any>, {
-    orientation: 'portrait',
-    colorScheme: 'light',
-    reduceMotion: false,
-    width: 0,
-    height: 0,
-  });
 
-const appStyles = {
-  container: tailwind('flex-1 justify-center items-center'),
-  title: tailwind('text-3xl font-bold'),
-  separator: tailwind('m-8 w-full border border-solid border-gray-200'),
-  input: tailwind('border border-solid border-gray-200 rounded-md p-2'),
-  inputContainer: tailwind('flex-row justify-center items-center p-2'),
-  inputField: tailwind('border border-solid border-gray-200 rounded-md p-2 flex-1'),
-  button: tailwind('bg-blue-500 rounded-md p-2 m-2'),
-  buttonText: tailwind('text-white font-bold'),
-  link: tailwind('text-blue-500'),
-  linkText: tailwind('font-bold'),
-  error: tailwind('text-red-500'),
-  success: tailwind('text-green-500'),
-};
+const tailwind = StyleSheet.create({
+  container: {  flex: 1,  justifyContent: 'center',  alignItems: 'center',},
+  logoContainer: {  flex: 1,  justifyContent: 'center',  alignItems: 'center',},
+  logo: {  width: 300,  height: 300, alignItems: 'center', alignSelf: 'center',},
+  title: {  fontSize: 20,  fontWeight: 'normal', fontFamily: 'Vikendi', alignSelf: 'center',},
+  subtitle: {  fontSize: 16,  fontWeight: 'normal', alignSelf: 'center', fontFamily: 'Vikendi',},
+  separator: {  marginVertical: 30,  height: 1,  width: '80%',},
+  input: {  height: 40,  margin: 12,  borderWidth: 1,},
+  inputContainer: {  flexDirection: 'row',  justifyContent: 'center',  alignItems: 'center',  padding: 10, margin: 10,  borderWidth: 1,  borderRadius: 5, alignSelf: 'center',},
+  inputField: {  borderWidth: 1,  flex: 1,},
+  button: {  backgroundColor: '#2196F3',  borderRadius: 5,  padding: 10,},
+  buttonText: {  color: 'white',  fontWeight: 'bold',},
+  link: {  color: '#2196F3',},
+  linkText: {  fontWeight: 'bold',},
+  error: {  color: 'red',},
+  success: {  color: 'green',},
+});
 
-export { appStyles as styles };
+
+export { tailwind as styles };
