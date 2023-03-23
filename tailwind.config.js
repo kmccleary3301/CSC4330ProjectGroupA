@@ -130,7 +130,7 @@ module.exports = {
   m_19xl_3: 38,
   m_xs_3: 11,
 },
-     , apple: {
+     apple: {
     extend: {},
   },
   plugins: [],
