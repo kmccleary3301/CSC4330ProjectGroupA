@@ -8,7 +8,7 @@ const tailwind = StyleSheet.create({
   container: {  flex: 1,  justifyContent: 'center',  alignItems: 'center',},
   logoContainer: {  flex: 1,  justifyContent: 'center',  alignItems: 'center',},
   logo: {  width: 300,  height: 300, alignItems: 'center', alignSelf: 'center',},
-  title: {  fontSize: 20,  fontWeight: 'normal', fontFamily: 'Vikendi', alignSelf: 'center',},
+  title: {  fontSize: 20, fontFamily: 'Vikendi', alignSelf: 'center',},
   subtitle: {  fontSize: 16,  fontWeight: 'normal', alignSelf: 'center', fontFamily: 'Vikendi',},
   separator: {  marginVertical: 30,  height: 1,  width: '80%',},
   input: {  height: 40,  margin: 12,  borderWidth: 1,},

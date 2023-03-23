@@ -19,7 +19,7 @@ export default function App() {
           style={styles.logo}
         />
       </View>
-      <StatusBar style='auto' />
+      
       <Text style={styles.title}>Login</Text>
       <Text style={styles.subtitle}>Enter your credentials below</Text>
       <View style={styles.inputContainer}>
