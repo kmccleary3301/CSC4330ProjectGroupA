@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Pressable, TextInput, Text, View } from 'react-native';
+import { StyleSheet, Pressable, TextInput, Text, View, Image } from 'react-native'; // import Image from react-native
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { styles } from './styles';
 
 import { useTogglePasswordVisibility } from './hooks/useTogglePasswordVisibility';
-
-
 
 export default function App() {
   const { passwordVisibility, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
   const [password, setPassword] = useState('');
   var [username, setUsername] = useState('');
-
+  
   return (
     <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Image source={require('./assets/logos/blue.png')} // use Image instead of image
+          style={styles.logo}
+        />
+      </View>
+      
+      <Text style={styles.title}>Login</Text>
+      <Text style={styles.subtitle}>Enter your credentials below</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.inputField}
@@ -48,7 +55,7 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
+const ssStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5EEDC',
