@@ -7,6 +7,11 @@ module.exports = {
       //import local font from assets folder url and use it
       Vikendi: ['url(../assets/fonts/Vikendi) format("opentype")'],
       SF: ['url(../assets/fonts/sf-compact-display-medium) format("opentype")'],
+      SFCB: ['url(../assets/fonts/sf-compact-display-bold) format("opentype")'],
+      SFCRR: ['url(../assets/fonts/sf-compact-display-rounded-regular) format("opentype")'],
+      SFCRB: ['url(../assets/fonts/sf-compact-display-rounded-bold) format("opentype")'],
+      SFCSB: ['url(../assets/fonts/sf-compact-display-semibold) format("opentype")'],
+      SFCR: ['url(../assets/fonts/sf-compact-display-regular) format("opentype")'],
     },
     colors: {/* Colors */
     
@@ -130,7 +135,7 @@ module.exports = {
   m_19xl_3: 38,
   m_xs_3: 11,
 },
-     apple: {
+     , apple: {
     extend: {},
   },
   plugins: [],
