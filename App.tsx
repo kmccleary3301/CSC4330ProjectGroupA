@@ -12,6 +12,7 @@ const Stack = createNativeStackNavigator();
 async function loadFonts() {
   await Font.loadAsync({
     Vikendi: require('./assets/fonts/Vikendi.otf'),
+    SF: require('./assets/fonts/SF.ttf'),
     ...Ionicons.font,
   });
 }
