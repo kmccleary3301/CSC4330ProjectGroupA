@@ -1,14 +1,14 @@
-import * as React from "react";
+// LoginRegister.tsx
+import React from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   Image,
   StyleSheet,
-  View,
   Text,
-  ImageBackground,
+  View,
   Pressable,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import styles  from '../styles';
+import styles from "../styles";
 
 const LoginRegister = () => {
   const navigation = useNavigation();
@@ -28,18 +28,18 @@ const LoginRegister = () => {
 
       <Pressable
         style={[styles.button, styles.loginButton]}
-        
+        onPress={() => navigation.navigate("LoginScreen")}
       >
         <Text style={styles.buttonText}>Login</Text>
       </Pressable>
       <Pressable
         style={[styles.button, styles.registerButton]}
-        
+        onPress={() => navigation.navigate("RegisterScreen")}
       >
         <Text style={styles.buttonText}>Register</Text>
       </Pressable>
     </View>
   );
 };
- 
+
 export default LoginRegister;

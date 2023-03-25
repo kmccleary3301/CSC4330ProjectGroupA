@@ -1,92 +1,70 @@
-function LoginScreen() {
-    const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
-    const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-  
-    const handleLogin = async () => {
-      if (!username || !password) {
-        setErrorMessage('Please enter your username and password.');
-        return;
-      }
-    
-      try {
-        const response = await fetch('https://example.com/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username,
-            password,
-          }),
-        });
-    
-        const result = await response.json();
-    
-        if (result.success) {
-          // Login successful, navigate to the home screen
-          
-        } else {
-          // Login failed, show an error message
-          setErrorMessage('Invalid username or password. Please try again.');
-        }
-      } catch (error) {
-        console.error(error);
-        setErrorMessage('An error occurred while logging in. Please try again later.');
-      }
-    };
-    
-    return (
-      <View style={styles.container}>
-        <View style={styles.logoContainer}>
-          <Image
-            source={require('./assets/logos/blue.png')}
-            style={styles.logo}
-          />
-        </View>
-        <Text style={styles.title}>Welcome back!</Text>
-        <Text style={styles.subtitle}>Enter your credentials below</Text>
-        <View style={styles.inputContainer}>
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import styles from '../styles';
+import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility.ts';
+
+const LoginScreen = () => {
+  const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Text style={styles.logo}>LOGO</Text>
+      </View>
+      <Text style={styles.title}>Login</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputField}
+          placeholder='Email'
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          autoCapitalize='none'
+          keyboardType='email-address'
+        />
+        <View style={styles.passwordContainer}>
           <TextInput
             style={styles.inputField}
-            placeholder='Enter username'
-            autoCapitalize='none'
-            autoCorrect={false}
-            textContentType='username'
-            value={username}
-            onChangeText={text => setUsername(text)}
-          />
-          <TextInput
-            style={styles.inputField}
-            placeholder='Enter password'
-            autoCapitalize='none'
-            autoCorrect={false}
-            textContentType='password'
-            secureTextEntry={!showPassword}
+            placeholder='Password'
             value={password}
-            onChangeText={text => setPassword(text)}
+            onChangeText={(text) => setPassword(text)}
+            autoCapitalize='none'
+            secureTextEntry={!passwordVisibility}
           />
-          <View style={styles.passwordVisibilityContainer}>
-            <Pressable onPress={handlePasswordVisibility}>
-              <Text style={styles.link}>{showPassword ? 'Hide' : 'Show'}</Text>
-            </Pressable>
-          </View>
+          <TouchableOpacity
+            onPress={handlePasswordVisibility}
+            style={styles.passwordVisibilityContainer}
+          >
+            <Text style={styles.passwordVisibilityText}>
+              {passwordVisibility ? 'Hide' : 'Show'}
+            </Text>
+          </TouchableOpacity>
         </View>
-        {errorMessage ? (
-          <Text style={styles.errorText}>{errorMessage}</Text>
-        ) : null}
-        <Pressable style={styles.button} onPress={handleLogin}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => console.log('Login pressed')}
+        >
           <Text style={styles.buttonText}>Login</Text>
-        </Pressable>
+        </TouchableOpacity>
         <View style={styles.linkContainer}>
-          <Text style={styles.linkText}>Don't have an account?</Text>
-          <Pressable >
-            <Text style={styles.link}>Sign up</Text>
-          </Pressable>
+          <Text style={styles.linkText}>Forgot your password?</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Register')}
+          >
+            <Text style={styles.link}>Create an account</Text>
+          </TouchableOpacity>
         </View>
       </View>
-    );
-  }
-  
+    </View>
+  );
+};
+
+export default LoginScreen;

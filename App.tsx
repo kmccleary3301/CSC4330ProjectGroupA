@@ -7,6 +7,8 @@ import { Ionicons } from '@expo/vector-icons';
 import * as SplashScreen from 'expo-splash-screen';
 import LoginRegister from './screens/LoginRegister';
 import MySplashScreen from './screens/MySplashScreen';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +49,8 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='LoginRegister'>
         <Stack.Screen name="LoginRegister" component={LoginRegister} />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
