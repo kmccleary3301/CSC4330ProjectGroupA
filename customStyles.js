@@ -8,6 +8,7 @@ module.exports = {
       Vikendi: ['url(../assets/fonts/Vikendi) format("opentype")'],
       //add system font
       system: ['system-ui', 'sans-serif'],
+      SF: ['SF Pro Display', 'sans-serif'],
     },
     colors: {/* Colors */
       black: "#000",
