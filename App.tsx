@@ -6,6 +6,7 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import * as SplashScreen from 'expo-splash-screen';
 import LoginRegister from './screens/LoginRegister';
+import MySplashScreen from './screens/MySplashScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,8 +39,8 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (!fontsLoaded) {
-    return null;
+  if (!fontsLoaded || !hideSplashScreen) {
+    return <MySplashScreen />;
   }
 
   return (
