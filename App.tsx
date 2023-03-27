@@ -16,6 +16,7 @@ async function loadFonts() {
   await Font.loadAsync({
     Vikendi: require('./assets/fonts/Vikendi.otf'),
     SF: require('./assets/fonts/SF.ttf'),
+    SFBold: require('./assets/fonts/sfc-bold.ttf'),
     ...Ionicons.font,
   });
 }

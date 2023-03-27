@@ -4,10 +4,12 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Image, // <-- add this import statement
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../styles';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility.ts';
+import { Ionicons } from '@expo/vector-icons';
+import styles from '../styles';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -17,8 +19,13 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Welcome back!</Text>
       <View style={styles.logoContainer}>
-        <Text style={styles.logo}>LOGO</Text>
+        <Image
+          style={styles.logo}
+          resizeMode="contain"
+          source={require("../assets/logos/tan.png")}
+        />
       </View>
       <Text style={styles.title}>Login</Text>
       <View style={styles.inputContainer}>
@@ -66,5 +73,16 @@ const LoginScreen = () => {
     </View>
   );
 };
+
+LoginScreen.navigationOptions = ({ navigation }) => ({
+  headerLeft: () => (
+    <TouchableOpacity
+      onPress={() => navigation.goBack()}
+      style={styles.headerButton}
+    >
+      <Ionicons name="chevron-back" size={24} color="black" />
+    </TouchableOpacity>
+  ),
+});
 
 export default LoginScreen;

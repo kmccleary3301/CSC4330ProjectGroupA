@@ -9,6 +9,7 @@ module.exports = {
       //add system font
       system: ['system-ui', 'sans-serif'],
       SF: ['SF Pro Display', 'sans-serif'],
+      SFBold: ['url(../assets/fonts/sfc-bold.ttf) format("truetype")'],
     },
     colors: {/* Colors */
       black: "#000",
