@@ -32,7 +32,8 @@
     "react-native-web": "~0.18.9",
     "react-navigation": "^4.4.4",
     "styled-components": "^5.3.9",
-    "tailwind-rn": "^4.2.0"
+    "tailwind-rn": "^4.2.0",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
