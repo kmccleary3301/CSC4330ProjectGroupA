@@ -1,26 +1,105 @@
-import create from 'tailwind-rn';
+//import create from 'tailwind-rn';
 import generatedStyles from './styles.json';
 import { TailwindProvider } from 'tailwind-rn/dist';
 import { StyleSheet, Text, View } from 'react-native';
+import customStyles from './customStyles';
+
+const blue = '#182640';
+const tan = '#FAE8CD';  
 
 
-const tailwind = StyleSheet.create({
-  container: {  flex: 1,  justifyContent: 'center',  alignItems: 'center',},
-  logoContainer: {  flex: 1,  justifyContent: 'center',  alignItems: 'center',},
-  logo: {  width: 300,  height: 300, alignItems: 'center', alignSelf: 'center',},
-  title: {  fontSize: 20, fontFamily: 'Vikendi', alignSelf: 'center',},
-  subtitle: {  fontSize: 16,  fontWeight: 'normal', alignSelf: 'center', fontFamily: 'Vikendi',},
-  separator: {  marginVertical: 30,  height: 1,  width: '80%',},
-  input: {  height: 40,  margin: 12,  borderWidth: 1,},
-  inputContainer: {  flexDirection: 'row',  justifyContent: 'center',  alignItems: 'center',  padding: 10, margin: 10,  borderWidth: 1,  borderRadius: 5, alignSelf: 'center',},
-  inputField: {  borderWidth: 1,  flex: 1, borderRadius: 5,  padding: 10,  margin: 10,  borderColor: '#2196F3', fontFamily: 'SF',},
-  button: {  backgroundColor: '#2196F3',  borderRadius: 5,  padding: 10,},
-  buttonText: {  color: 'white',  fontWeight: 'bold', textAlign: 'center', fontFamily: 'SF',},
-  link: {  color: '#2196F3',},
-  linkText: {  fontWeight: 'bold',},
-  error: {  color: 'red',},
-  success: {  color: 'green',},
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: blue,
+  },
+  logoContainer: {
+    marginTop: 30,
+    alignItems: 'center',
+  },
+  logo: {
+    width: 200,
+    height: 200,
+  },
+  title: {
+    marginTop: 50,
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: tan,
+    fontFamily: 'Vikendi',
+  },
+  subtitle: {
+    marginTop: 20,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: tan,
+    fontFamily: 'Vikendi',
+  },
+  inputContainer: {
+    marginTop: 20,
+    width: '80%',
+    borderRadius: 10,
+    padding: 20,
+    justifyContent: 'center',
+  },
+  inputField: {
+    height: 50,
+    borderColor: tan,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: tan,
+    padding: 10,
+    marginBottom: 20,
+    fontFamily: 'SF',
+  },
+  passwordVisibilityContainer: {
+    position: 'absolute',
+    right: 30,
+    top: 15,
+  },
+  errorText: {
+    color: 'red',
+    fontFamily: 'SF',
+    marginTop: 10,
+  },
+  button: {
+    width: '40%',
+    height: 50,
+    marginTop: 20,
+    borderRadius: 60,
+    borderColor: tan,
+    borderWidth: 2,
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  buttonText: {
+    color: tan,
+    fontWeight: 'bold',
+    fontFamily: 'SFBold',
+    fontSize: 20,
+    marginTop: -5,
+    marginBottom: -5,
+
+  },
+  linkContainer: {
+    marginTop: 20,
+    flexDirection: 'row',
+  },
+  linkText: {
+    color: tan,
+    fontFamily: 'SF',
+  },
+  link: {
+    color: tan,
+    fontWeight: 'bold',
+    marginLeft: 5,
+    fontFamily: 'SF',
+  },
 });
 
 
-export { tailwind as styles };
+export default styles;

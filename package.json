@@ -8,34 +8,31 @@
     "web": "expo start --web"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@expo/webpack-config": "^18.0.1",
-    "expo": "^48.0.9",
-    "expo-status-bar": "~1.4.2",
-    "react": "18.1.0",
-    "react-dom": "18.1.0",
-    "react-native": "0.70.5",
-    "react-native-web": "~0.18.9",
-    "yarn": "^1.22.19"
-=======
     "@expo/vector-icons": "^13.0.0",
     "@expo/webpack-config": "^18.0.1",
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
+    "@react-navigation/native": "^6.1.6",
+    "@react-navigation/native-stack": "^6.9.12",
     "expo": "^48.0.9",
+    "expo-app-loading": "^2.1.1",
+    "expo-asset": "^8.9.1",
     "expo-cli": "^6.3.2",
-    "expo-splash-screen": "~0.18.1",
+    "expo-splash-screen": "^0.18.1",
     "expo-status-bar": "~1.4.4",
     "node": "^19.8.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.71.4",
     "react-native-fs": "^2.20.0",
+    "react-native-gesture-handler": "^2.9.0",
+    "react-native-reanimated": "^3.0.2",
+    "react-native-safe-area-context": "4.5.0",
+    "react-native-screens": "~3.20.0",
     "react-native-web": "~0.18.9",
     "react-navigation": "^4.4.4",
     "styled-components": "^5.3.9",
     "tailwind-rn": "^4.2.0"
->>>>>>> af689d00ae0c24b08eef4ed40ddec0f440569993
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
