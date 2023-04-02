@@ -4,12 +4,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Image, // <-- add this import statement
+  Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility.ts';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles';
+//import { tailwind } from 'tailwind-rn';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -19,15 +20,20 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome back!</Text>
       <View style={styles.logoContainer}>
-        <Image
-          style={styles.logo}
-          resizeMode="contain"
-          source={require("../assets/logos/tan.png")}
-        />
+        <View style={{ width: 350, height: 250 }}>
+          <Image
+            style={{
+              width: '100%',
+              height: '100%',
+              resizeMode: 'contain',
+            }}
+            source={require('../assets/logos/tan.png')}
+          />
+        </View>
       </View>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Log In</Text>
+     
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.inputField}
@@ -76,11 +82,13 @@ const LoginScreen = () => {
 
 LoginScreen.navigationOptions = ({ navigation }) => ({
   headerLeft: () => (
-    <TouchableOpacity
-      onPress={() => navigation.goBack()}
-      style={styles.headerButton}
-    >
-      <Ionicons name="chevron-back" size={24} color="black" />
+    <TouchableOpacity onPress={() => navigation.goBack()}>
+      <View style={{ marginLeft: 20, marginTop: 10 }}>
+        <Image
+          source={require('../assets/icons/back.png')}
+          style={{ width: 30, height: 30, tintColor: '#D2B48C' }}
+        />
+      </View>
     </TouchableOpacity>
   ),
 });

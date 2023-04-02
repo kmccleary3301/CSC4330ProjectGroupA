@@ -1,4 +1,3 @@
-// LoginRegister.tsx
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -8,23 +7,30 @@ import {
   View,
   Pressable,
 } from "react-native";
-import styles from "../styles";
+import styles, { stylesFrancisBacon } from '../styles';
 
 const LoginRegister = () => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.logo}
-        resizeMode="contain"
-        source={require("../assets/logos/tan.png")}
-      />
+      <View style={styles.logoContainer}>
+      <View style={{ width: 350, height: 250 }}>
+        <Image
+          style={{
+            width: '100%',
+            height: '100%',
+            resizeMode: 'contain',
+          }}
+          source={require('../assets/logos/tan.png')}
+        />
+        </View>
+      </View>
       <Text style={styles.title}>SkillBridge</Text>
       <Text style={styles.subtitle}>
         “Knowledge is power”
       </Text>
-      <Text style={styles.subtitle}>- Francis Bacon</Text>
+      <Text style={stylesFrancisBacon.subtitle}>- Francis Bacon</Text>
 
       <Pressable
         style={[styles.button, styles.loginButton]}
