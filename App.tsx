@@ -11,6 +11,8 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
 import { Navigation } from './navigation';
+import NavBarContainor from './NavBar';
+import { profile } from 'console';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,7 +55,8 @@ export default function App() {
       <Stack.Navigator initialRouteName='LoginRegister'>
         <Stack.Screen 
           name="HomeScreen" 
-          component={HomeScreen} 
+          component={HomeScreen}
+          
           options={{
             headerTransparent: false,
             headerTintColor: '#D2B48C',
