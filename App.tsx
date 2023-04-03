@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from '@react-navigation/native';
 import * as Font from 'expo-font';
@@ -51,7 +51,29 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='LoginRegister'>
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen 
+          name="HomeScreen" 
+          component={HomeScreen} 
+          options={{
+            headerTransparent: false,
+            headerTintColor: '#D2B48C',
+            headerShadowVisible: false,
+            headerStyle: {backgroundColor: '#fae8cd'},
+            headerTitle: () => (
+                <Image
+                    source={require('./assets/logos/blue.png')}
+                    style={{width: 70, height: 70, marginTop: -15}}
+                />
+            ),
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => console.log('Hamburger Pressed.')}>
+                <Image
+                    source={require('./assets/icons/menu.png')}
+                    />
+              </TouchableOpacity>
+            ),
+          }}
+        />
         <Stack.Screen name="LoginRegister" component={LoginRegister}
         options={{headerShown: false}} />
         <Stack.Screen

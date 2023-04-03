@@ -12,10 +12,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Home</Text>
+            <Text style={[styles.title, {fontSize: 25} ]}>Select an Appointment:</Text>
         </View>
     );
   };
+
+
 
 
 //   function HomeScreen({ navigation }) {
