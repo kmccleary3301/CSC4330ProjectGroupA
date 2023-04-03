@@ -9,11 +9,8 @@ import LoginRegister from './screens/LoginRegister';
 import MySplashScreen from './screens/MySplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
-<<<<<<< HEAD
 import HomeScreen from './screens/HomeScreen';
-=======
 import { Navigation } from './navigation';
->>>>>>> e2628f16f2e67df9bd2a787f64c7cec41307b1ec
 
 const Stack = createNativeStackNavigator();
 
@@ -54,12 +51,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='LoginRegister'>
-<<<<<<< HEAD
-        <Stack.Screen name="LoginRegister" component={LoginRegister} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
-=======
         <Stack.Screen name="LoginRegister" component={LoginRegister}
         options={{headerShown: false}} />
         <Stack.Screen
@@ -79,7 +70,6 @@ export default function App() {
           headerTitle: '',
           headerShadowVisible: false,
         }} />
->>>>>>> e2628f16f2e67df9bd2a787f64c7cec41307b1ec
       </Stack.Navigator>
     </NavigationContainer>
   );
