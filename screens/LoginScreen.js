@@ -10,13 +10,36 @@ import { useNavigation } from '@react-navigation/native';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility.ts';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles';
+import {auth} from '../firebase';
+import {useAuthValue} from '../AuthContext';
 //import { tailwind } from 'tailwind-rn';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const {setTimeActive} = useAuthValue();
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
+
+  const login = e => {
+    e.preventDefault()
+    signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      if(!auth.currentUser.emailVerified) {
+        sendEmailVerification(auth.currentUser)
+        .then(() => {
+          setTimeActive(true)
+          navigate('/verify-email')
+        })
+      .catch(err => alert(err.message))
+      }else{
+        navigate('/profile')
+      }
+    })
+    .catch(err => setError(err.message))
+  };
+
 
   return (
     <View style={styles.container}>
@@ -35,11 +58,13 @@ const LoginScreen = () => {
       <Text style={styles.title}>Log In</Text>
      
       <View style={styles.inputContainer}>
+        <form onSubmit={login} name='login_form'>
         <TextInput
           style={styles.inputField}
           placeholder='Email'
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          required
+          onChange={e => setEmail(e.target.value)}
           autoCapitalize='none'
           keyboardType='email-address'
         />
@@ -48,7 +73,8 @@ const LoginScreen = () => {
             style={styles.inputField}
             placeholder='Password'
             value={password}
-            onChangeText={(text) => setPassword(text)}
+            required
+            onChange={e => setPassword(e.target.value)}
             autoCapitalize='none'
             secureTextEntry={!passwordVisibility}
           />
@@ -60,7 +86,7 @@ const LoginScreen = () => {
               {passwordVisibility ? 'Hide' : 'Show'}
             </Text>
           </TouchableOpacity>
-        </View>
+        </View></form>
         <TouchableOpacity
           style={styles.button}
           onPress={() => console.log('Login pressed')}
