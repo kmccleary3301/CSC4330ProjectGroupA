@@ -1,7 +1,15 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "./tsconfig.base",
   "compilerOptions": {
-    "jsx": "react",
-    "strict": true
+    "strict": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "lib": ["dom", "esnext"], // Add this line
+    "paths": {
+      "tailwind-rn/*": ["node_modules/tailwind-rn/*"],
+      "@types/*": ["node_modules/@types/*"]
+    }
   }
 }
