@@ -19,7 +19,7 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const {setTimeActive} = useAuthValue();
+  //const {setTimeActive} = useAuthValue();
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
 
   const login = e => {
@@ -30,11 +30,11 @@ const LoginScreen = () => {
         sendEmailVerification(auth.currentUser)
         .then(() => {
           setTimeActive(true)
-          navigate('/verify-email')
+          navigation.navigate('VerifyEmail')
         })
       .catch(err => alert(err.message))
       }else{
-        navigate('/profile')
+        navigation.navigate('MySplashScreen')
       }
     })
     .catch(err => setError(err.message))
