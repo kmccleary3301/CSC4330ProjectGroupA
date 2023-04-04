@@ -7,7 +7,7 @@ import {
   View,
   Pressable,
 } from "react-native";
-import styles, { stylesFrancisBacon } from '../styles';
+import styles from '../styles.ts';
 
 const LoginRegister = () => {
   const navigation = useNavigation();
@@ -30,7 +30,7 @@ const LoginRegister = () => {
       <Text style={styles.subtitle}>
         “Knowledge is power”
       </Text>
-      <Text style={stylesFrancisBacon.subtitle}>- Francis Bacon</Text>
+      <Text style={styles.boop}>- Francis Bacon</Text>
 
       <Pressable
         style={[styles.button, styles.loginButton]}

@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Vikendi";
+  src: url("./assets/fonts/Vikendi.otf");
+  font-family: SF;
+  src: url("./assets/fonts/SF.ttf");
+  font-family: SFBold;
+  src: url("./assets/fonts/SFBold.ttf");
+}
+
+@layer components {
+  .container {
+    @apply flex flex-1 items-center justify-start bg-blue pt-30;
+  }
+
+  .title {
+    @apply absolute top-15 z-10 text-4xl font-bold text-tan font-vikendi;
+  }
+
+  .input-container {
+    @apply mt-5 w-4/5 rounded-lg p-5 justify-center;
+  }
+
+  .input-field {
+    @apply h-12 border border-tan bg-tan p-2 mb-5 font-sf;
+  }
+
+  .password-visibility-container {
+    @apply absolute right-7 top-4;
+  }
+
+  .button {
+    @apply w-2/5 h-12 border-2 rounded-full border-tan p-1 items-center justify-center self-center;
+  }
+
+  .button-text {
+    @apply text-tan font-bold text-2xl font-sfbold mt-0 mb-0;
+  }
+
+  .link-container {
+    @apply flex flex-row;
+  }
+
+  .link-text {
+    @apply text-tan font-sf;
+  }
+
+  .link {
+    @apply text-tan font-bold ml-1 font-sf;
+  }
+
+  .logo-container {
+    @apply items-center justify-center mt-7;
+  }
+
+  .logo-wrapper {
+    @apply w-1/2 aspect-ratio-1;
+  }
+
+  .logo {
+    @apply w-full h-full;
+  }
+
+  .back-button {
+    @apply absolute top-1/2 left-5 w-30 transform -translate-y-1/2;
+  }
+}

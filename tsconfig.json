@@ -5,8 +5,9 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "outDir": "./dist",
-    "baseUrl": "./",
-    "lib": ["dom", "esnext"], // Add this line
+    "baseUrl": ".",
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "lib": ["dom", "esnext"],
     "paths": {
       "tailwind-rn/*": ["node_modules/tailwind-rn/*"],
       "@types/*": ["node_modules/@types/*"]

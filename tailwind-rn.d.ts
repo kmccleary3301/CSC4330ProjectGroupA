@@ -1,5 +1,5 @@
+// src/types/tailwind-rn.d.ts
 declare module 'tailwind-rn' {
-    const classes: { [className: string]: string };
-    export default classes;
-  }
-  
+  const create: (config: object) => (className: string) => any;
+  export default create;
+}

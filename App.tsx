@@ -11,20 +11,40 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import { Navigation } from './navigation';
 
+import { useAccessibilityInfo } from '@react-native-community/hooks';
+
+import TailwindProvider from './node_modules/tailwind-rn/dist/tailwind-provider'; // Modify this path based on your folder structure
+import useTailwind from './node_modules/tailwind-rn/dist/use-tailwind'; // Modify this path based on your folder structure
+
+
+// import  TailwindProvider from 'tailwind-rn';
+ import utilities from './tailwind.json';
+
+
+
+
+
+
 const Stack = createNativeStackNavigator();
+
+
 
 async function loadFonts() {
   await Font.loadAsync({
     Vikendi: require('./assets/fonts/Vikendi.otf'),
     SF: require('./assets/fonts/SF.ttf'),
-    SFBold: require('./assets/fonts/sfc-bold.ttf'),
+    SFBold: require('./assets/fonts/SFBold.ttf'),
     ...Ionicons.font,
   });
 }
 
-export default function App() {
+function App(): React.ReactElement{
   const [hideSplashScreen, setHideSplashScreen] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  const blue = '#182640';
+  const tan = '#FAE8CD';  
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -47,7 +67,12 @@ export default function App() {
     return <MySplashScreen />;
   }
 
+  // const MyTailwindProvider = ({ children }: { children: React.ReactNode }) => (
+  //   <>{TailwindProvider({ theme: {}, children })}</>
+  // );
+
   return (
+   <TailwindProvider utilities={myUtilities}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName='LoginRegister'>
         <Stack.Screen name="LoginRegister" component={LoginRegister}
@@ -57,7 +82,7 @@ export default function App() {
           component={LoginScreen}
           options={{
             headerTransparent: true,
-            headerTintColor: '#D2B48C',
+            headerTintColor: 'tan',
             headerTitle: '',
             headerShadowVisible: false,
           }}
@@ -65,11 +90,39 @@ export default function App() {
         <Stack.Screen name="RegisterScreen" component={RegisterScreen}
         options={{
           headerTransparent: true,
-          headerTintColor: '#D2B48C',
+          headerTintColor: 'tan',
           headerTitle: '',
           headerShadowVisible: false,
         }} />
       </Stack.Navigator>
     </NavigationContainer>
+    </TailwindProvider>
+    
   );
 }
+
+export default App;
+
+
+const myUtilities = {
+  'bg-red-500': {
+    style: {
+      backgroundColor: '#F56565',
+    },
+  },
+  'h-12': {
+    style: {
+      height: 48,
+    },
+  },
+  'w-12': {
+    style: {
+      width: 48,
+    },
+  },
+  'text-white': {
+    style: {
+      color: '#FFFFFF',
+    },
+  },
+};

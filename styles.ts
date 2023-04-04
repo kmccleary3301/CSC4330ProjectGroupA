@@ -1,32 +1,92 @@
-//import create from 'tailwind-rn';
-import generatedStyles from './styles.json';
-import { TailwindProvider } from 'tailwind-rn/dist';
+import './input.css';
+
 import { StyleSheet, Text, View } from 'react-native';
-//import customStyles from './customStyles';
 
 const blue = '#182640';
 const tan = '#FAE8CD';  
 
-const stylesFrancisBacon = StyleSheet.create({
-  subtitle: {
+const styles = StyleSheet.create({
+  boop: {
     marginTop: 20, // Decreased marginTop to move Francis Bacon text upward
     fontSize: 18,
     fontWeight: 'bold',
     color: tan,
     fontFamily: 'Vikendi',
   },
-});
-
-
-
-const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: blue,
-    paddingTop: 120, // Increased paddingTop to move everything more downward
+    paddingTop: 120,
   },
+
+  registerTitle: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: tan,
+    fontFamily: 'Vikendi',
+  },
+
+  registerBody: {
+    width: '80%',
+  },
+
+  subtitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: tan,
+    fontFamily: 'Vikendi',
+  },
+
+  inputField: {
+    height: 50,
+    borderColor: tan,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: tan,
+    padding: 10,
+    marginBottom: 20,
+    fontFamily: 'SF',
+  },
+
+  button: {
+    width: '40%',
+    height: 50,
+    borderRadius: 60,
+    borderColor: tan,
+    borderWidth: 2,
+    padding: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+
+  buttonText: {
+    color: tan,
+    fontWeight: 'bold',
+    fontFamily: 'SFBold',
+    fontSize: 24,
+    marginTop: -1,
+    marginBottom: -1,
+  },
+
+  linkContainer: {
+    flexDirection: 'row',
+  },
+
+  linkText: {
+    color: tan,
+    fontFamily: 'SF',
+  },
+
+  link: {
+    color: tan,
+    fontWeight: 'bold',
+    marginLeft: 5,
+    fontFamily: 'SF',
+  },
+
 
   logoContainer: {
     alignItems: 'center',
@@ -52,15 +112,6 @@ const styles = StyleSheet.create({
     color: tan,
     fontFamily: 'Vikendi',
   },
-
-  subtitle: {
-    marginTop: 40, // Keep the same margin to move the lower elements more upward
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: tan,
-    fontFamily: 'Vikendi',
-  },
-
   
   logoWrapper: {
     width: "50%",
@@ -77,16 +128,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'center',
   },
-  inputField: {
-    height: 50,
-    borderColor: tan,
-    borderWidth: 1,
-    borderRadius: 5,
-    backgroundColor: tan,
-    padding: 10,
-    marginBottom: 20,
-    fontFamily: 'SF',
-  },
+
   passwordVisibilityContainer: {
     position: 'absolute',
     right: 30,
@@ -97,41 +139,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SF',
     marginTop: 10,
   },
-  button: {
-    width: '40%',
-    height: 50,
-    marginTop: 20,
-    borderRadius: 60,
-    borderColor: tan,
-    borderWidth: 2,
-    padding: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-  },
-  buttonText: {
-    color: tan,
-    fontWeight: 'bold',
-    fontFamily: 'SFBold',
-    fontSize: 24,
-    marginTop: -1,
-    marginBottom: -1,
-
-  },
-  linkContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-  },
-  linkText: {
-    color: tan,
-    fontFamily: 'SF',
-  },
-  link: {
-    color: tan,
-    fontWeight: 'bold',
-    marginLeft: 5,
-    fontFamily: 'SF',
-  },
+  
   headerButton: {
     width: '40%',
     height: 50,
@@ -175,5 +183,5 @@ const styles = StyleSheet.create({
 
 });
 
-export { stylesFrancisBacon };
+
 export default styles;

@@ -1,3 +1,4 @@
 {
-    "terminal.integrated.scrollback": 2000
+    "terminal.integrated.scrollback": 2000,
+    "css.lint.unknownAtRules": "ignore"
 }

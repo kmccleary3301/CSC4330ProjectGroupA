@@ -1,68 +1,71 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import styles from '../styles';
 
-const RegisterScreen = () => {
-  const navigation = useNavigation();
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+//import useTailwind from 'tailwind-rn';
+import styles from '../styles.ts';
+import useTailwind from 'tailwind-rn/dist/use-tailwind.js';
+import { useNavigation } from '@react-navigation/native';
+
+
+const RegisterScreen = ({ navigation }) => {
+
+
+  //const tw = useTailwind();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleRegister = () => {
+    // Perform registration logic here
+  };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <View style={styles.loginHeader}>
-        <Text style={styles.loginTitle}>Register</Text>
-      </View>
-      <View style={styles.loginBody}>
-        <Text style={styles.loginSubtitle}>
-          Enter your @lsu.edu email address to verify your account
+    <View style={[styles.container, { justifyContent: 'center' }]}>
+      <Text style={[styles.registerTitle, { textAlign: 'center' }]}>Register</Text>
+      <View style={styles.registerBody}>
+        <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
+          Create a new account
         </Text>
-
         <TextInput
-          style={styles.loginInput}
+          style={styles.inputField}
+          onChangeText={setEmail}
+          value={email}
           placeholder="Email"
           keyboardType="email-address"
-          autoCompleteType="email"
-          textContentType="emailAddress"
+          autoCapitalize="none"
         />
-
+        <TextInput
+          style={styles.inputField}
+          onChangeText={setPassword}
+          value={password}
+          placeholder="Password"
+          secureTextEntry
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.inputField}
+          onChangeText={setConfirmPassword}
+          value={confirmPassword}
+          placeholder="Confirm Password"
+          secureTextEntry
+          autoCapitalize="none"
+        />
         <TouchableOpacity
-          style={styles.loginButton}
-          onPress={() => console.log('Verify email')} // Replace this with your email verification logic
+          style={[styles.button, { marginTop: 16 }]}
+          onPress={handleRegister}
         >
-          <Text style={styles.loginButtonText}>Verify</Text>
+          <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
-          <Text style={styles.loginLink}>
-            Already have an account? Login here
-          </Text>
-        </TouchableOpacity>
+        <View style={[styles.linkContainer, { marginTop: 16 }]}>
+          <Text style={styles.linkText}>Already have an account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+            <Text style={styles.link}>Login</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
-
-RegisterScreen.navigationOptions = ({ navigation }) => ({
-  headerLeft: () => (
-    <TouchableOpacity onPress={() => navigation.goBack()}>
-      <View style={{ marginLeft: 20, marginTop: 10 }}>
-        <Image
-          source={require('../assets/icons/back.png')}
-          style={{ width: 30, height: 30, tintColor: '#D2B48C' }}
-        />
-      </View>
-    </TouchableOpacity>
-  ),
-});
 
 export default RegisterScreen;

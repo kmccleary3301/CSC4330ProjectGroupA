@@ -9,10 +9,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility.ts';
 import { Ionicons } from '@expo/vector-icons';
-import styles from '../styles';
-//import { tailwind } from 'tailwind-rn';
+import styles from '../styles.ts';
+import { tailwind } from 'tailwind-rn';
+import useTailwind from 'tailwind-rn/dist/use-tailwind.js';
 
 const LoginScreen = () => {
+
+  const tw = useTailwind();
+
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -70,7 +74,7 @@ const LoginScreen = () => {
         <View style={styles.linkContainer}>
           <Text style={styles.linkText}>Forgot your password?</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Register')}
+            onPress={() => navigation.navigate('RegisterScreen')}
           >
             <Text style={styles.link}>Create an account</Text>
           </TouchableOpacity>
