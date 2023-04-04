@@ -65,8 +65,7 @@ export default function App() {
             headerTitle: () => (
                 <Image
                     source={require('./assets/logos/blue.png')}
-                    style={{width: 70, height: 70, marginTop: -15}}
-                />
+                    style={{width: 70, height: 70, marginTop: -15}}/>
             ),
             headerLeft: () => (
               <TouchableOpacity onPress={() => console.log('Hamburger Pressed.')}>
@@ -75,6 +74,7 @@ export default function App() {
                     />
               </TouchableOpacity>
             ),
+            
           }}
         />
         <Stack.Screen name="LoginRegister" component={LoginRegister}
