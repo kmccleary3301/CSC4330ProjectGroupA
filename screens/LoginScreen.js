@@ -25,7 +25,7 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <View style={{ width: 350, height: 250 }}>
+        <View style={{ width: 300, height: 200 }}>
           <Image
             style={{
               width: '100%',
@@ -66,7 +66,7 @@ const LoginScreen = () => {
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          style={styles.button}
+          style={[styles.button, styles.loginButton]}
           onPress={() => console.log('Login pressed')}
         >
           <Text style={styles.buttonText}>Login</Text>
@@ -78,23 +78,13 @@ const LoginScreen = () => {
           >
             <Text style={styles.link}>Create an account</Text>
           </TouchableOpacity>
+          
         </View>
       </View>
     </View>
   );
 };
 
-LoginScreen.navigationOptions = ({ navigation }) => ({
-  headerLeft: () => (
-    <TouchableOpacity onPress={() => navigation.goBack()}>
-      <View style={{ marginLeft: 20, marginTop: 10 }}>
-        <Image
-          source={require('../assets/icons/back.png')}
-          style={{ width: 30, height: 30, tintColor: '#D2B48C' }}
-        />
-      </View>
-    </TouchableOpacity>
-  ),
-});
+
 
 export default LoginScreen;

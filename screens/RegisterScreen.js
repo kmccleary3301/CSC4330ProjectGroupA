@@ -1,10 +1,17 @@
 
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-//import useTailwind from 'tailwind-rn';
-import styles from '../styles.ts';
-import useTailwind from 'tailwind-rn/dist/use-tailwind.js';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+import styles from '../styles.ts';
+import { tailwind } from 'tailwind-rn';
+import useTailwind from 'tailwind-rn/dist/use-tailwind.js';
 
 
 const RegisterScreen = ({ navigation }) => {
@@ -21,8 +28,20 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={[styles.container, { justifyContent: 'center' }]}>
-      <Text style={[styles.registerTitle, { textAlign: 'center' }]}>Register</Text>
+    <View style={[styles.container, { justifyContent: 'center', paddingTop: 0 }]}>
+      <View style={styles.logoContainer}>
+        <View style={{ width: 300, height: 200 }}>
+          <Image
+            style={{
+              width: '100%',
+              height: '100%',
+              resizeMode: 'contain',
+            }}
+            source={require('../assets/logos/tan.png')}
+          />
+        </View>
+      </View>
+      <Text style={[styles.title, { textAlign: 'center' }]}>Register</Text>
       <View style={styles.registerBody}>
         <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
           Create a new account
@@ -52,7 +71,7 @@ const RegisterScreen = ({ navigation }) => {
           autoCapitalize="none"
         />
         <TouchableOpacity
-          style={[styles.button, { marginTop: 16 }]}
+          style={[styles.button, styles.loginButton, { width: '50%' }]}
           onPress={handleRegister}
         >
           <Text style={styles.buttonText}>Register</Text>
@@ -67,5 +86,18 @@ const RegisterScreen = ({ navigation }) => {
     </View>
   );
 };
+
+RegisterScreen.navigationOptions = ({ navigation }) => ({
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
+      <View style={{ marginLeft: 20, marginTop: 10 }}>
+        <Image
+          source={require('../assets/icons/back.png')}
+          style={{ width: 30, height: 30 }}
+        />
+      </View>
+    </TouchableOpacity>
+  ),
+});
 
 export default RegisterScreen;

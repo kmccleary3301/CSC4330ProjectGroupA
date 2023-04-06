@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import * as SplashScreen from 'expo-splash-screen';
-import LoginRegister from './screens/LoginRegister';
+import InitialScreen from './screens/InitialScreen';
 import MySplashScreen from './screens/MySplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
@@ -63,30 +68,44 @@ function App(): React.ReactElement{
     return () => clearTimeout(timer);
   }, []);
 
+  //const navigation = useNavigation();
+
   if (!fontsLoaded || !hideSplashScreen) {
     return <MySplashScreen />;
   }
 
-  // const MyTailwindProvider = ({ children }: { children: React.ReactNode }) => (
-  //   <>{TailwindProvider({ theme: {}, children })}</>
-  // );
-
+ 
   return (
    <TailwindProvider utilities={myUtilities}>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='LoginRegister'>
-        <Stack.Screen name="LoginRegister" component={LoginRegister}
-        options={{headerShown: false}} />
-        <Stack.Screen
-          name="LoginScreen"
-          component={LoginScreen}
-          options={{
-            headerTransparent: true,
-            headerTintColor: 'tan',
-            headerTitle: '',
-            headerShadowVisible: false,
-          }}
+      <Stack.Navigator initialRouteName='InitialScreen'>
+        <Stack.Screen name="MySplashScreen" component={MySplashScreen} options={{headerShown: false}} />
+        <Stack.Screen name="InitialScreen" component={InitialScreen}
+          options={{headerShown: false}}
+          listeners={({ navigation }) => ({
+            beforeRemove: () => setHideSplashScreen(true),
+          })}
         />
+        <Stack.Screen
+        name="LoginScreen"
+        component={LoginScreen}
+        options={{
+          headerTransparent: true,
+          headerTintColor: 'tan',
+          headerTitle: '',
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
+              <View style={{ marginLeft: 20, marginTop: 10 }}>
+                <Image
+                  source={require('./assets/icons/back.png')}
+                  style={{ width: 30, height: 30 }}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
+        }}
+      />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen}
         options={{
           headerTransparent: true,

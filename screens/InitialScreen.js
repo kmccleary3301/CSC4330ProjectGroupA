@@ -9,13 +9,13 @@ import {
 } from "react-native";
 import styles from '../styles.ts';
 
-const LoginRegister = () => {
+const InitialScreen = () => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-      <View style={{ width: 350, height: 250 }}>
+      <View style={{ width: 300, height: 200 }}>
         <Image
           style={{
             width: '100%',
@@ -39,7 +39,7 @@ const LoginRegister = () => {
         <Text style={styles.buttonText}>Login</Text>
       </Pressable>
       <Pressable
-        style={[styles.button, styles.registerButton]}
+        style={[styles.button, styles.loginButton]}
         onPress={() => navigation.navigate("RegisterScreen")}
       >
         <Text style={styles.buttonText}>Register</Text>
@@ -48,4 +48,4 @@ const LoginRegister = () => {
   );
 };
 
-export default LoginRegister;
+export default InitialScreen;

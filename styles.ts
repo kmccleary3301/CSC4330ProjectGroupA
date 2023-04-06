@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: tan,
     fontFamily: 'Vikendi',
+    marginBottom: 20,
   },
   container: {
     flex: 1,
@@ -30,13 +31,15 @@ const styles = StyleSheet.create({
 
   registerBody: {
     width: '80%',
+    marginTop: 20,
   },
 
   subtitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: tan,
     fontFamily: 'Vikendi',
+    marginTop: 20,
   },
 
   inputField: {
@@ -53,7 +56,7 @@ const styles = StyleSheet.create({
   button: {
     width: '40%',
     height: 50,
-    borderRadius: 60,
+    borderRadius: 30,
     borderColor: tan,
     borderWidth: 2,
     padding: 5,
@@ -73,6 +76,8 @@ const styles = StyleSheet.create({
 
   linkContainer: {
     flexDirection: 'row',
+    marginTop: 20,
+    alignSelf: 'center',
   },
 
   linkText: {
@@ -86,7 +91,16 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontFamily: 'SF',
   },
-
+ 
+  logoWrapper: {
+    width: "50%",
+    aspectRatio: 1,
+  },
+  logo: {
+    width: 200,
+    height: 300,
+    marginTop: 30, // Keep the same marginTop for the logo
+  },
 
   logoContainer: {
     alignItems: 'center',
@@ -112,15 +126,7 @@ const styles = StyleSheet.create({
     color: tan,
     fontFamily: 'Vikendi',
   },
-  
-  logoWrapper: {
-    width: "50%",
-    aspectRatio: 1,
-  },
-  logo: {
-    width: "100%",
-    height: "100%",
-  },
+ 
   inputContainer: {
     marginTop: 20,
     width: '80%',
@@ -163,10 +169,11 @@ const styles = StyleSheet.create({
   loginButton: {
     width: '40%',
     height: 50,
-    marginTop: 20,
-    borderRadius: 60,
+    marginTop: 10,
+    marginBottom: 10,
+    borderRadius: 30,
     borderColor: tan,
-    borderWidth: 2,
+    borderWidth: 4.5,
     padding: 5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -178,6 +185,7 @@ const styles = StyleSheet.create({
   left: 20,
   width: '120%',
   transform: [{translateY: -50}],
+  color: tan,
 
   },
 
