@@ -15,6 +15,7 @@ import MySplashScreen from './screens/MySplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import { Navigation } from './navigation';
+import HomeScreen from './screens/HomeScreen';
 
 import { useAccessibilityInfo } from '@react-native-community/hooks';
 
@@ -113,6 +114,30 @@ function App(): React.ReactElement{
           headerTitle: '',
           headerShadowVisible: false,
         }} />
+        <Stack.Screen 
+          name="HomeScreen" 
+          component={HomeScreen}
+          
+          options={{
+            headerTransparent: false,
+            headerTintColor: '#D2B48C',
+            headerShadowVisible: false,
+            headerStyle: {backgroundColor: '#fae8cd'},
+            headerTitle: () => (
+                <Image
+                    source={require('./assets/logos/blue.png')}
+                    style={{width: 70, height: 70, marginTop: -15}}/>
+            ),
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => console.log('Hamburger Pressed.')}>
+                <Image
+                    source={require('./assets/icons/menu.png')}
+                    />
+              </TouchableOpacity>
+            ),
+            
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
     </TailwindProvider>
