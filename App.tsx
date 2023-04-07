@@ -4,7 +4,6 @@ import { StyleSheet, View,
   TextInput,
   TouchableOpacity,
   Image,} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from '@react-navigation/native';
 import * as Font from 'expo-font';
@@ -14,7 +13,6 @@ import InitialScreen from './screens/InitialScreen';
 import MySplashScreen from './screens/MySplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
-import { Navigation } from './navigation';
 import HomeScreen from './screens/HomeScreen';
 
 import { useAccessibilityInfo } from '@react-native-community/hooks';
