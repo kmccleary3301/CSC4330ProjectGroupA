@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   View,
@@ -6,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Picker
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,15 +22,16 @@ const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [userType, setUserType] = useState('');
 
   const handleRegister = () => {
     // Perform registration logic here
   };
 
   return (
-    <View style={[styles.container, { justifyContent: 'center', paddingTop: 0 }]}>
-      <View style={styles.logoContainer}>
-        <View style={{ width: 300, height: 200 }}>
+    <View style={[styles.container, { justifyContent: 'start', paddingTop: 120, marginTop: 0 }]}>
+      <View style={[styles.logoContainer, { marginTop: 0, paddingTop: 0 }]}>
+        <View style={{ width: 200, height: 100, marginTop: 5 }}>
           <Image
             style={{
               width: '100%',
@@ -41,11 +42,23 @@ const RegisterScreen = ({ navigation }) => {
           />
         </View>
       </View>
-      <Text style={[styles.title, { textAlign: 'center' }]}>Register</Text>
+      <Text style={[styles.title, { textAlign: 'center', marginBottom: 0, paddingBottom: 0 }]}>Register</Text>
       <View style={styles.registerBody}>
         <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
-          Create a new account
+          Create a new account with your university email.
         </Text>
+        <Picker
+          style={[styles.picker, { paddingLeft: 5 }]}
+          selectedValue={userType}
+          onValueChange={(itemValue) => setUserType(itemValue)}
+          prompt="I am a..."
+          mode="dropdown"
+        >
+          <Picker.Item label="I am a..." value="" />
+          <Picker.Item label="Student" value="student" />
+          <Picker.Item label="Tutor" value="tutor" />
+          <Picker.Item label="Administrator" value="administrator" />
+        </Picker>
         <TextInput
           style={styles.inputField}
           onChangeText={setEmail}
@@ -86,6 +99,7 @@ const RegisterScreen = ({ navigation }) => {
     </View>
   );
 };
+
 
 RegisterScreen.navigationOptions = ({ navigation }) => ({
   headerLeft: () => (

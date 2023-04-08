@@ -6,6 +6,14 @@ const blue = '#182640';
 const tan = '#FAE8CD';  
 
 const styles = StyleSheet.create({
+  picker: {
+    height: 50,
+    borderColor: tan,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: tan,
+    marginBottom: 20,
+  },
   boop: {
     marginTop: 20, // Decreased marginTop to move Francis Bacon text upward
     fontSize: 18,

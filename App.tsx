@@ -16,11 +16,13 @@ import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
 
 import { useAccessibilityInfo } from '@react-native-community/hooks';
+import TailwindProvider from 'tailwind-rn';
+import useTailwind from 'tailwind-rn';
 
-import TailwindProvider from './node_modules/tailwind-rn/dist/tailwind-provider'; // Modify this path based on your folder structure
-import useTailwind from './node_modules/tailwind-rn/dist/use-tailwind'; // Modify this path based on your folder structure
+//import TailwindProvider from './node_modules/tailwind-rn/dist/tailwind-provider'; // Modify this path based on your folder structure
+//import useTailwind from './node_modules/tailwind-rn/dist/use-tailwind'; // Modify this path based on your folder structure
 
-
+import { useNavigation } from '@react-navigation/native';
 // import  TailwindProvider from 'tailwind-rn';
  import utilities from './tailwind.json';
 
@@ -49,6 +51,7 @@ function App(): React.ReactElement{
   const blue = '#182640';
   const tan = '#FAE8CD';  
 
+  //const navigation = useNavigation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -75,15 +78,13 @@ function App(): React.ReactElement{
 
  
   return (
-   <TailwindProvider utilities={myUtilities}>
+   //<TailwindProvider utilities={myUtilities}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName='InitialScreen'>
         <Stack.Screen name="MySplashScreen" component={MySplashScreen} options={{headerShown: false}} />
         <Stack.Screen name="InitialScreen" component={InitialScreen}
           options={{headerShown: false}}
-          listeners={({ navigation }) => ({
-            beforeRemove: () => setHideSplashScreen(true),
-          })}
+          
         />
         <Stack.Screen
         name="LoginScreen"
@@ -98,7 +99,7 @@ function App(): React.ReactElement{
               <View style={{ marginLeft: 20, marginTop: 10 }}>
                 <Image
                   source={require('./assets/icons/back.png')}
-                  style={{ width: 30, height: 30 }}
+                  style={{ width: 20, height: 20 }}
                 />
               </View>
             </TouchableOpacity>
@@ -111,6 +112,16 @@ function App(): React.ReactElement{
           headerTintColor: 'tan',
           headerTitle: '',
           headerShadowVisible: false,
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
+              <View style={{ marginLeft: 20, marginTop: 10 }}>
+                <Image
+                  source={require('./assets/icons/back.png')}
+                  style={{ width: 20, height: 20 }}
+                />
+              </View>
+            </TouchableOpacity>
+          ),
         }} />
         <Stack.Screen 
           name="HomeScreen" 
@@ -138,7 +149,7 @@ function App(): React.ReactElement{
         />
       </Stack.Navigator>
     </NavigationContainer>
-    </TailwindProvider>
+   // </TailwindProvider>
     
   );
 }
