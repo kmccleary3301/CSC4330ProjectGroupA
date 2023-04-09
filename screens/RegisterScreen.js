@@ -1,32 +1,80 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  Picker
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, Picker} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
 import { tailwind } from 'tailwind-rn';
 import useTailwind from 'tailwind-rn/dist/use-tailwind.js';
-
+import {auth, db} from "../firebase";
+import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} from "firebase/auth";
+import {useAuthValue} from '../AuthContext';
+import {doc, setDoc} from "firebase/firestore";
 
 const RegisterScreen = ({ navigation }) => {
 
 
   //const tw = useTailwind();
 
+  const [name, setName] = useState ('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error , setError] = useState('');
+  const navigate = useNavigation();
   const [userType, setUserType] = useState('');
 
-  const handleRegister = () => {
-    // Perform registration logic here
-  };
+  const validatePassword = () => {
+    let isValid = true
+    // check to see if they are not empty
+    if (password !== '' && confirmPassword !== ''){
+        // check to see if they match
+        if (password !== confirmPassword) {
+            isValid = false
+            setError('Passwords do not match')
+        }
+    }
+    return isValid
+}
+
+const addProfile = async (name, email) => {
+  const user = auth.currentUser;
+  try {
+      await setDoc(doc(db, "users", user?.uid), {
+          uid: user.uid,
+          name,
+          email,
+      });
+  }   catch (err) {
+      console.error(err);
+      alert(err.message);
+  }
+};
+
+
+const handleRegister = e => {
+  e.preventDefault()
+  setError('')
+  if(validatePassword()) {
+      // use firebase to create user
+      createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+          sendEmailVerification(auth.currentUser)
+          .then(() => {
+              //setTimeActive(true)
+              navigation.navigate('VerifyEmail')
+          })
+      }).catch(err => setError(err.message))
+      .then (() => {
+          updateProfile(auth.currentUser, {displayName: name})
+      }).catch(err => alert(err.message))
+      .then (() => {
+          addProfile(name, email)
+      }).catch(err => setError(err.message))
+  }
+  setEmail('')
+  setPassword('')
+  setConfirmPassword('')
+};
 
   return (
     <View style={[styles.container, { justifyContent: 'start', paddingTop: 120, marginTop: 0 }]}>
@@ -42,6 +90,7 @@ const RegisterScreen = ({ navigation }) => {
           />
         </View>
       </View>
+      <form onSubmit={register} name='registration_form'>
       <Text style={[styles.title, { textAlign: 'center', marginBottom: 0, paddingBottom: 0 }]}>Register</Text>
       <View style={styles.registerBody}>
         <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
@@ -83,6 +132,7 @@ const RegisterScreen = ({ navigation }) => {
           secureTextEntry
           autoCapitalize="none"
         />
+        
         <TouchableOpacity
           style={[styles.button, styles.loginButton, { width: '50%' }]}
           onPress={handleRegister}
@@ -96,6 +146,7 @@ const RegisterScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
+      </form>
     </View>
   );
 };

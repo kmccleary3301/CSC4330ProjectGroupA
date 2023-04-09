@@ -19,6 +19,9 @@ import {
         <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <Text style={[styles.title, {fontSize: 25, marginTop: -45} ]}>Select an Appointment:</Text>
+             <TouchableOpacity onPress={() => navigation.navigate('AppointmentsScreen')}>
+             <Text>My Appointments</Text>
+             </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Text style={[styles.title, {fontSize: 15, marginTop: -90, marginLeft: -10, fontFamily: 'SF'} ]}>Change Date:</Text>
         </View>

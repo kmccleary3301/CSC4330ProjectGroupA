@@ -14,6 +14,7 @@ import MySplashScreen from './screens/MySplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
+import AppointmentsScreen from './screens/AppointmentsScreen';
 
 import { useAccessibilityInfo } from '@react-native-community/hooks';
 import TailwindProvider from 'tailwind-rn';
@@ -47,7 +48,7 @@ async function loadFonts() {
 function App(): React.ReactElement{
   const [hideSplashScreen, setHideSplashScreen] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
-
+  
   const blue = '#182640';
   const tan = '#FAE8CD';  
 
@@ -138,7 +139,7 @@ function App(): React.ReactElement{
                     style={{width: 70, height: 70, marginTop: -15}}/>
             ),
             headerLeft: () => (
-              <TouchableOpacity onPress={() => console.log('Hamburger Pressed.')}>
+              <TouchableOpacity onPress={() => navigation.navigate('AppointmentsScreen')}>
                 <Image
                     source={require('./assets/icons/menu.png')}
                     />
@@ -147,6 +148,31 @@ function App(): React.ReactElement{
             
           }}
         />
+      <Stack.Screen 
+          name="AppointmentsScreen" 
+          component={AppointmentsScreen}
+          
+          options={{
+            headerTransparent: false,
+            headerTintColor: '#D2B48C',
+            headerShadowVisible: false,
+            headerStyle: {backgroundColor: '#fae8cd'},
+            headerTitle: () => (
+                <Image
+                    source={require('./assets/logos/blue.png')}
+                    style={{width: 70, height: 70, marginTop: -15}}/>
+            ),
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => console.log('Hamburger Pressed.')}>
+                <Image
+                    source={require('./assets/icons/menu.png')}
+                    />
+              </TouchableOpacity>
+            ),
+            
+          }}
+          />
+      
       </Stack.Navigator>
     </NavigationContainer>
    // </TailwindProvider>
