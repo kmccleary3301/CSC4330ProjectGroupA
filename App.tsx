@@ -14,6 +14,11 @@ import MySplashScreen from './screens/MySplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
+import Drawer from 'react-native-drawer';
+import SideMenu from './SideMenu';
+import AppHeader from './AppHeader';
+
+
 
 import { useAccessibilityInfo } from '@react-native-community/hooks';
 import TailwindProvider from 'tailwind-rn';
@@ -47,6 +52,8 @@ async function loadFonts() {
 function App(): React.ReactElement{
   const [hideSplashScreen, setHideSplashScreen] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
 
   const blue = '#182640';
   const tan = '#FAE8CD';  
@@ -79,6 +86,28 @@ function App(): React.ReactElement{
  
   return (
    //<TailwindProvider utilities={myUtilities}>
+   <Drawer
+    type="overlay"
+    content={
+      <SideMenu
+        onClose={() => setDrawerOpen(false)}
+        onLogout={() => console.log('Logout')}
+        onHelpCenter={() => console.log('Help Center')}
+        onPrivacyPolicy={() => console.log('Privacy Policy')}
+        onSettings={() => console.log('Settings')}
+      />
+    }
+    open={drawerOpen}
+    tapToClose={true}
+    openDrawerOffset={0.2}
+    panCloseMask={0.2}
+    closedDrawerOffset={-3}
+    styles={{ drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 } }}
+    tweenHandler={ratio => ({
+      main: { opacity: 1 },
+      mainOverlay: { opacity: ratio / 2, backgroundColor: 'black' },
+    })}
+  >
     <NavigationContainer>
       <Stack.Navigator initialRouteName='InitialScreen'>
         <Stack.Screen name="MySplashScreen" component={MySplashScreen} options={{headerShown: false}} />
@@ -94,16 +123,16 @@ function App(): React.ReactElement{
           headerTintColor: 'tan',
           headerTitle: '',
           headerShadowVisible: false,
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
-              <View style={{ marginLeft: 20, marginTop: 10 }}>
-                <Image
-                  source={require('./assets/icons/back.png')}
-                  style={{ width: 20, height: 20 }}
-                />
-              </View>
-            </TouchableOpacity>
-          ),
+          // headerLeft: () => (
+          //   <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
+          //     <View style={{ marginLeft: 20, marginTop: 10 }}>
+          //       <Image
+          //         source={require('./assets/icons/back.png')}
+          //         style={{ width: 20, height: 20 }}
+          //       />
+          //     </View>
+          //   </TouchableOpacity>
+          // ),
         }}
       />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen}
@@ -112,44 +141,27 @@ function App(): React.ReactElement{
           headerTintColor: 'tan',
           headerTitle: '',
           headerShadowVisible: false,
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
-              <View style={{ marginLeft: 20, marginTop: 10 }}>
-                <Image
-                  source={require('./assets/icons/back.png')}
-                  style={{ width: 20, height: 20 }}
-                />
-              </View>
-            </TouchableOpacity>
-          ),
         }} />
         <Stack.Screen 
           name="HomeScreen" 
           component={HomeScreen}
-          
           options={{
             headerTransparent: false,
             headerTintColor: '#D2B48C',
             headerShadowVisible: false,
-            headerStyle: {backgroundColor: '#fae8cd'},
-            headerTitle: () => (
-                <Image
-                    source={require('./assets/logos/blue.png')}
-                    style={{width: 70, height: 70, marginTop: -15}}/>
-            ),
+            headerStyle: { backgroundColor: '#fae8cd' },
+            headerTitle: '',
+            headerTitleAlign: 'center',
             headerLeft: () => (
-              <TouchableOpacity onPress={() => console.log('Hamburger Pressed.')}>
-                <Image
-                    source={require('./assets/icons/menu.png')}
-                    />
-              </TouchableOpacity>
+              <AppHeader onHamburgerPress={() => setDrawerOpen(true)} />
             ),
-            
           }}
         />
+
+
       </Stack.Navigator>
     </NavigationContainer>
-   // </TailwindProvider>
+    </Drawer>
     
   );
 }
