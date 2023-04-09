@@ -14,7 +14,10 @@ import MySplashScreen from './screens/MySplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
-
+import VerifyEmail from './screens/VerifyEmail';
+import Drawer from 'react-native-drawer';
+import SideMenu from './SideMenu';
+import AppHeader from './AppHeader';
 import { useAccessibilityInfo } from '@react-native-community/hooks';
 import TailwindProvider from 'tailwind-rn';
 import useTailwind from 'tailwind-rn';
@@ -161,7 +164,7 @@ function App(): React.ReactElement{
             
           }}
         />
-      <Stack.Screen 
+      {/* <Stack.Screen 
           name="AppointmentsScreen" 
           component={AppointmentsScreen}
           
@@ -176,7 +179,7 @@ function App(): React.ReactElement{
               <AppHeader onHamburgerPress={() => setDrawerOpen(true)} />
             ),
           }}
-          />
+          /> */}
       
 
 

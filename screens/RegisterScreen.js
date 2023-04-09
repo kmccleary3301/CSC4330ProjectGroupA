@@ -7,7 +7,6 @@ import { tailwind } from 'tailwind-rn';
 import useTailwind from 'tailwind-rn/dist/use-tailwind.js';
 import {auth, db} from "../firebase";
 import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} from "firebase/auth";
-import {useAuthValue} from '../AuthContext';
 import {doc, setDoc} from "firebase/firestore";
 
 const RegisterScreen = ({ navigation }) => {
@@ -20,7 +19,6 @@ const RegisterScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error , setError] = useState('');
-  const navigate = useNavigation();
   const [userType, setUserType] = useState('');
 
   const validatePassword = () => {
@@ -51,30 +49,53 @@ const addProfile = async (name, email) => {
 };
 
 
-const handleRegister = e => {
-  e.preventDefault()
-  setError('')
-  if(validatePassword()) {
-      // use firebase to create user
-      createUserWithEmailAndPassword(auth, email, password)
+// const handleRegister = e => {
+//   e.preventDefault()
+//   setError('')
+//   if(validatePassword()) {
+//       // use firebase to create user
+//       createUserWithEmailAndPassword(auth, email, password)
+//       .then(() => {
+//           sendEmailVerification(auth.currentUser)
+//           .then(() => {
+//               //setTimeActive(true)
+//               navigation.navigate('VerifyEmail')
+//           })
+//       }).catch(err => setError(err.message))
+//       .then (() => {
+//           updateProfile(auth.currentUser, {displayName: name})
+//       }).catch(err => alert(err.message))
+//       .then (() => {
+//           addProfile(name, email)
+//       }).catch(err => setError(err.message))
+//   }
+//   setEmail('')
+//   setPassword('')
+//   setConfirmPassword('')
+// };
+
+const handleRegister = (e) => {
+  e.preventDefault();
+  setError('');
+
+  if (validatePassword()) {
+    // use firebase to create user
+    createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
-          sendEmailVerification(auth.currentUser)
-          .then(() => {
-              //setTimeActive(true)
-              navigation.navigate('VerifyEmail')
-          })
-      }).catch(err => setError(err.message))
-      .then (() => {
-          updateProfile(auth.currentUser, {displayName: name})
-      }).catch(err => alert(err.message))
-      .then (() => {
-          addProfile(name, email)
-      }).catch(err => setError(err.message))
+        sendEmailVerification(auth.currentUser).then(() => {
+          updateProfile(auth.currentUser, { displayName: name });
+          addProfile(name, email);
+          navigation.navigate('VerifyEmail');
+        });
+      })
+      .catch((err) => setError(err.message));
   }
-  setEmail('')
-  setPassword('')
-  setConfirmPassword('')
+
+  setEmail('');
+  setPassword('');
+  setConfirmPassword('');
 };
+
 
   return (
     <View style={[styles.container, { justifyContent: 'start', paddingTop: 120, marginTop: 0 }]}>
@@ -90,7 +111,7 @@ const handleRegister = e => {
           />
         </View>
       </View>
-      <form onSubmit={register} name='registration_form'>
+      <form onSubmit={handleRegister} name='registration_form'>
       <Text style={[styles.title, { textAlign: 'center', marginBottom: 0, paddingBottom: 0 }]}>Register</Text>
       <View style={styles.registerBody}>
         <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
@@ -110,7 +131,7 @@ const handleRegister = e => {
         </Picker>
         <TextInput
           style={styles.inputField}
-          onChangeText={setEmail}
+          onChange={e => setEmail(e.target.value)}
           value={email}
           placeholder="Email"
           keyboardType="email-address"
