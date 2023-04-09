@@ -85,6 +85,18 @@ const LoginScreen = () => {
   );
 };
 
+LoginScreen.navigationOptions = ({ navigation }) => ({
+  headerLeft: () => (
+    <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
+      <View style={{ marginLeft: 20, marginTop: 10 }}>
+        <Image
+          source={require('../assets/icons/back.png')}
+          style={{ width: 30, height: 30 }}
+        />
+      </View>
+    </TouchableOpacity>
+  ),
+});
 
 
 export default LoginScreen;

@@ -33,25 +33,4 @@ import {
     );
   };
 
-
-
-
-//   function HomeScreen({ navigation }) {
-//     return (
-//         <View>
-//             <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-//             <Text>Home</Text>
-//             </TouchableOpacity>
-//             <TouchableOpacity onPress={() => navigation.navigate('My Appointments')}>
-//             <Text>My Appointments</Text>
-//             </TouchableOpacity>
-//             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-//             <Text>Profile</Text>
-//             </TouchableOpacity>
-//             <TouchableOpacity onPress={() => navigation.navigate('More')}>
-//             <Text>Home</Text>
-//             </TouchableOpacity>
-//         </View>
-//     )
-//   }
 export default HomeScreen;
