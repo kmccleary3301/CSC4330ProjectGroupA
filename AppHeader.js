@@ -1,23 +1,28 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
-const AppHeader = ({ onHamburgerPress }) => {
+
+
+const AppHeader = ({ onHamburgerPress, navigation }) => {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={onHamburgerPress} style={styles.menuButton}>
+        <TouchableOpacity onPress={onHamburgerPress} style={[styles.menuButton, { flex: 1 }]}>
           <Image
             source={require('./assets/icons/menu.png')}
             style={styles.menuIcon}
           />
         </TouchableOpacity>
-        <Image
-          source={require('./assets/logos/blue.png')}
-          style={styles.logo}
-        />
-        <View style={styles.spacer} />
+        <View style={styles.logoContainer}>
+          <Image
+            source={require('./assets/logos/blue.png')}
+            style={styles.logo}
+          />
+        </View>
+        <View style={{ flex: 1 }} />
       </View>
     );
   };
+  
   
   
   
@@ -37,23 +42,22 @@ const AppHeader = ({ onHamburgerPress }) => {
     menuIcon: {
       width: 24,
       height: 24,
+      marginLeft: 10,
+    },
+    logoContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginLeft: 180,
     },
     logo: {
-      position: 'absolute',
-      width: 45,
-      height: 45,
+      width: 60,
+      height: 60,
       resizeMode: 'contain',
-      left: 0,
-      right: 0,
-      top: 0,
-      bottom: 0,
-      marginHorizontal: 'auto',
-      marginVertical: 'auto',
-    },
-    spacer: {
-      width: 45,
     },
   });
+  
+  
   
   
 

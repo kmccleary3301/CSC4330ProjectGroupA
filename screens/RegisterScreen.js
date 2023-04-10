@@ -10,14 +10,10 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
-import { tailwind } from 'tailwind-rn';
-import useTailwind from 'tailwind-rn/dist/use-tailwind.js';
 
 
 const RegisterScreen = ({ navigation }) => {
 
-
-  //const tw = useTailwind();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

@@ -9,7 +9,7 @@
     "typeRoots": ["types.ts", "./node_modules/@types"],
     "lib": ["dom", "esnext"],
     "paths": {
-      "tailwind-rn/*": ["node_modules/tailwind-rn/*"],
+      //"tailwind-rn/*": ["node_modules/tailwind-rn/*"],
       "@types/*": ["node_modules/@types/*"]
     }
   },
