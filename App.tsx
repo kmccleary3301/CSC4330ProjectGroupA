@@ -18,23 +18,14 @@ import HomeScreen from './screens/HomeScreen';
 import Drawer from 'react-native-drawer';
 import SideMenu from './SideMenu';
 import AppHeader from './AppHeader';
+import SubjectSearchScreen from './screens/SubjectSearchScreen';
 
 
 
 import { useAccessibilityInfo } from '@react-native-community/hooks';
-//import TailwindProvider from 'tailwind-rn';
-//import useTailwind from 'tailwind-rn';
 
-//import TailwindProvider from './node_modules/tailwind-rn/dist/tailwind-provider'; // Modify this path based on your folder structure
-//import useTailwind from './node_modules/tailwind-rn/dist/use-tailwind'; // Modify this path based on your folder structure
 
 import { useNavigation } from '@react-navigation/native';
-// import  TailwindProvider from 'tailwind-rn';
- import utilities from './tailwind.json';
-
-
-
-
 
 
 const Stack = createNativeStackNavigator();
@@ -59,7 +50,6 @@ function App(): React.ReactElement{
   const blue = '#182640';
   const tan = '#FAE8CD';  
 
-  //const navigation = useNavigation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -78,7 +68,6 @@ function App(): React.ReactElement{
     return () => clearTimeout(timer);
   }, []);
 
-  //const navigation = useNavigation();
 
   if (!fontsLoaded || !hideSplashScreen) {
     return <MySplashScreen />;
@@ -86,7 +75,6 @@ function App(): React.ReactElement{
 
  
   return (
-   //<TailwindProvider utilities={myUtilities}>
    <Drawer
     type="overlay"
     content={
@@ -158,6 +146,21 @@ function App(): React.ReactElement{
             ),
           }}
         />
+        <Stack.Screen
+          name="SubjectSearchScreen"
+          component={SubjectSearchScreen}
+          options={{
+            headerTransparent: false,
+            headerTintColor: '#D2B48C',
+            headerShadowVisible: false,
+            headerStyle: { backgroundColor: '#fae8cd' },
+            headerTitle: '',
+            headerTitleAlign: 'center',
+            headerLeft: () => (
+              <AppHeader onHamburgerPress={() => setDrawerOpen(true)} />
+            ),
+          }}
+        />
 
 
       </Stack.Navigator>
@@ -170,25 +173,3 @@ function App(): React.ReactElement{
 export default App;
 
 
-const myUtilities = {
-  'bg-red-500': {
-    style: {
-      backgroundColor: '#F56565',
-    },
-  },
-  'h-12': {
-    style: {
-      height: 48,
-    },
-  },
-  'w-12': {
-    style: {
-      width: 48,
-    },
-  },
-  'text-white': {
-    style: {
-      color: '#FFFFFF',
-    },
-  },
-};
