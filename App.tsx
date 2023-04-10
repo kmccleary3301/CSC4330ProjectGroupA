@@ -21,8 +21,8 @@ import AppHeader from './AppHeader';
 
 
 import { useAccessibilityInfo } from '@react-native-community/hooks';
-import TailwindProvider from 'tailwind-rn';
-import useTailwind from 'tailwind-rn';
+//import TailwindProvider from 'tailwind-rn';
+//import useTailwind from 'tailwind-rn';
 
 //import TailwindProvider from './node_modules/tailwind-rn/dist/tailwind-provider'; // Modify this path based on your folder structure
 //import useTailwind from './node_modules/tailwind-rn/dist/use-tailwind'; // Modify this path based on your folder structure
