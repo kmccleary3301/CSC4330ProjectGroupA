@@ -15,9 +15,9 @@ import {
 } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from "./types"; // Import your RootStackParamList type from the types file
-import profileIcon from './assets/icons/profile2x.png';
-import appointmentsIcon from './assets/icons/appointments2x.png';
-import homeIcon from './assets/icons/home2x.png';
+import profileIcon from './assets/icons/profile.png';
+import appointmentsIcon from './assets/icons/appointments.png';
+import homeIcon from './assets/icons/home.png';
 
 
 type NavBarItemProps = {

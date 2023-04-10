@@ -1,4 +1,4 @@
-//import './input.css';
+
 
 import { StyleSheet, Text, View } from 'react-native';
 

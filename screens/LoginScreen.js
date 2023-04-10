@@ -10,12 +10,9 @@ import { useNavigation } from '@react-navigation/native';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility.ts';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
-//import { tailwind } from 'tailwind-rn';
-//import useTailwind from 'tailwind-rn/dist/use-tailwind.js';
 
 const LoginScreen = () => {
 
-  //const tw = useTailwind();
 
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
