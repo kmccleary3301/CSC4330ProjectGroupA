@@ -17,7 +17,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from "./types"; // Import your RootStackParamList type from the types file
 
 
-
 type NavBarItemProps = {
   iconSource: ImageSourcePropType;
   screenName: keyof RootStackParamList;
