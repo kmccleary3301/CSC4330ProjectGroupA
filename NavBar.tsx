@@ -15,9 +15,8 @@ import {
 } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from "./types"; // Import your RootStackParamList type from the types file
-import profileIcon from './assets/icons/profile@2x.png';
-import appointmentsIcon from './assets/icons/appointments@2x.png';
-import homeIcon from './assets/icons/home@2x.png';
+
+
 
 
 type NavBarItemProps = {
@@ -66,17 +65,17 @@ const NavBarContainer = () => {
   return (
     <View style={styles.navigationBar}>
       <NavBarItem
-        iconSource={homeIcon}
+        iconSource={require('./assets/icons/home2x.png')}
         screenName="HomeScreen"
         text="Home"
       />
       <NavBarItem
-        iconSource={appointmentsIcon}
+        iconSource={require('./assets/icons/appointments2x.png')}
         screenName="AppointmentsScreen"
         text="My Appointments"
       />
       <NavBarItem 
-        iconSource={profileIcon}
+        iconSource={require('./assets/icons/profile2x.png')}
         screenName="ProfileScreen"
         text="Profile"
       />

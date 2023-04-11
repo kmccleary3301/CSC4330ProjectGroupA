@@ -13,6 +13,7 @@ import InitialScreen from './screens/InitialScreen';
 import MySplashScreen from './screens/MySplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ProfileScreen from './screens/ProfileScreen';
 import HomeScreen from './screens/HomeScreen';
 import Drawer from 'react-native-drawer';
 import SideMenu from './SideMenu';
