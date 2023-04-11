@@ -14,6 +14,7 @@ import MySplashScreen from './screens/MySplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
 import HomeScreen from './screens/HomeScreen';
 import Drawer from 'react-native-drawer';
 import SideMenu from './SideMenu';
@@ -173,7 +174,57 @@ function App(): React.ReactElement{
               ),
             }}
           />
-        <Stack.Screen
+          <Stack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
+            options={{
+            headerTransparent: false,
+            headerTintColor: '#D2B48C',
+            headerShadowVisible: false,
+            headerStyle: { backgroundColor: '#fae8cd' },
+            header: (props) => (
+              <AppHeader
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="EditProfileScreen"
+            component={EditProfileScreen}
+            options={{
+            headerTransparent: false,
+            headerTintColor: '#D2B48C',
+            headerShadowVisible: false,
+            headerStyle: { backgroundColor: '#fae8cd' },
+            header: (props) => (
+              <AppHeader
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
             name="AptRequestScreen"
             component={AptRequestScreen}
             options={{
