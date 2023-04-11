@@ -279,15 +279,15 @@ const lightBlue = '#C9D3FF';
     flexDirection: 'row',
     },
     button: {
-    width: 100,
-    height: 50,
+    width: '32%',
+    height: '8%',
     marginTop: 20,
     marginBottom: 10,
     borderRadius: 30,
     borderColor: tan,
     borderWidth: 4.5,
-    padding: 0,
-    alignItems: 'center',
+    //padding: 0,
+    //alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
     backgroundColor: blue,
@@ -296,9 +296,10 @@ const lightBlue = '#C9D3FF';
     color: tan,
     fontSize: 20,
     fontFamily: 'SF',
+    //fontWeight: 'bold',
     },
     buttonContent: {
-    height: 50,
+    //height: 50,
     },
     });
   

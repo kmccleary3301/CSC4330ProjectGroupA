@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: "#182640",
-    fontFamily: "SF Compact Display Regular",
+    fontFamily: "SFBold",
   },
   activeIcon: {
     tintColor: "#76A9D2",
