@@ -31,6 +31,9 @@ import { useNavigation } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 
+const blue = '#182640';
+const tan = '#FAE8CD'; 
+const lightBlue = '#C9D3FF'; 
 
 
 async function loadFonts() {
@@ -48,8 +51,7 @@ function App(): React.ReactElement{
   const [drawerOpen, setDrawerOpen] = useState(false);
 
 
-  const blue = '#182640';
-  const tan = '#FAE8CD';  
+
 
 
   useEffect(() => {
@@ -68,13 +70,10 @@ function App(): React.ReactElement{
 
     return () => clearTimeout(timer);
   }, []);
-
-
-  if (!fontsLoaded || !hideSplashScreen) {
-    return <MySplashScreen />;
-  }
-
- 
+    if (!fontsLoaded || !hideSplashScreen) {
+      return <MySplashScreen />;
+    }
+  
   return (
    <Drawer
     type="overlay"
@@ -102,8 +101,7 @@ function App(): React.ReactElement{
       <Stack.Navigator initialRouteName='InitialScreen'>
         <Stack.Screen name="MySplashScreen" component={MySplashScreen} options={{headerShown: false}} />
         <Stack.Screen name="InitialScreen" component={InitialScreen}
-          options={{headerShown: false}}
-          
+          options={{headerShown: false}}    
         />
         <Stack.Screen
         name="LoginScreen"
@@ -113,16 +111,6 @@ function App(): React.ReactElement{
           headerTintColor: 'tan',
           headerTitle: '',
           headerShadowVisible: false,
-          // headerLeft: () => (
-          //   <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
-          //     <View style={{ marginLeft: 20, marginTop: 10 }}>
-          //       <Image
-          //         source={require('./assets/icons/back.png')}
-          //         style={{ width: 20, height: 20 }}
-          //       />
-          //     </View>
-          //   </TouchableOpacity>
-          // ),
         }}
       />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen}
@@ -132,57 +120,73 @@ function App(): React.ReactElement{
           headerTitle: '',
           headerShadowVisible: false,
         }} />
-        <Stack.Screen 
-          name="HomeScreen" 
+        <Stack.Screen
+          name="HomeScreen"
           component={HomeScreen}
           options={{
             headerTransparent: false,
             headerTintColor: '#D2B48C',
             headerShadowVisible: false,
             headerStyle: { backgroundColor: '#fae8cd' },
-            headerTitle: '',
-            headerTitleAlign: 'center',
-            headerLeft: () => (
-              <AppHeader onHamburgerPress={() => setDrawerOpen(true)} />
+            header: (props) => (
+              <AppHeader
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
+              />
             ),
           }}
         />
+          <Stack.Screen
+            name="SubjectSearchScreen"
+            component={SubjectSearchScreen}
+            options={{
+              headerTransparent: false,
+              headerTintColor: '#D2B48C',
+              headerShadowVisible: false,
+              headerStyle: { backgroundColor: '#fae8cd' },
+              headerTitle: '',
+              headerTitleAlign: 'center',
+              header: (props) => (
+                <AppHeader
+                  title="Home"
+                  menu
+                  right="menu"
+                  onMenuPress={() => setDrawerOpen(true)}
+                  onLogoutPress={() => console.log('Logout')}
+                  {...props}
+                />
+              ),
+            }}
+          />
         <Stack.Screen
-          name="SubjectSearchScreen"
-          component={SubjectSearchScreen}
-          options={{
-            headerTransparent: false,
-            headerTintColor: '#D2B48C',
-            headerShadowVisible: false,
-            headerStyle: { backgroundColor: '#fae8cd' },
-            headerTitle: '',
-            headerTitleAlign: 'center',
-            headerLeft: () => (
-              <AppHeader onHamburgerPress={() => setDrawerOpen(true)} />
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="AptRequestScreen"
-          component={AptRequestScreen}
-          options={{
-            headerTransparent: false,
-            headerTintColor: '#D2B48C',
-            headerShadowVisible: false,
-            headerStyle: { backgroundColor: '#fae8cd' },
-            headerTitle: '',
-            headerTitleAlign: 'center',
-            headerLeft: () => (
-              <AppHeader onHamburgerPress={() => setDrawerOpen(true)} />
-            ),
-          }}
-        />
-
-
+            name="AptRequestScreen"
+            component={AptRequestScreen}
+            options={{
+              headerTransparent: false,
+              headerTintColor: '#D2B48C',
+              headerShadowVisible: false,
+              headerStyle: { backgroundColor: '#fae8cd' },
+              headerTitle: '',
+              headerTitleAlign: 'center',
+              header: (props) => (
+                <AppHeader
+                  title="Home"
+                  menu
+                  right="menu"
+                  onMenuPress={() => setDrawerOpen(true)}
+                  onLogoutPress={() => console.log('Logout')}
+                  {...props}
+                />
+              ),
+            }}
+          />
       </Stack.Navigator>
     </NavigationContainer>
     </Drawer>
-    
   );
 }
 
