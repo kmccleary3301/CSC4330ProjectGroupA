@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import NavBarContainer from '../NavBar';
 
 const tan = '#FAE8CD';
 const blue = '#182640';
@@ -27,6 +28,7 @@ const AptRequestScreen = ({ route }) => {
     };
   
     return (
+      <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <Text style={styles.title}>Request appointment?</Text>
         <Text style={styles.date}>
@@ -84,7 +86,12 @@ const AptRequestScreen = ({ route }) => {
           Keep in mind, once the instructor accepts this request, failure to show
           up will result in consequences
         </Text>
+        
       </View>
+
+      <NavBarContainer />
+      </View>
+      
     );
   };
   

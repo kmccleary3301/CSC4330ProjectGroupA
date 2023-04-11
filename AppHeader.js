@@ -36,15 +36,7 @@ const AppHeader = ({
           />
         </TouchableOpacity>
       )}
-      {back && (
-        <TouchableOpacity onPress={() => {}}>
-          <Image
-            source={require('./assets/icons/back.png')}
-            style={{ width: IconSize, height: IconSize, tintColor: iconColor }}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      )}
+      
     </View>
   );
 
@@ -115,6 +107,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 60,
     height: 60,
-    marginRight: 50,
+    marginRight: 40,
   },
 });
