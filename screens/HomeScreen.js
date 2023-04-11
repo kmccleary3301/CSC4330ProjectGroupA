@@ -3,6 +3,7 @@ import {
   View,
   Text,
   Image,
+  FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles';
@@ -54,6 +55,21 @@ const lightBlue = '#C9D3FF';
         { id: 7, name: 'Oliver Smith', rating: '4.3/5', subject: 'Physics', time: '3:30-4:30' },
         { id: 8, name: 'Liam Brown', rating: '4.7/5', subject: 'Algebra', time: '3:30-4:30' },
         { id: 9, name: 'Charlotte Jones', rating: '4.6/5', subject: 'Chemistry', time: '3:30-4:30' },
+      ],
+    },
+    {
+      date: '2023-04-11',
+      appointments: [
+        { id: 10, name: 'Noah Williams', rating: '4.9/5', subject: 'English', time: '3:30-4:30' },
+        { id: 11, name: 'Mia Davis', rating: '4.8/5', subject: 'Spanish', time: '3:30-4:30' },
+        { id: 12, name: 'Lucas Miller', rating: '4.7/5', subject: 'French', time: '3:30-4:30' },
+        { id: 13, name: 'Elijah Wilson', rating: '4.6/5', subject: 'German', time: '3:30-4:30' },
+        { id: 14, name: 'Ava Taylor', rating: '4.5/5', subject: 'Latin', time: '3:30-4:30' },
+        { id: 15, name: 'Logan Anderson', rating: '4.4/5', subject: 'Italian', time: '3:30-4:30' },
+       // { id: 16, name: 'Mason Thomas', rating: '4.3/5', subject: 'Russian', time: '3:30-4:30' },
+       // { id: 17, name: 'Ethan Jackson', rating: '4.2/5', subject: 'Japanese', time: '3:30-4:30' },
+       // { id: 18, name: 'Emily Moore', rating: '4.1/5', subject: 'Chinese', time: '3:30-4:30' },
+       // { id: 19, name: 'Daniel Harris', rating: '4.0/5', subject: 'Korean', time: '3:30-4:30' },
       ],
     },
   ];
@@ -111,17 +127,20 @@ const lightBlue = '#C9D3FF';
    const onConfirmSingle = React.useCallback(
     (params) => {
       setOpen(false);
-      setSelectedDate(params.date);
+      const localDate = new Date(params.date.getTime() - params.date.getTimezoneOffset() * 60000);
+      setSelectedDate(localDate);
     },
     [setOpen, setSelectedDate]
-   );
+  );
+
     return (
         <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <Text style={[styles.title, {fontSize: 20, marginTop: -35} ]}>Select an Appointment:</Text>
          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+         <Text style={[styles.title, { fontSize: 20, marginTop: -92, marginLeft: 60, fontFamily: 'SF' }]}>Change Date:</Text>
           <TouchableOpacity onPress={() => setOpen(true)} uppercase={false} mode="outlined">
-          <Ionicons name="calendar" size={45} color="tan" style={{ marginRight: 30, marginTop: -35 }} />
+          <Ionicons name="calendar" size={45} color='#FAE8CD' style={{ marginRight: 30, marginTop: -35 }} />
           </TouchableOpacity>
           <DatePickerModal
             locale="en"
@@ -131,7 +150,7 @@ const lightBlue = '#C9D3FF';
             date={selectedDate}
             onConfirm={onConfirmSingle}
           />
-          <Text style={[styles.title, { fontSize: 20, marginTop: -90, marginLeft: 60, fontFamily: 'SF' }]}>Change Date:</Text>
+         
           
           
         </View>

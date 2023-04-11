@@ -42,7 +42,7 @@ const AptRequestScreen = ({ route }) => {
             {["Instructor Name", "Rating", "Subject", "Time Slot"].map((header, index) => (
                 <View key={index} style={styles.headerEntry}>
                 <View style={styles.headerTextWrapper}>
-                    <Text>{header}</Text>
+                    <Text style={styles.headerText}>{header}</Text>
                 </View>
                 </View>
             ))}
@@ -56,7 +56,7 @@ const AptRequestScreen = ({ route }) => {
             ].map((data, index) => (
                 <View key={index} style={styles.dataEntry}>
                 <View style={styles.dataTextWrapper}>
-                    <Text style={{ fontSize: 14 }}>{data}</Text>
+                    <Text style={styles.tableText}>{data}</Text>
                 </View>
                 </View>
             ))}
@@ -97,10 +97,10 @@ const AptRequestScreen = ({ route }) => {
         paddingTop: 40, // Add padding to adjust space
       },      
     title: {
-      fontSize: 30,
+      fontSize: 24,
       fontWeight: 'bold',
       color: tan,
-      marginBottom: 10,
+      marginBottom: 20,
       fontFamily: 'Vikendi'
     },
     date: {
@@ -127,6 +127,7 @@ const AptRequestScreen = ({ route }) => {
         flexGrow: 1,
         flexBasis: 85,
         height: 40,
+        fontSize: 13,
       },
       headerTextWrapper: {
         flex: 1,
@@ -198,6 +199,15 @@ const AptRequestScreen = ({ route }) => {
     color: 'red',
     textAlign: 'center',
     paddingHorizontal: 10,
+    },
+    headerText: {
+    fontSize: 11,
+    //fontWeight: 'bold',
+    marginHorizontal: -10,
+    },
+    tableText: {
+    fontSize: 11,
+    fontWeight: 'bold',
     },
 
     });
