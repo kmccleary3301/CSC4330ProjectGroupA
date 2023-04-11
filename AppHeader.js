@@ -10,11 +10,12 @@ const AppHeader = ({ onHamburgerPress }) => {
             style={styles.menuIcon}
           />
         </TouchableOpacity>
+        <View style={styles.logoWrapper} />
         <Image
           source={require('./assets/logos/blue.png')}
           style={styles.logo}
         />
-        <View style={styles.spacer} />
+        <View />
       </View>
     );
   };
@@ -27,7 +28,7 @@ const AppHeader = ({ onHamburgerPress }) => {
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'start',
       alignItems: 'center',
       width: '100%',
     },
@@ -37,11 +38,12 @@ const AppHeader = ({ onHamburgerPress }) => {
     menuIcon: {
       width: 24,
       height: 24,
+      marginLeft: 20,
     },
     logo: {
       position: 'absolute',
-      width: 45,
-      height: 45,
+      width: 60,
+      height: 60,
       resizeMode: 'contain',
       left: 0,
       right: 0,
@@ -49,10 +51,15 @@ const AppHeader = ({ onHamburgerPress }) => {
       bottom: 0,
       marginHorizontal: 'auto',
       marginVertical: 'auto',
+
     },
     spacer: {
       width: 45,
     },
+    logoWrapper: {
+      width: 45,
+    },
+    
   });
   
   
