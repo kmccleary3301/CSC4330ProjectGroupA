@@ -19,6 +19,7 @@ import Drawer from 'react-native-drawer';
 import SideMenu from './SideMenu';
 import AppHeader from './AppHeader';
 import SubjectSearchScreen from './screens/SubjectSearchScreen';
+import AptRequestScreen from './screens/AptRequestScreen';
 
 
 
@@ -149,6 +150,21 @@ function App(): React.ReactElement{
         <Stack.Screen
           name="SubjectSearchScreen"
           component={SubjectSearchScreen}
+          options={{
+            headerTransparent: false,
+            headerTintColor: '#D2B48C',
+            headerShadowVisible: false,
+            headerStyle: { backgroundColor: '#fae8cd' },
+            headerTitle: '',
+            headerTitleAlign: 'center',
+            headerLeft: () => (
+              <AppHeader onHamburgerPress={() => setDrawerOpen(true)} />
+            ),
+          }}
+        />
+        <Stack.Screen
+          name="AptRequestScreen"
+          component={AptRequestScreen}
           options={{
             headerTransparent: false,
             headerTintColor: '#D2B48C',
