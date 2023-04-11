@@ -19,6 +19,7 @@ import SideMenu from './SideMenu';
 import AppHeader from './AppHeader';
 import SubjectSearchScreen from './screens/SubjectSearchScreen';
 import AptRequestScreen from './screens/AptRequestScreen';
+import AppointmentsScreen from './screens/AppointmentsScreen';
 
 
 
@@ -129,6 +130,11 @@ function App(): React.ReactElement{
             headerStyle: { backgroundColor: '#fae8cd' },
             header: (props) => (
               <AppHeader
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
                 title="Home"
                 menu
                 right="menu"
@@ -151,12 +157,17 @@ function App(): React.ReactElement{
               headerTitleAlign: 'center',
               header: (props) => (
                 <AppHeader
-                  title="Home"
-                  menu
-                  right="menu"
-                  onMenuPress={() => setDrawerOpen(true)}
-                  onLogoutPress={() => console.log('Logout')}
-                  {...props}
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
                 />
               ),
             }}
@@ -173,12 +184,44 @@ function App(): React.ReactElement{
               headerTitleAlign: 'center',
               header: (props) => (
                 <AppHeader
-                  title="Home"
-                  menu
-                  right="menu"
-                  onMenuPress={() => setDrawerOpen(true)}
-                  onLogoutPress={() => console.log('Logout')}
-                  {...props}
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="AppointmentsScreen"
+            component={AppointmentsScreen}
+            options={{
+              headerTransparent: false,
+              headerTintColor: '#D2B48C',
+              headerShadowVisible: false,
+              headerStyle: { backgroundColor: '#fae8cd' },
+              headerTitle: '',
+              headerTitleAlign: 'center',
+              header: (props) => (
+                <AppHeader
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
                 />
               ),
             }}

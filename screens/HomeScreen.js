@@ -4,10 +4,12 @@ import {
   Text,
   Image,
   FlatList,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+//import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Font from 'expo-font'
 import { Ionicons } from '@expo/vector-icons';
 import NavBarContainer from '../NavBar';
@@ -66,10 +68,10 @@ const lightBlue = '#C9D3FF';
         { id: 13, name: 'Elijah Wilson', rating: '4.6/5', subject: 'German', time: '3:30-4:30' },
         { id: 14, name: 'Ava Taylor', rating: '4.5/5', subject: 'Latin', time: '3:30-4:30' },
         { id: 15, name: 'Logan Anderson', rating: '4.4/5', subject: 'Italian', time: '3:30-4:30' },
-       // { id: 16, name: 'Mason Thomas', rating: '4.3/5', subject: 'Russian', time: '3:30-4:30' },
-       // { id: 17, name: 'Ethan Jackson', rating: '4.2/5', subject: 'Japanese', time: '3:30-4:30' },
-       // { id: 18, name: 'Emily Moore', rating: '4.1/5', subject: 'Chinese', time: '3:30-4:30' },
-       // { id: 19, name: 'Daniel Harris', rating: '4.0/5', subject: 'Korean', time: '3:30-4:30' },
+       { id: 16, name: 'Mason Thomas', rating: '4.3/5', subject: 'Russian', time: '3:30-4:30' },
+       { id: 17, name: 'Ethan Jackson', rating: '4.2/5', subject: 'Japanese', time: '3:30-4:30' },
+       { id: 18, name: 'Emily Moore', rating: '4.1/5', subject: 'Chinese', time: '3:30-4:30' },
+       { id: 19, name: 'Daniel Harris', rating: '4.0/5', subject: 'Korean', time: '3:30-4:30' },
       ],
     },
   ];
@@ -151,15 +153,13 @@ const lightBlue = '#C9D3FF';
             onConfirm={onConfirmSingle}
           />
          
-          
-          
         </View>
         <Text style={[styles.title, {fontSize: 18, marginTop: 100, fontFamily: 'SF'}]}>
           {selectedDate.toDateString() === new Date().toDateString() ? "Today, " : ""}
           {selectedDate.toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})}
         </Text>
         
-        <View style={sStyles.table}>
+        <ScrollView style={sStyles.table} contentContainerStyle={{ flexGrow: 1 }}>
         <View style={sStyles.tableRow}>
         <View style={sStyles.headerEntry}>
           <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Instructor Name</Text>
@@ -174,34 +174,34 @@ const lightBlue = '#C9D3FF';
           <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Time Slot</Text>
         </View>
       </View>
-          {appointments.map((appointment) => (
-          <TouchableOpacity
-            key={appointment.id}
-            onPress={() => onAppointmentPress(appointment.id)}
-          >
-            <View
-              style={
-                selectedAppointmentId === appointment.id
-                  ? sStyles.selectedRow
-                  : sStyles.tableRow
-              }
-            >
-              <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.name}</Text>
-              </View>
-              <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.rating}</Text>
-              </View>
-              <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.subject}</Text>
-              </View>
-              <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.time}</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        ))}
+      {appointments.map((appointment) => (
+    <TouchableOpacity
+      key={appointment.id}
+      onPress={() => onAppointmentPress(appointment.id)}
+    >
+      <View
+        style={
+          selectedAppointmentId === appointment.id
+            ? sStyles.selectedRow
+            : sStyles.tableRow
+        }
+      >
+        <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
+          <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.name}</Text>
         </View>
+        <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
+          <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.rating}</Text>
+        </View>
+        <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
+          <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.subject}</Text>
+        </View>
+        <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
+          <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.time}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  ))}
+        </ScrollView>
         <Button
           mode="contained"
           style={sStyles.button}
@@ -217,10 +217,6 @@ const lightBlue = '#C9D3FF';
       
     );
   };
-
-
-
-
 
   const sStyles = StyleSheet.create({
     container: {
@@ -240,6 +236,7 @@ const lightBlue = '#C9D3FF';
     width: '90%',
     borderWidth: 1,
     borderColor: 'black',
+    maxHeight: '50%',
     },
     tableRow: {
     flexDirection: 'row',
