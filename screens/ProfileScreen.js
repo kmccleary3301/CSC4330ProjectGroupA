@@ -30,7 +30,7 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <Text style={[styles.title]}>My Profile</Text>
 
-      <View style={styles.profileContainer}>
+      <View style={styles.profileContainor}>
         {/* Display user profile information */}
         <Text style={styles.profileInfo}>{userProfile.name}</Text>
         <Text style={styles.profileInfo}>{userProfile.email}</Text>
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     button: {
       width: 175,
       height: 50,
-      marginTop: 275,
+      marginTop: 470,
       marginBottom: 10,
       borderRadius: 30,
       borderColor: tan,
