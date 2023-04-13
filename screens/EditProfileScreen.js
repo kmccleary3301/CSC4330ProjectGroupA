@@ -12,78 +12,102 @@ const EditProfileScreen = () => {
     const handleCancel = () => {
         navigation.navigate(ProfileScreen);
     }
+    const handleSaveChanges = () => {
+      navigation.navigate(ProfileScreen)
+      //Obviously it needs to actually save the changes, here just navigates back to the profile screen
+   };
+ 
+
+
+
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={styles.container}>
+          <View style={styles.cancelContainor}>
+            <Pressable
+              onPress = {handleCancel}>
+              <Text style={styles.cancelText}>Cancel</Text>
+            </Pressable>
+          </View>
+
+          <View style={horizontalLine}></View>
+
+
+
+          <Pressable
+            style={[styles.button, styles.saveChangesButton]}
+            onPress={handleSaveChanges}>
+            <Text style={styles.buttonText}>Save changes</Text>
+          </Pressable>
+        </View>
+      <NavBarContainer />
+    </View>
+  );
+  };
   
-//   // Access the passed user profile information from the route prop
-//   const { userProfile } = route.params;
+  
+  
+  const blue = '#182640';
+  const tan = '#FAE8CD'; 
 
-
-//   const [name, setName] = useState(userProfile.name);
-//   const [email, setEmail] = useState(userProfile.email);
-
-
-
-//   const handleSaveProfile = () => {
-//     const updatedUserProfile = {
-//         ...userProfile, 
-//         name: name, 
-//         email: email,    
-//   };
-//   console.log("User profile was updated");
-// };
-
-return (
-    <View style={{ flex: 1 }}>
-    <View style={styles.container}></View>
-
-    <Pressable
-        onPress = {handleCancel}>
-        <Text style={styles.cancelText}>Cancel</Text>
-    </Pressable>
-    <NavBarContainer />
-  </View>
-);
-};
-
-
-
-  // Render the EditProfileScreen UI with the passed user profile information
-//   return (
-//     <View>
-//       <Text>Edit Profile</Text>
-//       <TextInput
-//         value={name}
-//         onChangeText={setName}
-//         placeholder="Name"
-//       />
-//       <TextInput
-//         value={email}
-//         onChangeText={setEmail}
-//         placeholder="Email"
-//       />
-//       <Button title="Save" onPress={handleSaveProfile} />
-//     </View>
-//   );
-// };
-
-const blue = '#182640';
-const tan = '#FAE8CD'; 
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        backgroundColor: '#182640',
-        paddingTop: 120,
+  const horizontalLine = {
+    borderWidth: 1,
+    borderColor: 'tan',
+    marginVertical: 10,
+  };
+  
+  const styles = StyleSheet.create({
+      container: {
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          backgroundColor: '#182640',
+          paddingTop: 120,
+        },
+      cancelText: {
+          fontFamily: 'SF',
+          fontSize: 15,
+          color: tan,
+          backgroundColor: blue,
+          padding: 5,
       },
-    cancelText: {
-        fontFamily: 'SF',
-        fontSize: 15,
-        color: tan,
+      cancelContainor: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        padding: 16,
+        zIndex: 999,
+        flexDirection: 'row',
+        alignItems: 'center',
+      },
+      button: {
+        width: 175,
+        height: 50,
+        marginTop: 440, //subject to change as page evolves
+        marginBottom: 10,
+        borderRadius: 30,
+        borderColor: tan,
+        borderWidth: 4.5,
+        padding: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
         backgroundColor: blue,
-        padding: 5,
-    },
-});
-
-
-export default EditProfileScreen;
+        },
+      buttonText: {
+        color: tan,
+        fontSize: 20,
+        fontFamily: 'SF',
+        },
+      saveChangesButton: {
+        backgroundColor: blue,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 30,
+        borderColor: tan,
+        borderWidth: 4,
+      },
+  });
+  
+  
+  export default EditProfileScreen;

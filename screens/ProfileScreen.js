@@ -1,3 +1,6 @@
+//just need to implement the profile picture!!
+
+
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -15,9 +18,16 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   const userProfile = {
-    name: "John Doe",
-    email:"johndoe@ex.com",
-    //more fields to come
+    name: "Mike Tiger",
+    email:"mtiger1@lsu.edu",
+    pronouns:"He/his/him",
+    userType:"Student",
+    school:"Lousiana State University",
+    subject1: "Astronomy",
+    subject2: "Calculus",
+    subject3: "Computer Science",
+    subject4: "English",
+    subject5: "Geology",
   };
 
 
@@ -29,18 +39,26 @@ const ProfileScreen = () => {
     <View style={{ flex: 1 }}>
     <View style={styles.container}>
       <Text style={[styles.title]}>My Profile</Text>
-
-      <View style={styles.profileContainor}>
-        {/* Display user profile information */}
-        <Text style={styles.profileInfo}>{userProfile.name}</Text>
-        <Text style={styles.profileInfo}>{userProfile.email}</Text>
-
+        <View style={styles.profileContainor}>
+          {/* <View style={styles.profilePicPlaceholder}></View> */}
+          <Text style={styles.profileInfo}>{userProfile.name}                {[userProfile.pronouns]}</Text>
+          <Text style={styles.profileInfo}>{userProfile.email}</Text>
+          <Text style={styles.userType}>{userProfile.userType}</Text>
+          <Text style={styles.school}>{userProfile.school}</Text>
+        </View>
+        <Text style={styles.subtitle}>My Subjects:</Text>
+        <View style={styles.subjectsContainor}>
+          <Text style={styles.subjects}>{userProfile.subject1}</Text>
+          <Text style={styles.subjects}>{userProfile.subject2}</Text>
+          <Text style={styles.subjects}>{userProfile.subject3}</Text>
+          <Text style={styles.subjects}>{userProfile.subject4}</Text>
+          <Text style={styles.subjects}>{userProfile.subject5}</Text>
+       </View>
       <Pressable
           style={[styles.button, styles.editProfileButton]}
           onPress={handleEditProfile}>
         <Text style={styles.buttonText}>Edit Profile</Text>
       </Pressable>
-    </View>
     </View>
     <NavBarContainer />
   </View>
@@ -56,7 +74,7 @@ const styles = StyleSheet.create({
     button: {
       width: 175,
       height: 50,
-      marginTop: 470,
+      marginTop: 150,
       marginBottom: 10,
       borderRadius: 30,
       borderColor: tan,
@@ -72,7 +90,6 @@ const styles = StyleSheet.create({
       fontSize: 20,
       fontFamily: 'SF',
       },
-
     editProfileButton: {
       backgroundColor: blue,
       paddingHorizontal: 20,
@@ -81,7 +98,7 @@ const styles = StyleSheet.create({
       borderColor: tan,
       borderWidth: 4,
     },
-  container: {
+    container: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'flex-start',
@@ -94,36 +111,66 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       color: tan,
       fontFamily: 'Vikendi',
+      marginBottom: 30,
     },
     subtitle: {
-      fontSize: 15,
+      fontSize: 18,
       fontWeight: 'bold',
       color: tan,
       fontFamily: 'Vikendi',
-    },
-    profileContainor: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
+      marginTop: 50,
     },
     profileInfo: {
       marginBottom: 5,
       fontWeight: 'bold',
       color: tan,
       fontFamily: 'SF',
-      fontSize: 13,
-      textAlign: "left",
+      fontSize: 17,
     },
-    positionAndSubjects: {
+    userType: {
       color: tan,
       fontFamily: 'SF',
-      fontSize: 13,
+      fontSize: 17,
+      marginBottom: 5,
+    }, 
+    school: {
+      color: tan,
+      fontFamily: 'SF',
+      fontSize: 17,
+    },
+    subjects: {
+      color: tan,
+      fontFamily: 'SF',
+      fontSize: 17,
+      marginBottom: 5,
     }, 
     pronouns: {
       color: tan,
       fontFamily: 'SF',
-      fontSize: 11,
+      fontSize: 17,
     },
+    profileContainor: {
+      alignItems: 'flex-start', 
+      justifyContent: 'center',
+    },
+    subjectsContainor: {
+      marginTop: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    // couldnt get image imports so temporary placeholder
+    profilePicPlaceholder: {
+      width: 50, 
+      height: 50,
+      borderRadius: 25, // Set border radius to half og width/height to make it circular
+      backgroundColor: 'pink'
+    },
+    pictureContainor: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+
 });
 
 export default ProfileScreen;
