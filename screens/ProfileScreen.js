@@ -32,7 +32,7 @@ const ProfileScreen = () => {
 
 
   const handleEditProfile = () => {
-     navigation.navigate('EditProfileScreen', {userProfile})
+     navigation.navigate('EditProfileScreen', {userProfile: userProfile})
   };
 
   return (
@@ -62,6 +62,7 @@ const ProfileScreen = () => {
     </View>
     <NavBarContainer />
   </View>
+  
   );
 };
 
