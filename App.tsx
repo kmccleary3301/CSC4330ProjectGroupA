@@ -23,6 +23,7 @@ import SubjectSearchScreen from './screens/SubjectSearchScreen';
 import AptRequestScreen from './screens/AptRequestScreen';
 import AppointmentsScreen from './screens/AppointmentsScreen';
 import RegisterInfoScreen from './screens/RegisterInfoScreen';
+import SubjectAddScreen from './screens/SubjectAddScreen';
 
 
 
@@ -155,6 +156,8 @@ function App(): React.ReactElement{
       />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen}
         options={getScreenOptions('external')} />
+        <Stack.Screen name="SubjectAddScreen" component={SubjectAddScreen}
+        options={getScreenOptions('external')} />
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
@@ -162,7 +165,7 @@ function App(): React.ReactElement{
         />
         <Stack.Screen name="RegisterInfoScreen" component={RegisterInfoScreen}
         options={getScreenOptions('external')} />
-        
+
           <Stack.Screen
             name="SubjectSearchScreen"
             component={SubjectSearchScreen}

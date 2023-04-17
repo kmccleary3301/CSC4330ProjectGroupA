@@ -20,10 +20,12 @@ const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [userType, setUserType] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
-  const handleRegister = () => {
+  const handleNext = () => {
     // Perform registration logic here
+    navigation.navigate('RegisterInfoScreen');
   };
 
   return (
@@ -45,18 +47,20 @@ const RegisterScreen = ({ navigation }) => {
         <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
           Create a new account with your university email.
         </Text>
-        <Picker
-          style={[styles.picker, { paddingLeft: 5 }]}
-          selectedValue={userType}
-          onValueChange={(itemValue) => setUserType(itemValue)}
-          prompt="I am a..."
-          mode="dropdown"
-        >
-          <Picker.Item label="I am a..." value="" />
-          <Picker.Item label="Student" value="student" />
-          <Picker.Item label="Tutor" value="tutor" />
-          <Picker.Item label="Administrator" value="administrator" />
-        </Picker>
+        <TextInput
+          style={styles.inputField}
+          onChangeText={setFirstName}
+          value={firstName}
+          placeholder="First Name"
+          autoCapitalize="words"
+        />
+        <TextInput
+          style={styles.inputField}
+          onChangeText={setLastName}
+          value={lastName}
+          placeholder="Last Name"
+          autoCapitalize="words"
+        />
         <TextInput
           style={styles.inputField}
           onChangeText={setEmail}
@@ -83,9 +87,9 @@ const RegisterScreen = ({ navigation }) => {
         />
         <TouchableOpacity
           style={[styles.button, styles.loginButton, { width: '50%' }]}
-          onPress={[handleRegister, () => navigation.navigate('RegisterInfoScreen')]}
+          onPress={handleNext}
         >
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
         <View style={[styles.linkContainer, { marginTop: 16 }]}>
           <Text style={styles.linkText}>Already have an account?</Text>

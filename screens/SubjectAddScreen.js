@@ -12,7 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
 
 
-const RegisterInfoScreen = ({ navigation }) => {
+const SubjectAddScreen = ({ navigation }) => {
 
 
 
@@ -45,7 +45,7 @@ const RegisterInfoScreen = ({ navigation }) => {
       <Text style={[styles.title, { textAlign: 'center', marginBottom: 0, paddingBottom: 0 }]}>Register</Text>
       <View style={styles.registerBody}>
         <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
-          We just need a few more things before your account is created.
+          Lastly, you'll just need to add your subjects of interest.
         </Text>
         <Picker
           style={[styles.picker, { paddingLeft: 5 }]}
@@ -77,7 +77,7 @@ const RegisterInfoScreen = ({ navigation }) => {
         <TouchableOpacity onPress={handleNext}
           style={[styles.button, styles.loginButton, { width: '50%' }]}
         >
-          <Text style={styles.buttonText}>Next</Text>
+          <Text style={styles.buttonText}>Finish</Text>
         </TouchableOpacity>
         <View style={[styles.linkContainer, { marginTop: 16 }]}>
           <Text style={styles.linkText}>Already have an account?</Text>
@@ -91,7 +91,7 @@ const RegisterInfoScreen = ({ navigation }) => {
 };
 
 
-RegisterInfoScreen.navigationOptions = ({ navigation }) => ({
+SubjectAddScreen.navigationOptions = ({ navigation }) => ({
   headerLeft: () => (
     <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
       <View style={{ marginLeft: 20, marginTop: 10 }}>
@@ -104,4 +104,4 @@ RegisterInfoScreen.navigationOptions = ({ navigation }) => ({
   ),
 });
 
-export default RegisterInfoScreen;
+export default SubjectAddScreen;
