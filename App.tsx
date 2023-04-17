@@ -22,6 +22,7 @@ import AppHeader from './AppHeader';
 import SubjectSearchScreen from './screens/SubjectSearchScreen';
 import AptRequestScreen from './screens/AptRequestScreen';
 import AppointmentsScreen from './screens/AppointmentsScreen';
+import RegisterInfoScreen from './screens/RegisterInfoScreen';
 
 
 
@@ -159,6 +160,9 @@ function App(): React.ReactElement{
           component={HomeScreen}
           options={getScreenOptions('internal')}
         />
+        <Stack.Screen name="RegisterInfoScreen" component={RegisterInfoScreen}
+        options={getScreenOptions('external')} />
+        
           <Stack.Screen
             name="SubjectSearchScreen"
             component={SubjectSearchScreen}

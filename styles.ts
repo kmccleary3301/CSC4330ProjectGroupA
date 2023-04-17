@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+    maxWidth: 150,
   },
   backButton: {
   position: 'absolute',

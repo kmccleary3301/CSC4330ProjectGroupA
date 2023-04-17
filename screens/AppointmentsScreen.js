@@ -228,9 +228,10 @@ const AppointmentsScreen = () => {
       </View>
       {pastAppointments.map((appointment) => (
     <TouchableOpacity
+        style={{ marginBottom: 0, paddingBottom: 0 }}
       key={appointment.id}
       onPress={() => onAppointmentPress(appointment.id)}
-    >
+     >
       <View
         style={
           selectedAppointmentId === appointment.id
@@ -292,7 +293,7 @@ const sStyles = StyleSheet.create({
         width: '90%',
         borderWidth: 1,
         borderColor: 'black',
-        maxHeight: 250,
+        maxHeight: 200,
         },
         tableRow: {
         flexDirection: 'row',

@@ -12,18 +12,18 @@ import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
 
 
-const RegisterScreen = ({ navigation }) => {
+const RegisterInfoScreen = ({ navigation }) => {
 
 
 
 
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [userType, setUserType] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
   const handleRegister = () => {
-    // Perform registration logic here
+    // Perform registration logic and navigate to the next screen
+    navigation.navigate('HomeScreen');
   };
 
   return (
@@ -43,47 +43,26 @@ const RegisterScreen = ({ navigation }) => {
       <Text style={[styles.title, { textAlign: 'center', marginBottom: 0, paddingBottom: 0 }]}>Register</Text>
       <View style={styles.registerBody}>
         <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
-          Create a new account with your university email.
+          We just need a few more things before your account is created.
         </Text>
-        <Picker
-          style={[styles.picker, { paddingLeft: 5 }]}
-          selectedValue={userType}
-          onValueChange={(itemValue) => setUserType(itemValue)}
-          prompt="I am a..."
-          mode="dropdown"
-        >
-          <Picker.Item label="I am a..." value="" />
-          <Picker.Item label="Student" value="student" />
-          <Picker.Item label="Tutor" value="tutor" />
-          <Picker.Item label="Administrator" value="administrator" />
-        </Picker>
         <TextInput
           style={styles.inputField}
-          onChangeText={setEmail}
-          value={email}
-          placeholder="Email"
-          keyboardType="email-address"
-          autoCapitalize="none"
+          onChangeText={setFirstName}
+          value={firstName}
+          placeholder="First Name"
+          autoCapitalize="words"
         />
         <TextInput
           style={styles.inputField}
-          onChangeText={setPassword}
-          value={password}
-          placeholder="Password"
-          secureTextEntry
-          autoCapitalize="none"
+          onChangeText={setLastName}
+          value={lastName}
+          placeholder="Last Name"
+          autoCapitalize="words"
         />
-        <TextInput
-          style={styles.inputField}
-          onChangeText={setConfirmPassword}
-          value={confirmPassword}
-          placeholder="Confirm Password"
-          secureTextEntry
-          autoCapitalize="none"
-        />
+        
         <TouchableOpacity
           style={[styles.button, styles.loginButton, { width: '50%' }]}
-          onPress={[handleRegister, () => navigation.navigate('RegisterInfoScreen')]}
+          onPress={() => navigation.navigate('HomeScreen')}
         >
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
@@ -99,7 +78,7 @@ const RegisterScreen = ({ navigation }) => {
 };
 
 
-RegisterScreen.navigationOptions = ({ navigation }) => ({
+RegisterInfoScreen.navigationOptions = ({ navigation }) => ({
   headerLeft: () => (
     <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
       <View style={{ marginLeft: 20, marginTop: 10 }}>
@@ -112,4 +91,4 @@ RegisterScreen.navigationOptions = ({ navigation }) => ({
   ),
 });
 
-export default RegisterScreen;
+export default RegisterInfoScreen;
