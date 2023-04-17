@@ -13,6 +13,8 @@ import InitialScreen from './screens/InitialScreen';
 import MySplashScreen from './screens/MySplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
 import HomeScreen from './screens/HomeScreen';
 import Drawer from 'react-native-drawer';
 import SideMenu from './SideMenu';
@@ -20,6 +22,7 @@ import AppHeader from './AppHeader';
 import SubjectSearchScreen from './screens/SubjectSearchScreen';
 import AptRequestScreen from './screens/AptRequestScreen';
 import AppointmentsScreen from './screens/AppointmentsScreen';
+import RegisterInfoScreen from './screens/RegisterInfoScreen';
 
 
 
@@ -157,11 +160,22 @@ function App(): React.ReactElement{
           component={HomeScreen}
           options={getScreenOptions('internal')}
         />
+        <Stack.Screen name="RegisterInfoScreen" component={RegisterInfoScreen}
+        options={getScreenOptions('external')} />
+        
           <Stack.Screen
             name="SubjectSearchScreen"
             component={SubjectSearchScreen}
             options={getScreenOptions('internal')}
           />
+        <Stack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
+        />
+        <Stack.Screen
+            name="EditProfileScreen"
+            component={EditProfileScreen}
+        />
         <Stack.Screen
             name="AptRequestScreen"
             component={AptRequestScreen}

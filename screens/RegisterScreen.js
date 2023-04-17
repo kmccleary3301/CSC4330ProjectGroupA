@@ -126,7 +126,7 @@ const RegisterScreen = ({ navigation }) => {
        
         <TouchableOpacity
           style={[styles.button, styles.loginButton, { width: '50%' }]}
-          onPress={handleRegister}
+          onPress={[handleRegister, () => navigation.navigate('RegisterInfoScreen')]}
         >
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
