@@ -1,6 +1,5 @@
 import React, {useState} from "react";
-import { View, Text, StyleSheet, Pressable, TextInput } from "react-native";
-import ProfileScreen from "./ProfileScreen";
+import { View, Text, StyleSheet, Pressable, TextInput, Picker } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import NavBarContainer from '../NavBar';
 
@@ -13,8 +12,39 @@ const EditProfileScreen = ({ route }) => {
   const [email, setEmail] = useState(userProfile.email);
   const [pronouns, setPronouns] = useState(userProfile.pronouns);
   const [userSubjects, setUserSubjects] = useState([]);
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
 
 
+  // Function to handle subject selection
+  const handleSubjectChange = (subject) => {
+    setSelectedSubject(subject);
+  };
+
+  // should alphabetize them for sure
+  const subjects = [
+    'Accounting',
+    'Science',
+    'English Literature',
+    'English',
+    'Computer Science',
+    'Geography',
+    'Geology',
+    'Calculus',
+    'Algebra',
+    'Architecture',
+    'Art History',
+    'Anthropology',
+    'History',
+    'Social Work',
+    'Sociology',
+    'Pyschology',
+  ];
+
+  // Function to toggle dropdown visibility
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
 
   const handleCancel = () => {
     navigation.goBack();
@@ -28,7 +58,7 @@ const EditProfileScreen = ({ route }) => {
       pronouns: pronouns,
       subjects: userSubjects ?? []
     };
-    onUpdateProfile(updatedUserProfile); // Call onUpdateProfile with the updated userProfile
+    onUpdateProfile(updatedUserProfile); 
     navigation.goBack();
   };
 
@@ -88,7 +118,6 @@ const EditProfileScreen = ({ route }) => {
           {userProfile.subject1 && (
             <View style={styles.subjectContainor}>
               <Pressable
-                style={styles.deleteButton}
                 onPress={() => handleDeleteSubject(0)}>
                 <Text style={styles.deleteButtonText}>-</Text>
               </Pressable>
@@ -131,17 +160,34 @@ const EditProfileScreen = ({ route }) => {
               <Text style={styles.subjectsText}>{userProfile.subject5}</Text>
             </View>
           )}
-                  
-        <View style={styles.subjectContainor}>
-          <Pressable
-            onPress={() => handleAddSubject}>
-            <Text style={styles.deleteButtonText}>+</Text>
-          </Pressable>
-          <Text style={styles.subjectsText}>Add course</Text>
+          <View>
+          <View style={styles.subjectContainor}>
+            <Pressable
+              onPress={() => toggleDropdown()}
+            >
+              <Text style={styles.deleteButtonText}>+</Text>
+            </Pressable>
+            {showDropdown ? ( 
+              <Picker
+                selectedValue={selectedSubject}
+                onValueChange={handleSubjectChange}
+              >
+                {subjects.map((subject, index) => (
+                  <Picker.Item
+                    key={index}
+                    label={subject}
+                    value={subject}
+                  />
+                ))}
+              </Picker>
+            ) : (
+              <Text style={styles.subjectsText}>Add course</Text> 
+            )}
+          </View>
         </View>
         </View>
         
-
+        
 
           <Pressable
             style={[styles.saveChangesButton, styles.saveChangesButton]}
