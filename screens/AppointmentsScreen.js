@@ -26,16 +26,6 @@ const AppointmentsScreen = () => {
     // ...
 
     // Example appointment object
-        {   
-            id: 1,
-            name: 'John Doe',
-            rating: 4.5,
-            subject: 'Math',
-            time: '10:00 AM',
-            date: '2020-12-01',
-            location: 'Online',
-            status: 'Approved',
-        },
         {
             id: 2,
             name: 'Jane Doe',
