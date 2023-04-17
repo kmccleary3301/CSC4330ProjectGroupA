@@ -6,6 +6,5 @@ export type RootStackParamList = {
     HomeScreen: undefined;
     ProfileScreen: undefined;
     AppointmentsScreen: undefined;
-    EditProfileScreen: undefined;
   };
   
