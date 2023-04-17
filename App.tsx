@@ -13,6 +13,8 @@ import InitialScreen from './screens/InitialScreen';
 import MySplashScreen from './screens/MySplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
 import HomeScreen from './screens/HomeScreen';
 import Drawer from 'react-native-drawer';
 import SideMenu from './SideMenu';
@@ -66,6 +68,7 @@ function App(): React.ReactElement{
         setFontsLoaded(true);
         SplashScreen.hideAsync().catch(() => {});
       })
+      
       .catch(console.error);
 
     return () => clearTimeout(timer);
@@ -73,48 +76,6 @@ function App(): React.ReactElement{
     if (!fontsLoaded || !hideSplashScreen) {
       return <MySplashScreen />;
     }
-
-    const getScreenOptions = (type: 'internal' | 'external', overrides = {}) => {
-      const internalOptions = {
-        headerTransparent: false,
-        headerTintColor: '#D2B48C',
-        headerShadowVisible: false,
-        headerStyle: { backgroundColor: '#fae8cd' },
-        headerTitle: '',
-        headerTitleAlign: 'center',
-        header: (props) => (
-          <AppHeader
-            style
-            back={false}
-            headerBg="#fae8cd"
-            iconColor="#182640"
-            tintColor
-            title="Home"
-            menu
-            right="menu"
-            onMenuPress={() => setDrawerOpen(true)}
-            onLogoutPress={() => console.log('Logout')}
-            {...props}
-          />
-        ),
-      };
-  
-      const externalOptions = {
-        headerTransparent: true,
-        headerTintColor: 'tan',
-        headerTitle: '',
-        headerShadowVisible: false,
-      };
-  
-      const baseOptions = type === 'internal' ? internalOptions : externalOptions;
-  
-      return {
-        ...baseOptions,
-        ...overrides,
-      };
-    };
-  
-    
   
   return (
    <Drawer
@@ -148,29 +109,175 @@ function App(): React.ReactElement{
         <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
-        options={getScreenOptions('external')}
+        options={{
+          headerTransparent: true,
+          headerTintColor: 'tan',
+          headerTitle: '',
+          headerShadowVisible: false,
+        }}
       />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen}
-        options={getScreenOptions('external')} />
+        options={{
+          headerTransparent: true,
+          headerTintColor: 'tan',
+          headerTitle: '',
+          headerShadowVisible: false,
+        }} />
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
-          options={getScreenOptions('internal')}
+          options={{
+            headerTransparent: false,
+            headerTintColor: '#D2B48C',
+            headerShadowVisible: false,
+            headerStyle: { backgroundColor: '#fae8cd' },
+            header: (props) => (
+              <AppHeader
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
+              />
+            ),
+          }}
         />
           <Stack.Screen
             name="SubjectSearchScreen"
             component={SubjectSearchScreen}
-            options={getScreenOptions('internal')}
+            options={{
+              headerTransparent: false,
+              headerTintColor: '#D2B48C',
+              headerShadowVisible: false,
+              headerStyle: { backgroundColor: '#fae8cd' },
+              headerTitle: '',
+              headerTitleAlign: 'center',
+              header: (props) => (
+                <AppHeader
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
+                />
+              ),
+            }}
           />
-        <Stack.Screen
+          <Stack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
+            options={{
+            headerTransparent: false,
+            headerTintColor: '#D2B48C',
+            headerShadowVisible: false,
+            headerStyle: { backgroundColor: '#fae8cd' },
+            header: (props) => (
+              <AppHeader
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="EditProfileScreen"
+            component={EditProfileScreen}
+            options={{
+            headerTransparent: false,
+            headerTintColor: '#D2B48C',
+            headerShadowVisible: false,
+            headerStyle: { backgroundColor: '#fae8cd' },
+            header: (props) => (
+              <AppHeader
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
             name="AptRequestScreen"
             component={AptRequestScreen}
-            options={getScreenOptions('internal')}
+            options={{
+              headerTransparent: false,
+              headerTintColor: '#D2B48C',
+              headerShadowVisible: false,
+              headerStyle: { backgroundColor: '#fae8cd' },
+              headerTitle: '',
+              headerTitleAlign: 'center',
+              header: (props) => (
+                <AppHeader
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
+                />
+              ),
+            }}
           />
           <Stack.Screen
             name="AppointmentsScreen"
             component={AppointmentsScreen}
-            options={getScreenOptions('internal')}
+            options={{
+              headerTransparent: false,
+              headerTintColor: '#D2B48C',
+              headerShadowVisible: false,
+              headerStyle: { backgroundColor: '#fae8cd' },
+              headerTitle: '',
+              headerTitleAlign: 'center',
+              header: (props) => (
+                <AppHeader
+                style
+                back={false}
+                headerBg='#fae8cd'
+                iconColor
+                tintColor
+                title="Home"
+                menu
+                right="menu"
+                onMenuPress={() => setDrawerOpen(true)}
+                onLogoutPress={() => console.log('Logout')}
+                {...props}
+                />
+              ),
+            }}
           />
       </Stack.Navigator>
     </NavigationContainer>

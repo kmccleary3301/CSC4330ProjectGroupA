@@ -57,7 +57,7 @@ const AppHeader = ({
       {title && (
         <Image
         source={require('./assets/logos/blue.png')}
-        style={{ ...styles.logo }}
+        style={{ ...styles.logo, tintColor }}
         resizeMode="contain"
       />
       )}

@@ -48,43 +48,6 @@ const AppointmentsScreen = () => {
             status: 'Pending',
             appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
         },
-        {
-          id: 3,
-          name: 'James Dunsen',
-          rating: 4.5,
-          subject: 'Astronomy',
-          time: '10:00 AM',
-          date: '2023-24-02',
-          duration: '1 hour',
-          location: 'Online',
-          status: 'Pending',
-          appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
-      },
-      {
-        id: 4,
-        name: 'Michael Bergeron',
-        rating: 4.5,
-        subject: 'Comp Sci',
-        time: '10:00 AM',
-        date: '2023-24-02',
-        duration: '1 hour',
-        location: 'Online',
-        status: 'Pending',
-        appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
-    },
-    {
-      id: 5,
-      name: 'Hailey Martinez',
-      rating: 4.5,
-      subject: 'English',
-      time: '10:00 AM',
-      date: '2023-01-03',
-      duration: '1 hour',
-      location: 'Online',
-      status: 'Pending',
-      appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
-  },
-
   ];
 
   const pastAppointments = [
@@ -100,56 +63,7 @@ const AppointmentsScreen = () => {
         location: 'Online',
         status: 'Completed',
         appointmentNotes: 'I am illiterate.',
-      },
-
-      {
-        id: 2,
-        name: 'Jessica Juarez',
-        rating: 4,
-        subject: 'Calculus',
-        time: '10:00 AM',
-        date: '2023-23-03',
-        duration: '1 hour',
-        location: 'Online',
-        status: 'Completed',
-        appointmentNotes: 'I am illiterate.',
-      },
-      {
-        id: 3,
-        name: 'Michael Bergeron',
-        rating: 4.5,
-        subject: 'Comp Sci',
-        time: '10:00 AM',
-        date: '2023-24-02',
-        duration: '1 hour',
-        location: 'Online',
-        status: 'Pending',
-        appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
-     },
-     {
-        id: 4,
-        name: 'Michael Bergeron',
-        rating: 4.5,
-        subject: 'Comp Sci',
-        time: '10:00 AM',
-        date: '2023-24-02',
-        duration: '1 hour',
-        location: 'Online',
-        status: 'Pending',
-        appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
-      },
-      {
-        id: 5,
-        name: 'Michael Bergeron',
-        rating: 4.5,
-        subject: 'Comp Sci',
-        time: '10:00 AM',
-        date: '2023-24-02',
-        duration: '1 hour',
-        location: 'Online',
-        status: 'Pending',
-        appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
-      },
+      }
       
   ];
 
@@ -169,8 +83,8 @@ const AppointmentsScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       
-      <View style={[styles.container,{ alignItems: 'center' }]}>
-        <Text style={[styles.title, { fontSize: 20,   marginTop: -45 }]}>My Appointments:</Text>
+      <View style={[styles.container,{ alignItems: 'center', marginTop: 20 }]}>
+        <Text style={[styles.title, { fontSize: 20 }]}>My Appointments</Text>
 
         {/* My Appointments Table */}
         <ScrollView style={sStyles.table} contentContainerStyle={{ flexGrow: 1 }}>
@@ -217,8 +131,8 @@ const AppointmentsScreen = () => {
   ))}
         </ScrollView>
         </View>
-        <View style={[styles.container,{ alignItems: 'center' }]}> 
-        <Text style={[styles.title, { fontSize: 20,   marginTop: -45 }]}>Past Appointments:</Text>
+        <View style={[styles.container,{ alignItems: 'center', marginTop: 20 }]}>
+        <Text style={[styles.title, { fontSize: 20 }]}>Past Appointments</Text>
 
         {/* Past Appointments Table */}
         <ScrollView style={sStyles.table} contentContainerStyle={{ flexGrow: 1 }}>
@@ -263,22 +177,12 @@ const AppointmentsScreen = () => {
       </View>
     </TouchableOpacity>
   ))}
-       {/* <TouchableOpacity onPress={navigateToHistory}>
-          <Text style={{ color: blue, fontSize: 16, marginBottom: 20, marginTop: 10,  textDecorationLine: 'underline' }}>See all history</Text>
-      </TouchableOpacity> */}
-        
         </ScrollView>
-          <View style={{ alignItems: 'center' }}>
-            <TouchableOpacity onPress={() => navigation.navigate('HistoryScreen')}>
-              <Text style={{ color: 'beige', fontSize: 16, fontFamily: 'SF', marginTop: 10 }}>See all history</Text>
-            </TouchableOpacity>
-          </View>
-
         </View>
 
-        
-
-        
+        <TouchableOpacity onPress={navigateToHistory}>
+          <Text style={{ color: blue, fontSize: 16, textDecorationLine: 'underline', marginTop: 20 }}>See all history</Text>
+        </TouchableOpacity>
       <NavBarContainer />
     </View>
   );
@@ -298,11 +202,10 @@ const sStyles = StyleSheet.create({
         fontFamily: 'Vikendi',
         },
         table: {
-        marginTop: -60,
         width: '90%',
         borderWidth: 1,
         borderColor: 'black',
-        maxHeight: 250,
+        maxHeight: 120,
         },
         tableRow: {
         flexDirection: 'row',
