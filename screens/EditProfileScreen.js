@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, TextInput } from "react-native";
 import ProfileScreen from "./ProfileScreen";
 import { useNavigation } from "@react-navigation/native";
 import NavBarContainer from '../NavBar';
@@ -7,32 +7,38 @@ import NavBarContainer from '../NavBar';
 
 
 const EditProfileScreen = ({ route }) => {
-    const { userProfile } = route.params;
-    const navigation = useNavigation();
-    const [userSubjects, setUserSubjects] = useState([]);
-    
-
-    const handleCancel = () => {
-        navigation.goBack();
-    }
-    const handleSaveChanges = () => {
-      const updatedUserProfile = {
-        ...userProfile,
-        subjects: userSubjects ?? []
-      };
-      navigation.goBack(null, {userProfile: updatedUserProfile});
-   };
+  const { userProfile, onUpdateProfile } = route.params; // Get userProfile and onUpdateProfile from route params
+  const navigation = useNavigation();
+  const [name, setName] = useState(userProfile.name);
+  const [email, setEmail] = useState(userProfile.email);
+  const [pronouns, setPronouns] = useState(userProfile.pronouns);
+  const [userSubjects, setUserSubjects] = useState([]);
 
 
-   const handleDeleteSubject = (index) => {
+
+  const handleCancel = () => {
+    navigation.goBack();
+  }
+
+  const handleSaveChanges = () => {
+    const updatedUserProfile = {
+      ...userProfile,
+      name: name,
+      email: email,
+      pronouns: pronouns,
+      subjects: userSubjects ?? []
+    };
+    onUpdateProfile(updatedUserProfile); // Call onUpdateProfile with the updated userProfile
+    navigation.goBack();
+  };
+
+  const handleDeleteSubject = (index) => {
     const updatedSubjects = [...userSubjects];
     updatedSubjects.splice(index, 1);
-    if (updatedSubjects !== undefined && updatedSubjects !== null) {
-      setUserSubjects(updatedSubjects);
-    }
+    setUserSubjects(updatedSubjects);
   };
   
-
+  
 
     return (
       <View style={{ flex: 1 }}>
@@ -45,73 +51,100 @@ const EditProfileScreen = ({ route }) => {
             </Pressable>
           </View>
 
-
           <View style={styles.profileInfoContainer}>
-            <Text style={styles.profileInfoLabel}>Name: </Text>
-            <Text style={styles.profileInfoValue}>{userProfile.name}</Text>
+            <View style={styles.nameContainer}>
+              <Text style={styles.profileInfoLabel}>Name:          </Text>
+              <TextInput
+              style={styles.profileInfoValue}
+              value={name}
+              onChangeText={setName}
+            />
+            </View>
+
+          <View style={styles.nameContainer}>
+            <Text style={styles.profileInfoLabel}>Email:    </Text>
+            <TextInput
+              style={styles.profileInfoValue}
+              value={email}
+              onChangeText={setEmail}
+          />          
           </View>
 
-          <View style={styles.profileInfoContainer}>
-            <Text style={styles.profileInfoLabel}>Email: </Text>
-            <Text style={styles.profileInfoValue}>{userProfile.email}</Text>
-          </View>
-
-          <View style={styles.profileInfoContainer}>
+          <View style={styles.nameContainer}>
             <Text style={styles.profileInfoLabel}>Pronouns: </Text>
-            <Text style={styles.profileInfoValue}>{userProfile.pronouns}</Text>
+            <TextInput
+            style={styles.profileInfoValue}
+            value={pronouns}
+            onChangeText={setPronouns}
+          />          
           </View>
-
-
-
+          </View>
 
 
 
           <Text style={styles.subtitle}>My Subjects: </Text>
+          
           <View style={styles.subjectsContainor}>
+          {userProfile.subject1 && (
             <View style={styles.subjectContainor}>
-              <Text style={styles.subjects}>{userProfile.subject1}</Text>
               <Pressable
                 style={styles.deleteButton}
                 onPress={() => handleDeleteSubject(0)}>
                 <Text style={styles.deleteButtonText}>-</Text>
               </Pressable>
+              <Text style={styles.subjectsText}>{userProfile.subject1}</Text>
             </View>
+          )}
+          {userProfile.subject2 && (
             <View style={styles.subjectContainor}>
-              <Text style={styles.subjects}>{userProfile.subject2}</Text>
               <Pressable
-                style={styles.deleteButton}
                 onPress={() => handleDeleteSubject(1)}>
                 <Text style={styles.deleteButtonText}>-</Text>
               </Pressable>
-            </View> 
+              <Text style={styles.subjectsText}>{userProfile.subject2}</Text>
+            </View>
+          )}
+          {userProfile.subject3 && (
             <View style={styles.subjectContainor}>
-              <Text style={styles.subjects}>{userProfile.subject3}</Text>
               <Pressable
-                style={styles.deleteButton}
                 onPress={() => handleDeleteSubject(2)}>
                 <Text style={styles.deleteButtonText}>-</Text>
               </Pressable>
-            </View> 
+              <Text style={styles.subjectsText}>{userProfile.subject3}</Text>
+            </View>
+          )}
+          {userProfile.subject4 && (
             <View style={styles.subjectContainor}>
-              <Text style={styles.subjects}>{userProfile.subject4}</Text>
               <Pressable
-                style={styles.deleteButton}
                 onPress={() => handleDeleteSubject(3)}>
                 <Text style={styles.deleteButtonText}>-</Text>
               </Pressable>
+              <Text style={styles.subjectsText}>{userProfile.subject4}</Text>
             </View>
+          )}
+          {userProfile.subject5 && (
             <View style={styles.subjectContainor}>
-              <Text style={styles.subjects}>{userProfile.subject5}</Text>
               <Pressable
-                style={styles.deleteButton}
                 onPress={() => handleDeleteSubject(4)}>
                 <Text style={styles.deleteButtonText}>-</Text>
               </Pressable>
+              <Text style={styles.subjectsText}>{userProfile.subject5}</Text>
             </View>
-          </View>
+          )}
+                  
+        <View style={styles.subjectContainor}>
+          <Pressable
+            onPress={() => handleAddSubject}>
+            <Text style={styles.deleteButtonText}>+</Text>
+          </Pressable>
+          <Text style={styles.subjectsText}>Add course</Text>
+        </View>
+        </View>
+        
+
 
           <Pressable
-            style={[styles.button, styles.saveChangesButton]}
+            style={[styles.saveChangesButton, styles.saveChangesButton]}
             onPress={handleSaveChanges}>
             <Text style={styles.buttonText}>Save changes</Text>
           </Pressable>
@@ -120,17 +153,11 @@ const EditProfileScreen = ({ route }) => {
     </View>
   );
   };
-  
-  
-  
+   
   const blue = '#182640';
   const tan = '#FAE8CD'; 
+  
 
-  const horizontalLine = {
-    borderWidth: 1,
-    borderColor: 'tan',
-    marginVertical: 10,
-  };
   
   const styles = StyleSheet.create({
       container: {
@@ -138,7 +165,7 @@ const EditProfileScreen = ({ route }) => {
           alignItems: 'center',
           justifyContent: 'flex-start',
           backgroundColor: '#182640',
-          paddingTop: 120,
+          paddingTop: 45,
         },
       cancelText: {
           fontFamily: 'SF',
@@ -156,11 +183,10 @@ const EditProfileScreen = ({ route }) => {
         flexDirection: 'row',
         alignItems: 'center',
       },
-      button: {
+      saveChangesButton: {
         width: 175,
         height: 50,
         marginTop: 50, //subject to change as page evolves
-        marginBottom: 10,
         borderRadius: 30,
         borderColor: tan,
         borderWidth: 4.5,
@@ -175,10 +201,11 @@ const EditProfileScreen = ({ route }) => {
         fontSize: 20,
         fontFamily: 'SF',
         },
-        deleteButtonText: {
+      deleteButtonText: {
           color: tan,
           fontSize: 20,
           fontFamily: 'SF',
+          marginRight: 35,
         },
       saveChangesButton: {
         backgroundColor: blue,
@@ -196,36 +223,47 @@ const EditProfileScreen = ({ route }) => {
         fontWeight: 'bold',
         color: tan,
         fontFamily: 'Vikendi',
-        marginTop: 75,
+        marginTop: 40,
       },
       subjectsContainor: {
         marginTop: 10,
-        alignItems: 'center',
+        alignItems: 'flex-start', 
         justifyContent: 'center',
+        marginBottom: 60,
       },
-      subjects: {
+      subjectsText: {
         color: tan,
         fontFamily: 'SF',
-        fontSize: 17,
+        fontSize: 20,
+        alignSelf: 'flex-start',
       }, 
+      subjectContainor: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+        justifyContent: 'center',
+      },
       profileInfoValue: {
-        marginBottom: 5,
         fontWeight: 'bold',
         color: tan,
         fontFamily: 'SF',
         fontSize: 17,
+        textAlign: 'center'
       },
       profileInfoLabel: {
-        marginBottom: 5,
         color: tan,
         fontFamily: 'SF',
         fontSize: 17,
-        marginRight: 50,
       },
+      nameContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginTop: 15,
+      }, 
       profileInfoContainer: {
-        flexDirection:'row', 
-        marginVertical: 8,
-        marginLeft: 16,
+        marginTop: 30, 
       }
   });
   

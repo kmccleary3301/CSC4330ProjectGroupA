@@ -1,7 +1,7 @@
 //just need to implement the profile picture!!
 
 
-import React from "react";
+import React, {useState} from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
   Image,
@@ -17,7 +17,7 @@ import EditProfileScreen from "./EditProfileScreen";
 const ProfileScreen = () => {
   const navigation = useNavigation();
 
-  const userProfile = {
+  const [userProfile, setUserProfile] = useState({
     name: "Mike Tiger",
     email:"mtiger1@lsu.edu",
     pronouns:"He/his/him",
@@ -28,7 +28,11 @@ const ProfileScreen = () => {
     subject3: "Computer Science",
     subject4: "English",
     subject5: "Geology",
-  };
+  });
+
+  const handleUpdateProfile = (updatedUserProfile) => {
+    setUserProfile(updatedUserProfile);
+  }
 
 
   const handleEditProfile = () => {
@@ -75,7 +79,7 @@ const styles = StyleSheet.create({
     button: {
       width: 175,
       height: 50,
-      marginTop: 150,
+      marginTop: 75,    //subject to change if styling changes are made
       marginBottom: 10,
       borderRadius: 30,
       borderColor: tan,
@@ -143,7 +147,7 @@ const styles = StyleSheet.create({
       color: tan,
       fontFamily: 'SF',
       fontSize: 17,
-      marginBottom: 5,
+      marginBottom: 15,
     }, 
     pronouns: {
       color: tan,
@@ -155,7 +159,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     subjectsContainor: {
-      marginTop: 10,
+      marginTop: 40,
       alignItems: 'center',
       justifyContent: 'center',
     },
