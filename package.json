@@ -26,6 +26,7 @@
     "expo-modules-autolinking": "^0.8.1",
     "expo-splash-screen": "^0.18.1",
     "expo-status-bar": "~1.4.4",
+    "firebase": "^9.19.1",
     "metro-core": "^0.76.0",
     "node": "^19.8.1",
     "postcss": "^8.4.21",
