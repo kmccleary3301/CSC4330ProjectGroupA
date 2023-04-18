@@ -14,6 +14,7 @@ import NavBarContainer from '../NavBar';
 import EditProfileScreen from "./EditProfileScreen";
 
 
+
 const ProfileScreen = () => {
   const navigation = useNavigation();
 
@@ -39,12 +40,16 @@ const ProfileScreen = () => {
      navigation.navigate('EditProfileScreen', {userProfile: userProfile})
   };
 
+  const profilePic = require('../assets/icons/profileAvatar.png');
+
+
   return (
     <View style={{ flex: 1 }}>
     <View style={styles.container}>
-      <Text style={[styles.title]}>My Profile</Text>
-        <View style={styles.profileContainor}>
-          {/* <View style={styles.profilePicPlaceholder}></View> */}
+      <Text style={[styles.title]}>My Profile</Text>    
+        
+      <View style={styles.profileContainer}>  
+        <Image style={styles.profilePic} source={profilePic} />
           <Text style={styles.profileInfo}>{userProfile.name}                {[userProfile.pronouns]}</Text>
           <Text style={styles.profileInfo}>{userProfile.email}</Text>
           <Text style={styles.userType}>{userProfile.userType}</Text>
@@ -164,7 +169,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     // couldnt get image imports so temporary placeholder
-    profilePicPlaceholder: {
+    profilePic: {
       width: 50, 
       height: 50,
       borderRadius: 25, // Set border radius to half og width/height to make it circular
