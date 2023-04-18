@@ -30,13 +30,14 @@ const ProfileScreen = () => {
     subject5: "Geology",
   });
 
+
+ 
   const handleUpdateProfile = (updatedUserProfile) => {
     setUserProfile(updatedUserProfile);
-  }
-
+  };
 
   const handleEditProfile = () => {
-     navigation.navigate('EditProfileScreen', {userProfile: userProfile})
+     navigation.navigate('EditProfileScreen', {userProfile, onUpdateProfile: handleUpdateProfile})
   };
 
   return (

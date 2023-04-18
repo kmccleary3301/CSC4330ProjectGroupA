@@ -11,7 +11,6 @@ const EditProfileScreen = ({ route }) => {
   const [name, setName] = useState(userProfile.name);
   const [email, setEmail] = useState(userProfile.email);
   const [pronouns, setPronouns] = useState(userProfile.pronouns);
-  const [userSubjects, setUserSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -73,6 +72,15 @@ const EditProfileScreen = ({ route }) => {
     'Womens Studies'
   ];
 
+  const [userSubjects, setUserSubjects] = useState([
+    userProfile.subject1,
+    userProfile.subject2,
+    userProfile.subject3,
+    userProfile.subject4,
+    userProfile.subject5,
+  ]);
+
+
   // Function to toggle dropdown visibility
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -88,7 +96,11 @@ const EditProfileScreen = ({ route }) => {
       name: name,
       email: email,
       pronouns: pronouns,
-      subjects: userSubjects ?? []
+      subject1: userSubjects[0] || "",
+      subject2: userSubjects[1] || "",
+      subject3: userSubjects[2] || "",
+      subject4: userSubjects[3] || "",
+      subject5: userSubjects[4] || "",
     };
     onUpdateProfile(updatedUserProfile); 
     navigation.goBack();
@@ -98,7 +110,9 @@ const EditProfileScreen = ({ route }) => {
     const updatedSubjects = [...userSubjects];
     updatedSubjects.splice(index, 1);
     setUserSubjects(updatedSubjects);
-  };
+    console.log(updatedSubjects);
+};
+
   
   
 
@@ -147,78 +161,32 @@ const EditProfileScreen = ({ route }) => {
           <Text style={styles.subtitle}>My Subjects: </Text>
           
           <View style={styles.subjectsContainer}>
-          {userProfile.subject1 && (
-            <View style={styles.subjectContainer}>
-              <Pressable
-                onPress={() => handleDeleteSubject(0)}>
-                <Text style={styles.deleteButtonText}>-</Text>
-              </Pressable>
-              <Text style={styles.subjectsText}>{userProfile.subject1}</Text>
-            </View>
-          )}
-          {userProfile.subject2 && (
-            <View style={styles.subjectContainer}>
-              <Pressable
-                onPress={() => handleDeleteSubject(1)}>
-                <Text style={styles.deleteButtonText}>-</Text>
-              </Pressable>
-              <Text style={styles.subjectsText}>{userProfile.subject2}</Text>
-            </View>
-          )}
-          {userProfile.subject3 && (
-            <View style={styles.subjectContainer}>
-              <Pressable
-                onPress={() => handleDeleteSubject(2)}>
-                <Text style={styles.deleteButtonText}>-</Text>
-              </Pressable>
-              <Text style={styles.subjectsText}>{userProfile.subject3}</Text>
-            </View>
-          )}
-          {userProfile.subject4 && (
-            <View style={styles.subjectContainer}>
-              <Pressable
-                onPress={() => handleDeleteSubject(3)}>
-                <Text style={styles.deleteButtonText}>-</Text>
-              </Pressable>
-              <Text style={styles.subjectsText}>{userProfile.subject4}</Text>
-            </View>
-          )}
-          {userProfile.subject5 && (
-            <View style={styles.subjectContainer}>
-              <Pressable
-                onPress={() => handleDeleteSubject(4)}>
-                <Text style={styles.deleteButtonText}>-</Text>
-              </Pressable>
-              <Text style={styles.subjectsText}>{userProfile.subject5}</Text>
-            </View>
-          )}
-          <View>
-          <View style={styles.subjectContainer}>
-            <Pressable
-              onPress={() => toggleDropdown()}
-            >
-              <Text style={styles.deleteButtonText}>+</Text>
-            </Pressable>
-            {showDropdown ? ( 
-              <Picker
-                selectedValue={selectedSubject}
-                onValueChange={handleSubjectChange}
-              >
-                {subjects.map((subject, index) => (
-                  <Picker.Item
-                    key={index}
-                    label={subject}
-                    value={subject}
-                  />
-                ))}
-              </Picker>
-            ) : (
-              <Text style={styles.subjectsText}>Add course</Text> 
-            )}
-          </View>
-        </View>
-        </View>
-        
+  {userSubjects.map((subject, index) => (
+    <View key={index} style={styles.subjectContainer}>
+      <Pressable onPress={() => handleDeleteSubject(index)}>
+        <Text style={styles.deleteButtonText}>-</Text>
+      </Pressable>
+      <Text style={styles.subjectsText}>{subject}</Text>
+    </View>
+  ))}
+  <View>
+    <View style={styles.subjectContainer}>
+      <Pressable onPress={() => toggleDropdown()}>
+        <Text style={styles.deleteButtonText}>+</Text>
+      </Pressable>
+      {showDropdown ? (
+        <Picker selectedValue={selectedSubject} onValueChange={handleSubjectChange}>
+          {subjects.map((subject, index) => (
+            <Picker.Item key={index} label={subject} value={subject} />
+          ))}
+        </Picker>
+      ) : (
+        <Text style={styles.subjectsText}>Add course</Text>
+      )}
+    </View>
+  </View>
+</View>
+
         
 
           <Pressable
