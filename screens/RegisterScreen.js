@@ -19,6 +19,7 @@ const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+<<<<<<< HEAD
   const [userType, setUserType] = useState('');
   const [error , setError] = useState('');
 
@@ -63,6 +64,15 @@ const RegisterScreen = ({ navigation }) => {
     }
 }
 
+=======
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
+  const handleNext = () => {
+    // Perform registration logic here
+    navigation.navigate('RegisterInfoScreen');
+  };
+>>>>>>> a72826cf9a31171cd3a67fcbb4dbae8be81bc928
 
   return (
     <View style={[styles.container, { justifyContent: 'start', paddingTop: 120, marginTop: 0 }]}>
@@ -83,6 +93,7 @@ const RegisterScreen = ({ navigation }) => {
         <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
           Create a new account with your university email.
         </Text>
+<<<<<<< HEAD
         
 
         <Picker
@@ -101,6 +112,23 @@ const RegisterScreen = ({ navigation }) => {
 
         <form onSubmit={handleRegister} name='registration_form'>
         <input
+=======
+        <TextInput
+          style={styles.inputField}
+          onChangeText={setFirstName}
+          value={firstName}
+          placeholder="First Name"
+          autoCapitalize="words"
+        />
+        <TextInput
+          style={styles.inputField}
+          onChangeText={setLastName}
+          value={lastName}
+          placeholder="Last Name"
+          autoCapitalize="words"
+        />
+        <TextInput
+>>>>>>> a72826cf9a31171cd3a67fcbb4dbae8be81bc928
           style={styles.inputField}
           onChange={e => setEmail(e.target.value)}
           value={email}
@@ -126,9 +154,9 @@ const RegisterScreen = ({ navigation }) => {
        
         <TouchableOpacity
           style={[styles.button, styles.loginButton, { width: '50%' }]}
-          onPress={handleRegister}
+          onPress={handleNext}
         >
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
          </form>
         <View style={[styles.linkContainer, { marginTop: 16 }]}>
@@ -157,3 +185,4 @@ RegisterScreen.navigationOptions = ({ navigation }) => ({
 });
 
 export default RegisterScreen;
+
