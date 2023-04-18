@@ -129,7 +129,7 @@ const RegisterScreen = ({ navigation }) => {
           onPress={[handleRegister, () => navigation.navigate('RegisterInfoScreen')]}
         >
           <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
+         </TouchableOpacity>
          </form>
         <View style={[styles.linkContainer, { marginTop: 16 }]}>
           <Text style={styles.linkText}>Already have an account?</Text>
