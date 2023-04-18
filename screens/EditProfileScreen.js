@@ -101,6 +101,7 @@ const EditProfileScreen = ({ route }) => {
       subject3: userSubjects[2] || "",
       subject4: userSubjects[3] || "",
       subject5: userSubjects[4] || "",
+      
     };
     onUpdateProfile(updatedUserProfile); 
     navigation.goBack();
@@ -161,31 +162,31 @@ const EditProfileScreen = ({ route }) => {
           <Text style={styles.subtitle}>My Subjects: </Text>
           
           <View style={styles.subjectsContainer}>
-  {userSubjects.map((subject, index) => (
-    <View key={index} style={styles.subjectContainer}>
-      <Pressable onPress={() => handleDeleteSubject(index)}>
-        <Text style={styles.deleteButtonText}>-</Text>
-      </Pressable>
-      <Text style={styles.subjectsText}>{subject}</Text>
-    </View>
-  ))}
-  <View>
-    <View style={styles.subjectContainer}>
-      <Pressable onPress={() => toggleDropdown()}>
-        <Text style={styles.deleteButtonText}>+</Text>
-      </Pressable>
-      {showDropdown ? (
-        <Picker selectedValue={selectedSubject} onValueChange={handleSubjectChange}>
-          {subjects.map((subject, index) => (
-            <Picker.Item key={index} label={subject} value={subject} />
+          {userSubjects.map((subject, index) => (
+            <View key={index} style={styles.subjectContainer}>
+              <Pressable onPress={() => handleDeleteSubject(index)}>
+                <Text style={styles.deleteButtonText}>-</Text>
+              </Pressable>
+              <Text style={styles.subjectsText}>{subject}</Text>
+            </View>
           ))}
-        </Picker>
-      ) : (
-        <Text style={styles.subjectsText}>Add course</Text>
-      )}
-    </View>
-  </View>
-</View>
+          <View>
+            <View style={styles.subjectContainer}>
+              <Pressable onPress={() => toggleDropdown()}>
+                <Text style={styles.deleteButtonText}>+</Text>
+              </Pressable>
+              {showDropdown ? (
+                <Picker selectedValue={selectedSubject} onValueChange={handleSubjectChange}>
+                  {subjects.map((subject, index) => (
+                    <Picker.Item key={index} label={subject} value={subject} />
+                  ))}
+                </Picker>
+              ) : (
+                <Text style={styles.subjectsText}>Add course</Text>
+              )}
+            </View>
+          </View>
+        </View>
 
         
 
