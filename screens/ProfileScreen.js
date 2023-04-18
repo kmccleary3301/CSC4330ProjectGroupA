@@ -43,7 +43,7 @@ const ProfileScreen = () => {
     <View style={{ flex: 1 }}>
     <View style={styles.container}>
       <Text style={[styles.title]}>My Profile</Text>
-        <View style={styles.profileContainor}>
+        <View style={styles.profileContainer}>
           {/* <View style={styles.profilePicPlaceholder}></View> */}
           <Text style={styles.profileInfo}>{userProfile.name}                {[userProfile.pronouns]}</Text>
           <Text style={styles.profileInfo}>{userProfile.email}</Text>
@@ -51,7 +51,7 @@ const ProfileScreen = () => {
           <Text style={styles.school}>{userProfile.school}</Text>
         </View>
         <Text style={styles.subtitle}>My Subjects:</Text>
-        <View style={styles.subjectsContainor}>
+        <View style={styles.subjectsContainer}>
           <Text style={styles.subjects}>{userProfile.subject1}</Text>
           <Text style={styles.subjects}>{userProfile.subject2}</Text>
           <Text style={styles.subjects}>{userProfile.subject3}</Text>
@@ -154,11 +154,11 @@ const styles = StyleSheet.create({
       fontFamily: 'SF',
       fontSize: 17,
     },
-    profileContainor: {
+    profileContainer: {
       alignItems: 'flex-start', 
       justifyContent: 'center',
     },
-    subjectsContainor: {
+    subjectsContainer: {
       marginTop: 40,
       alignItems: 'center',
       justifyContent: 'center',
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
       borderRadius: 25, // Set border radius to half og width/height to make it circular
       backgroundColor: 'pink'
     },
-    pictureContainor: {
+    pictureContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',

@@ -24,21 +24,53 @@ const EditProfileScreen = ({ route }) => {
   // should alphabetize them for sure
   const subjects = [
     'Accounting',
-    'Science',
-    'English Literature',
-    'English',
-    'Computer Science',
-    'Geography',
-    'Geology',
-    'Calculus',
-    'Algebra',
-    'Architecture',
-    'Art History',
     'Anthropology',
+    'Art History',
+    'Astronomy',
+    'Biology',
+    'Business Administration',
+    'Chemistry',
+    'Communications',
+    'Computer Science',
+    'Creative Writing',
+    'Criminal Justice',
+    'Digital Media',
+    'Economics',
+    'Education',
+    'Engineering',
+    'English',
+    'English Literature',
+    'Environmental Science',
+    'Film Studies',
+    'French',
+    'Geography',
+    'Global Studies',
     'History',
+    'International Relations',
+    'Journalism',
+    'Law',
+    'Linguistics',
+    'Marketing',
+    'Mathematics',
+    'Mechanical Engineering',
+    'Music',
+    'Neuroscience',
+    'Philosophy',
+    'Physics',
+    'Political Science',
+    'Psychology',
+    'Public Health',
+    'Religious Studies',
     'Social Work',
     'Sociology',
-    'Pyschology',
+    'Spanish',
+    'Statistics',
+    'Sustainability Studies',
+    'Theater',
+    'Theology',
+    'Urban Studies',
+    'Visual Arts',
+    'Womens Studies'
   ];
 
   // Function to toggle dropdown visibility
@@ -74,7 +106,7 @@ const EditProfileScreen = ({ route }) => {
       <View style={{ flex: 1 }}>
         <View style={styles.container}>
 
-          <View style={styles.cancelContainor}>
+          <View style={styles.cancelContainer}>
             <Pressable
               onPress = {handleCancel}>
               <Text style={styles.cancelText}>Cancel</Text>
@@ -114,9 +146,9 @@ const EditProfileScreen = ({ route }) => {
 
           <Text style={styles.subtitle}>My Subjects: </Text>
           
-          <View style={styles.subjectsContainor}>
+          <View style={styles.subjectsContainer}>
           {userProfile.subject1 && (
-            <View style={styles.subjectContainor}>
+            <View style={styles.subjectContainer}>
               <Pressable
                 onPress={() => handleDeleteSubject(0)}>
                 <Text style={styles.deleteButtonText}>-</Text>
@@ -125,7 +157,7 @@ const EditProfileScreen = ({ route }) => {
             </View>
           )}
           {userProfile.subject2 && (
-            <View style={styles.subjectContainor}>
+            <View style={styles.subjectContainer}>
               <Pressable
                 onPress={() => handleDeleteSubject(1)}>
                 <Text style={styles.deleteButtonText}>-</Text>
@@ -134,7 +166,7 @@ const EditProfileScreen = ({ route }) => {
             </View>
           )}
           {userProfile.subject3 && (
-            <View style={styles.subjectContainor}>
+            <View style={styles.subjectContainer}>
               <Pressable
                 onPress={() => handleDeleteSubject(2)}>
                 <Text style={styles.deleteButtonText}>-</Text>
@@ -143,7 +175,7 @@ const EditProfileScreen = ({ route }) => {
             </View>
           )}
           {userProfile.subject4 && (
-            <View style={styles.subjectContainor}>
+            <View style={styles.subjectContainer}>
               <Pressable
                 onPress={() => handleDeleteSubject(3)}>
                 <Text style={styles.deleteButtonText}>-</Text>
@@ -152,7 +184,7 @@ const EditProfileScreen = ({ route }) => {
             </View>
           )}
           {userProfile.subject5 && (
-            <View style={styles.subjectContainor}>
+            <View style={styles.subjectContainer}>
               <Pressable
                 onPress={() => handleDeleteSubject(4)}>
                 <Text style={styles.deleteButtonText}>-</Text>
@@ -161,7 +193,7 @@ const EditProfileScreen = ({ route }) => {
             </View>
           )}
           <View>
-          <View style={styles.subjectContainor}>
+          <View style={styles.subjectContainer}>
             <Pressable
               onPress={() => toggleDropdown()}
             >
@@ -220,7 +252,7 @@ const EditProfileScreen = ({ route }) => {
           backgroundColor: blue,
           padding: 5,
       },
-      cancelContainor: {
+      cancelContainer: {
         position: 'absolute',
         top: 0,
         left: 0,
@@ -271,7 +303,7 @@ const EditProfileScreen = ({ route }) => {
         fontFamily: 'Vikendi',
         marginTop: 40,
       },
-      subjectsContainor: {
+      subjectsContainer: {
         marginTop: 10,
         alignItems: 'flex-start', 
         justifyContent: 'center',
@@ -283,7 +315,7 @@ const EditProfileScreen = ({ route }) => {
         fontSize: 20,
         alignSelf: 'flex-start',
       }, 
-      subjectContainor: {
+      subjectContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
