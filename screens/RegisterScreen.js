@@ -117,3 +117,4 @@ RegisterScreen.navigationOptions = ({ navigation }) => ({
 });
 
 export default RegisterScreen;
+
