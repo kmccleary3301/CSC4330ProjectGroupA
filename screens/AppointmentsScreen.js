@@ -20,6 +20,7 @@ const AppointmentsScreen = () => {
   const navigation = useNavigation();
 
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+  const [pastAppointmentsList, setPastAppointmentsList] = useState(pastAppointments);
 
   // Your mock data for future and past appointments
   const futureAppointments = [
@@ -27,34 +28,34 @@ const AppointmentsScreen = () => {
 
     // Example appointment object
         {
-            id: 2,
-            name: 'Jane Doe',
+            id: 1,
+            name: 'David Sorenti',
             rating: 4.5,
-            subject: 'Math',
+            subject: 'Geography',
             time: '10:00 AM',
-            date: '2020-12-01',
+            date: '2023-18-02',
             duration: '1 hour',
             location: 'Online',
             status: 'Pending',
             appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
         },
         {
-          id: 3,
-          name: 'James Dunsen',
+          id: 2,
+          name: 'Jessica Juarez',
           rating: 4.5,
-          subject: 'Astronomy',
+          subject: 'Calculus',
           time: '10:00 AM',
-          date: '2023-24-02',
+          date: '2023-23-02',
           duration: '1 hour',
           location: 'Online',
           status: 'Pending',
           appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
       },
       {
-        id: 4,
-        name: 'Michael Bergeron',
+        id: 3,
+        name: 'James Dunsen',
         rating: 4.5,
-        subject: 'Comp Sci',
+        subject: 'Astronomy',
         time: '10:00 AM',
         date: '2023-24-02',
         duration: '1 hour',
@@ -63,17 +64,29 @@ const AppointmentsScreen = () => {
         appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
     },
     {
-      id: 5,
-      name: 'Hailey Martinez',
+      id: 4,
+      name: 'Michael Burgeron',
       rating: 4.5,
-      subject: 'English',
+      subject: 'Comp Sci',
       time: '10:00 AM',
-      date: '2023-01-03',
+      date: '2023-29-02',
       duration: '1 hour',
       location: 'Online',
       status: 'Pending',
       appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
   },
+  {
+    id: 5,
+    name: 'Hailey Martinez',
+    rating: 4.5,
+    subject: 'English',
+    time: '10:00 AM',
+    date: '2023-01-03',
+    duration: '1 hour',
+    location: 'Online',
+    status: 'Pending',
+    appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
+},
 
   ];
 
@@ -81,11 +94,11 @@ const AppointmentsScreen = () => {
     // ...
     {
         id: 1,
-        name: 'Jessica Doe',
+        name: 'David Sorenti',
         rating: 4.5,
-        subject: 'English',
+        subject: 'Geography',
         time: '10:00 AM',
-        date: '2020-12-01',
+        date: '2023-18-02',
         duration: '1 hour',
         location: 'Online',
         status: 'Completed',
@@ -98,7 +111,7 @@ const AppointmentsScreen = () => {
         rating: 4,
         subject: 'Calculus',
         time: '10:00 AM',
-        date: '2023-23-03',
+        date: '2023-22-02',
         duration: '1 hour',
         location: 'Online',
         status: 'Completed',
@@ -106,9 +119,9 @@ const AppointmentsScreen = () => {
       },
       {
         id: 3,
-        name: 'Michael Bergeron',
+        name: 'James Dunsen',
         rating: 4.5,
-        subject: 'Comp Sci',
+        subject: 'Astronomy',
         time: '10:00 AM',
         date: '2023-24-02',
         duration: '1 hour',
@@ -122,7 +135,7 @@ const AppointmentsScreen = () => {
         rating: 4.5,
         subject: 'Comp Sci',
         time: '10:00 AM',
-        date: '2023-24-02',
+        date: '2023-29-02',
         duration: '1 hour',
         location: 'Online',
         status: 'Pending',
@@ -130,11 +143,11 @@ const AppointmentsScreen = () => {
       },
       {
         id: 5,
-        name: 'Michael Bergeron',
+        name: 'Hailey Martinez',
         rating: 4.5,
-        subject: 'Comp Sci',
+        subject: 'English',
         time: '10:00 AM',
-        date: '2023-24-02',
+        date: '2023-01-03',
         duration: '1 hour',
         location: 'Online',
         status: 'Pending',
@@ -253,9 +266,6 @@ const AppointmentsScreen = () => {
       </View>
     </TouchableOpacity>
   ))}
-       {/* <TouchableOpacity onPress={navigateToHistory}>
-          <Text style={{ color: blue, fontSize: 16, marginBottom: 20, marginTop: 10,  textDecorationLine: 'underline' }}>See all history</Text>
-      </TouchableOpacity> */}
         
         </ScrollView>
           <View style={{ alignItems: 'center' }}>
@@ -292,7 +302,7 @@ const sStyles = StyleSheet.create({
         width: '90%',
         borderWidth: 1,
         borderColor: 'black',
-        maxHeight: 250,
+        maxHeight: 240,
         },
         tableRow: {
         flexDirection: 'row',
