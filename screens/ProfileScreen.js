@@ -10,6 +10,7 @@ import {
   View,
   Pressable,
 } from "react-native";
+
 import NavBarContainer from '../NavBar';
 import EditProfileScreen from "./EditProfileScreen";
 
