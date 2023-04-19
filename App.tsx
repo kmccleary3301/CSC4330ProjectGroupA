@@ -22,17 +22,14 @@ import AppHeader from './AppHeader';
 import SubjectSearchScreen from './screens/SubjectSearchScreen';
 import AptRequestScreen from './screens/AptRequestScreen';
 import AppointmentsScreen from './screens/AppointmentsScreen';
-<<<<<<< HEAD
-import VerifyEmail from './screens/VerifyEmail';
-import { AuthProvider } from './AuthContext';
-import {auth} from './firebase';
-import {onAuthStateChanged} from 'firebase/auth';
-=======
 import RegisterInfoScreen from './screens/RegisterInfoScreen';
 import SubjectAddScreen from './screens/SubjectAddScreen';
 
 
->>>>>>> lydia-edits1
+import VerifyEmail from './screens/VerifyEmail';
+import { AuthProvider } from './AuthContext';
+import {auth} from './firebase';
+import {onAuthStateChanged} from 'firebase/auth';
 
 import { useAccessibilityInfo } from '@react-native-community/hooks';
 
