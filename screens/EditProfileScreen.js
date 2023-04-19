@@ -16,14 +16,10 @@ const EditProfileScreen = ({ route }) => {
 
 
   const handleSubjectChange = (subject) => {
-    // Check if subject is already in the array
     if (!userSubjects.includes(subject)) {
-      // Create a copy of the array and add the new subject to it
       const updatedUserSubjects = [...userSubjects, subject];
-      // Set the state to the updated array
       setUserSubjects(updatedUserSubjects);
     }
-    // Hide the dropdown
     setShowDropdown(false);
   };
   
@@ -99,21 +95,22 @@ const EditProfileScreen = ({ route }) => {
   }
 
   const handleSaveChanges = () => {
+    const filteredSubjects = userSubjects.filter(subject => subject !== ''); // Filter out empty strings
     const updatedUserProfile = {
       ...userProfile,
       name: name,
       email: email,
       pronouns: pronouns,
-      subject1: userSubjects[0] || "",
-      subject2: userSubjects[1] || "",
-      subject3: userSubjects[2] || "",
-      subject4: userSubjects[3] || "",
-      subject5: userSubjects[4] || "",
-      
+      subject1: filteredSubjects[0] || "",
+      subject2: filteredSubjects[1] || "",
+      subject3: filteredSubjects[2] || "",
+      subject4: filteredSubjects[3] || "",
+      subject5: filteredSubjects[4] || "",
     };
-    onUpdateProfile(updatedUserProfile); 
+    onUpdateProfile(updatedUserProfile);
     navigation.goBack();
   };
+  
 
   const handleDeleteSubject = (index) => {
     const updatedSubjects = [...userSubjects];
