@@ -11,6 +11,8 @@ import { Ionicons } from '@expo/vector-icons';
 import NavBarContainer from '../NavBar';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
+import AllHistoryScreen from './AllHistoryScreen';
+
 
 const blue = '#182640';
 const tan = '#FAE8CD'; 
@@ -162,7 +164,15 @@ const AppointmentsScreen = () => {
   };
 
   const navigateToHistory = () => {
-    navigation.navigate('HistoryScreen');
+    navigation.navigate('AllHistoryScreen');
+  };
+
+  const AllHistoryScreen = () => {
+    return (
+      <View>
+        <Text>All History Screen</Text>
+      </View>
+    );
   };
 
   const onAppointmentPress = (appointmentId) => {
@@ -269,9 +279,9 @@ const AppointmentsScreen = () => {
         
         </ScrollView>
           <View style={{ alignItems: 'center' }}>
-            <TouchableOpacity onPress={() => navigation.navigate('HistoryScreen')}>
-              <Text style={{ color: 'beige', fontSize: 16, fontFamily: 'SF', marginTop: 10 }}>See all history</Text>
-            </TouchableOpacity>
+          <TouchableOpacity onPress={navigateToHistory}>
+            <Text style={{ color: 'beige', fontSize: 16, fontFamily: 'SF', marginTop: 10 }}>See all history</Text>
+          </TouchableOpacity>
           </View>
 
         </View>
