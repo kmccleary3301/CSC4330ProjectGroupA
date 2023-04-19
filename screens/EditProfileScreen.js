@@ -15,10 +15,18 @@ const EditProfileScreen = ({ route }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
 
-  // Function to handle subject selection
   const handleSubjectChange = (subject) => {
-    setSelectedSubject(subject);
+    // Check if subject is already in the array
+    if (!userSubjects.includes(subject)) {
+      // Create a copy of the array and add the new subject to it
+      const updatedUserSubjects = [...userSubjects, subject];
+      // Set the state to the updated array
+      setUserSubjects(updatedUserSubjects);
+    }
+    // Hide the dropdown
+    setShowDropdown(false);
   };
+  
 
   // should alphabetize them for sure
   const subjects = [
