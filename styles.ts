@@ -51,13 +51,13 @@ const styles = StyleSheet.create({
   },
 
   inputField: {
-    height: 50,
+    height: 45,
     borderColor: tan,
     borderWidth: 1,
     borderRadius: 5,
     backgroundColor: tan,
     padding: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     fontFamily: 'SF',
   },
 
@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+    maxWidth: 150,
   },
   backButton: {
   position: 'absolute',

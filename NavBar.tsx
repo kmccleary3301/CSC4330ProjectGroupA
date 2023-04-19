@@ -17,8 +17,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from "./types"; // Import your RootStackParamList type from the types file
 
 
-
-
 type NavBarItemProps = {
   iconSource: ImageSourcePropType;
   screenName: keyof RootStackParamList;
@@ -65,26 +63,23 @@ const NavBarContainer = () => {
   return (
     <View style={styles.navigationBar}>
       <NavBarItem
-        iconSource={require('./assets/icons/home2x.png')}
+        iconSource={require('./assets/icons/home.png')}
         screenName="HomeScreen"
         text="Home"
       />
       <NavBarItem
-        iconSource={require('./assets/icons/appointments2x.png')}
+        iconSource={require('./assets/icons/appointments.png')}
         screenName="AppointmentsScreen"
         text="My Appointments"
       />
-       <TouchableOpacity onPress={() => navigation.navigate("ProfileScreen")}>
-        <NavBarItem 
-          iconSource={require('./assets/icons/profile2x.png')}
-          screenName="ProfileScreen"
-          text="Profile"
-        />
-      </TouchableOpacity>
+      <NavBarItem 
+        iconSource={require('./assets/icons/profile.png')}
+        screenName="ProfileScreen"
+        text="Profile"
+      />
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   navigationBar: {
@@ -106,7 +101,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 14,
     color: "#182640",
-    fontFamily: "SF Compact Display Regular",
+    fontFamily: "SFBold",
   },
   activeIcon: {
     tintColor: "#76A9D2",

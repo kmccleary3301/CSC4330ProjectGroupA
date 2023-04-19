@@ -73,8 +73,22 @@ const lightBlue = '#C9D3FF';
        { id: 18, name: 'Emily Moore', rating: '4.1/5', subject: 'Chinese', time: '3:30-4:30' },
        { id: 19, name: 'Daniel Harris', rating: '4.0/5', subject: 'Korean', time: '3:30-4:30' },
       ],
-    },
-  ];
+    },{
+    date: '2023-04-14',
+    appointments: [
+      { id: 20, name: 'William White', rating: '4.9/5', subject: 'Geography', time: '3:30-4:30' },
+      { id: 21, name: 'Alexander Walker', rating: '4.8/5', subject: 'Calculus', time: '3:30-4:30' },
+      { id: 22, name: 'Harper Thompson', rating: '4.7/5', subject: 'Astronomy', time: '3:30-4:30' },
+      { id: 23, name: 'Jacob Martin', rating: '4.6/5', subject: 'Comp Sci', time: '3:30-4:30' },
+      { id: 24, name: 'Isabella Clark', rating: '4.5/5', subject: 'Biology', time: '3:30-4:30' },
+      { id: 25, name: 'Ella Lee', rating: '4.4/5', subject: 'History', time: '3:30-4:30' },
+      { id: 26, name: 'Benjamin Hernandez', rating: '4.3/5', subject: 'Physics', time: '3:30-4:30' },
+      { id: 27, name: 'Michael Rodriguez', rating: '4.2/5', subject: 'Algebra', time: '3:30-4:30' },
+      { id: 28, name: 'Evelyn Lewis', rating: '4.1/5', subject: 'Chemistry', time: '3:30-4:30' },
+      { id: 29, name: 'Liam Hall', rating: '4.0/5', subject: 'English', time: '3:30-4:30' },
+      { id: 30, name: 'Abigail Scott', rating: '3.9/5', subject: 'Spanish', time: '3:30-4:30' },
+    ],
+  }];
 
   const formattedSelectedDate = selectedDate.toISOString().substring(0, 10);
 
@@ -200,7 +214,6 @@ const lightBlue = '#C9D3FF';
         </View>
       </View>
     </TouchableOpacity>
-
   ))}
         </ScrollView>
         <Button
@@ -280,15 +293,15 @@ const lightBlue = '#C9D3FF';
     flexDirection: 'row',
     },
     button: {
-    width: 100,
-    height: 50,
+    width: '32%',
+    height: '8%',
     marginTop: 20,
     marginBottom: 10,
     borderRadius: 30,
     borderColor: tan,
     borderWidth: 4.5,
-    padding: 0,
-    alignItems: 'center',
+    //padding: 0,
+    //alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
     backgroundColor: blue,
@@ -297,9 +310,10 @@ const lightBlue = '#C9D3FF';
     color: tan,
     fontSize: 20,
     fontFamily: 'SF',
+    //fontWeight: 'bold',
     },
     buttonContent: {
-    height: 50,
+    //height: 50,
     },
     });
   

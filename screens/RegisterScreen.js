@@ -10,21 +10,59 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
-
+import {auth, db} from '../firebase';
+import {createUserWithEmailAndPassword} from 'firebase/auth'
+import {doc, setDoc} from "firebase/firestore";
 
 const RegisterScreen = ({ navigation }) => {
-
-
-
-
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userType, setUserType] = useState('');
+  const [error , setError] = useState('');
 
-  const handleRegister = () => {
-    // Perform registration logic here
-  };
+  const validatePassword = () => {
+    let isValid = true
+    if (password !== '' && confirmPassword !== ''){
+      if (password !== confirmPassword) {
+        isValid = false
+        setError('Passwords does not match')
+      }
+    }
+    return isValid
+  }
+
+  const handleRegister = e => {
+    e.preventDefault()
+    setError('')
+    if(validatePassword()) {
+      // Create a new user with email and password using firebase
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((res) => {
+            console.log(res.user)
+          })
+        .catch(err => setError(err.message))
+    }
+    setEmail('')
+    setPassword('')
+    setConfirmPassword('')
+  }
+
+  const addProfile = async (name, email) => {
+    const user = auth.currentUser;
+    try {
+        await setDoc(doc(db, "users", user?.uid), {
+            uid: user.uid,
+            name,
+            email,
+        });
+    }   catch (err) {
+        console.error(err);
+        alert(err.message);
+    }
+}
+
 
   return (
     <View style={[styles.container, { justifyContent: 'start', paddingTop: 120, marginTop: 0 }]}>
@@ -45,6 +83,8 @@ const RegisterScreen = ({ navigation }) => {
         <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
           Create a new account with your university email.
         </Text>
+        
+
         <Picker
           style={[styles.picker, { paddingLeft: 5 }]}
           selectedValue={userType}
@@ -57,36 +97,40 @@ const RegisterScreen = ({ navigation }) => {
           <Picker.Item label="Tutor" value="tutor" />
           <Picker.Item label="Administrator" value="administrator" />
         </Picker>
-        <TextInput
+
+
+        <form onSubmit={handleRegister} name='registration_form'>
+        <input
           style={styles.inputField}
-          onChangeText={setEmail}
+          onChange={e => setEmail(e.target.value)}
           value={email}
           placeholder="Email"
-          keyboardType="email-address"
+          
           autoCapitalize="none"
         />
-        <TextInput
+        <input
           style={styles.inputField}
-          onChangeText={setPassword}
+          onChange={e => setPassword(e.target.value)}
           value={password}
           placeholder="Password"
-          secureTextEntry
+          
           autoCapitalize="none"
         />
-        <TextInput
+        <input
           style={styles.inputField}
-          onChangeText={setConfirmPassword}
+          onChange={e => setConfirmPassword(e.target.value)}
           value={confirmPassword}
           placeholder="Confirm Password"
-          secureTextEntry
           autoCapitalize="none"
         />
+       
         <TouchableOpacity
           style={[styles.button, styles.loginButton, { width: '50%' }]}
           onPress={handleRegister}
         >
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
+         </form>
         <View style={[styles.linkContainer, { marginTop: 16 }]}>
           <Text style={styles.linkText}>Already have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
@@ -113,3 +157,4 @@ RegisterScreen.navigationOptions = ({ navigation }) => ({
 });
 
 export default RegisterScreen;
+
