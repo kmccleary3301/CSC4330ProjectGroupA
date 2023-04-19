@@ -20,8 +20,10 @@ import AppHeader from './AppHeader';
 import SubjectSearchScreen from './screens/SubjectSearchScreen';
 import AptRequestScreen from './screens/AptRequestScreen';
 import AppointmentsScreen from './screens/AppointmentsScreen';
-
-
+import VerifyEmail from './screens/VerifyEmail';
+import { AuthProvider } from './AuthContext';
+import {auth} from './firebase';
+import {onAuthStateChanged} from 'firebase/auth';
 
 import { useAccessibilityInfo } from '@react-native-community/hooks';
 
@@ -49,12 +51,16 @@ function App(): React.ReactElement{
   const [hideSplashScreen, setHideSplashScreen] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-
+  const [currentUser, setCurrentUser] = useState(null);
+  const [timeActive, setTimeActive] = useState(false);
 
 
 
   useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user)
+    })
+
     const timer = setTimeout(() => {
       setHideSplashScreen(true);
     }, 1000);
@@ -117,7 +123,9 @@ function App(): React.ReactElement{
     
   
   return (
+    
    <Drawer
+   
     type="overlay"
     content={
       <SideMenu
@@ -140,6 +148,7 @@ function App(): React.ReactElement{
     })}
   >
     <NavigationContainer>
+      <AuthProvider value={{currentUser, timeActive, setTimeActive}}>
       <Stack.Navigator initialRouteName='InitialScreen'>
         <Stack.Screen name="MySplashScreen" component={MySplashScreen} options={{headerShown: false}} />
         <Stack.Screen name="InitialScreen" component={InitialScreen}
@@ -172,9 +181,16 @@ function App(): React.ReactElement{
             component={AppointmentsScreen}
             options={getScreenOptions('internal')}
           />
+          <Stack.Screen
+            name="VerifyEmail"
+            component={VerifyEmail}
+            options={getScreenOptions('internal')}
+          />
       </Stack.Navigator>
+      </AuthProvider>
     </NavigationContainer>
     </Drawer>
+    
   );
 }
 

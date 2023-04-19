@@ -11,8 +11,9 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
 import {auth, db} from '../firebase';
-import {createUserWithEmailAndPassword} from 'firebase/auth'
+import {createUserWithEmailAndPassword, sendEmailVerification} from 'firebase/auth'
 import {doc, setDoc} from "firebase/firestore";
+import {useAuthValue} from '../AuthContext'
 
 const RegisterScreen = ({ navigation }) => {
   
@@ -21,6 +22,7 @@ const RegisterScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userType, setUserType] = useState('');
   const [error , setError] = useState('');
+  const {setTimeActive} = useAuthValue();
 
   const validatePassword = () => {
     let isValid = true
@@ -39,10 +41,19 @@ const RegisterScreen = ({ navigation }) => {
     if(validatePassword()) {
       // Create a new user with email and password using firebase
         createUserWithEmailAndPassword(auth, email, password)
-        .then((res) => {
-            console.log(res.user)
+        .then(() => {
+          sendEmailVerification(auth.currentUser)
+          .then(() => {
+            setTimeActive(true)
+            navigation.navigate('VerifyEmail')
           })
-        .catch(err => setError(err.message))
+        }).catch(err => setError(err.message))
+        // .then (() => {
+        //   updateProfile(auth.currentUser, {displayName: name})
+        // }).catch(err => alert(err.message))
+        // .then (() => {
+        //     addProfile(name, email)
+        // }).catch(err => setError(err.message))
     }
     setEmail('')
     setPassword('')
