@@ -17,7 +17,7 @@ function VerifyEmail () {
         .then(() => {
           if(currentUser?.emailVerified){
             clearInterval(interval)
-            navigate('ProfileScreen')
+            navigate('/') //Navigate the user to their Profile Screen once verification has been confirmed
           }
         })
         .catch((err) => {
