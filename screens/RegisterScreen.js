@@ -139,7 +139,7 @@ const RegisterScreen = ({ navigation }) => {
           style={[styles.button, styles.loginButton, { width: '50%' }]}
           onPress={handleRegister}
         >
-          <Text style={styles.buttonText}>Register</Text>
+          <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
          </form>
         <View style={[styles.linkContainer, { marginTop: 16 }]}>
@@ -168,3 +168,4 @@ RegisterScreen.navigationOptions = ({ navigation }) => ({
 });
 
 export default RegisterScreen;
+
