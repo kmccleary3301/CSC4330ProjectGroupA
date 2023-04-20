@@ -175,13 +175,11 @@ function App(): React.ReactElement{
             name="ProfileScreen"
             component={ProfileScreen}
             options={getScreenOptions('internal')}
-
         />
         <Stack.Screen
             name="EditProfileScreen"
             component={EditProfileScreen}
             options={getScreenOptions('internal')}
-
         />
         <Stack.Screen
             name="AptRequestScreen"

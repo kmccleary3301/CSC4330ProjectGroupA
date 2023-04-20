@@ -52,8 +52,10 @@ const RegisterScreen = ({ navigation }) => {
   const addProfile = async (name, email) => {
     const user = auth.currentUser;
     try {
+      //users in name of doc
+      // user?.uid is looking for user id
         await setDoc(doc(db, "users", user?.uid), {
-            uid: user.uid,
+            uid: user.uid, //set uid if its not there
             name,
             email,
         });

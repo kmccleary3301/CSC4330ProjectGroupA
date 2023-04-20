@@ -1,5 +1,3 @@
-//just need to implement the profile picture!!
-
 
 import React, {useState} from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +16,7 @@ import EditProfileScreen from "./EditProfileScreen";
 const ProfileScreen = () => {
   const navigation = useNavigation();
 
+  
   const [userProfile, setUserProfile] = useState({
     name: "Mike Tiger",
     email:"mtiger1@lsu.edu",

@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import { View, Text, StyleSheet, Pressable, TextInput, Picker } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import NavBarContainer from '../NavBar';
+import ImagePicker from 'react-native-image-picker';
+
 
 
 
@@ -16,12 +18,20 @@ const EditProfileScreen = ({ route }) => {
 
 
   const handleSubjectChange = (subject) => {
+    if (userSubjects.length >= 5) {
+      alert("You have already added the maximum number of subjects.");
+      return;
+    }
+
     if (!userSubjects.includes(subject)) {
       const updatedUserSubjects = [...userSubjects, subject];
       setUserSubjects(updatedUserSubjects);
+      setShowDropdown(false);
+    } else {
+      alert(`You have already added "${subject}" as one of your subjects.`);
     }
-    setShowDropdown(false);
   };
+  
   
 
   // should alphabetize them for sure
@@ -115,10 +125,9 @@ const EditProfileScreen = ({ route }) => {
   const handleDeleteSubject = (index) => {
     const updatedSubjects = [...userSubjects];
     updatedSubjects.splice(index, 1);
-    setUserSubjects(updatedSubjects);
-    console.log(updatedSubjects);
-};
-
+    setUserSubjects(updatedSubjects.filter(subject => subject !== ''));
+  };
+  
   
   
 
@@ -167,7 +176,7 @@ const EditProfileScreen = ({ route }) => {
           <Text style={styles.subtitle}>My Subjects: </Text>
           
           <View style={styles.subjectsContainer}>
-          {userSubjects.map((subject, index) => (
+          {userSubjects.filter(subject => subject !== '').map((subject, index) => (
             <View key={index} style={styles.subjectContainer}>
               <Pressable onPress={() => handleDeleteSubject(index)}>
                 <Text style={styles.deleteButtonText}>-</Text>
@@ -192,6 +201,7 @@ const EditProfileScreen = ({ route }) => {
             </View>
           </View>
         </View>
+
 
         
 
