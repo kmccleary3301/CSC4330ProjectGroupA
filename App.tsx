@@ -117,6 +117,7 @@ function App(): React.ReactElement{
         headerTitle: '',
         headerShadowVisible: false,
       };
+      
   
       const baseOptions = type === 'internal' ? internalOptions : externalOptions;
   
@@ -176,6 +177,8 @@ function App(): React.ReactElement{
         />
         <Stack.Screen name="RegisterInfoScreen" component={RegisterInfoScreen}
         options={getScreenOptions('external')} />
+        <Stack.Screen name="VerifyEmail" component={VerifyEmail}
+        options={getScreenOptions('external')} />
 
           <Stack.Screen
             name="SubjectSearchScreen"
@@ -200,11 +203,7 @@ function App(): React.ReactElement{
             component={AppointmentsScreen}
             options={getScreenOptions('internal')}
           />
-          <Stack.Screen
-            name="VerifyEmail"
-            component={VerifyEmail}
-            options={getScreenOptions('internal')}
-          />
+          
       </Stack.Navigator>
       </AuthProvider>
     </NavigationContainer>
