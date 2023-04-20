@@ -18,6 +18,29 @@ const blue = '#182640';
 const tan = '#FAE8CD'; 
 const lightBlue = '#C9D3FF';
 
+const StarRating = ({ rating, onRatingPress }) => {
+  const stars = [];
+
+  for (let i = 1; i <= 5; i++) {
+    const starName = i <= rating ? 'star' : 'star-outline';
+    const starColor = i <= rating ? 'Blue' : '#BFBFBF';
+
+    stars.push(
+      <TouchableOpacity key={i} onPress={() => onRatingPress(i)}>
+        <Ionicons name={starName} size={15} color={starColor} />
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <View style={sStyles.ratingRow}>
+      {stars.map((star, index) => (
+        <View key={index}>{star}</View>
+      ))}
+    </View>
+  );
+};
+
 const AppointmentsScreen = () => {
   const navigation = useNavigation();
 
@@ -34,7 +57,7 @@ const AppointmentsScreen = () => {
             name: 'David Sorenti',
             rating: 4.5,
             subject: 'Geography',
-            time: '10:00 AM',
+            time: '3:30-4:30',
             date: '2023-18-02',
             duration: '1 hour',
             location: 'Online',
@@ -46,7 +69,7 @@ const AppointmentsScreen = () => {
           name: 'Jessica Juarez',
           rating: 4.5,
           subject: 'Calculus',
-          time: '10:00 AM',
+          time: '2:30-3:30',
           date: '2023-23-02',
           duration: '1 hour',
           location: 'Online',
@@ -58,7 +81,7 @@ const AppointmentsScreen = () => {
         name: 'James Dunsen',
         rating: 4.5,
         subject: 'Astronomy',
-        time: '10:00 AM',
+        time: '10:30-11:30',
         date: '2023-24-02',
         duration: '1 hour',
         location: 'Online',
@@ -70,7 +93,7 @@ const AppointmentsScreen = () => {
       name: 'Michael Burgeron',
       rating: 4.5,
       subject: 'Comp Sci',
-      time: '10:00 AM',
+      time: '12:30-1:00',
       date: '2023-29-02',
       duration: '1 hour',
       location: 'Online',
@@ -82,7 +105,7 @@ const AppointmentsScreen = () => {
     name: 'Hailey Martinez',
     rating: 4.5,
     subject: 'English',
-    time: '10:00 AM',
+    time: '10:30-11:30',
     date: '2023-01-03',
     duration: '1 hour',
     location: 'Online',
@@ -161,18 +184,25 @@ const AppointmentsScreen = () => {
   // Function to handle rating
   const handleRating = (appointmentId, rating) => {
     // Update the appointment rating in your state/database
+    // Create a new array of past appointments with the updated rating
+    const updatedAppointments = pastAppointmentsList.map((appointment) => {
+      if (appointment.id === appointmentId) {
+        // If this is the selected appointment, update the rating
+        return {
+          ...appointment,
+          rating: rating,
+        };
+      } else {
+        return appointment;
+      }
+    });
+  
+    // Set the state variable with the new array of past appointments
+    setPastAppointmentsList(updatedAppointments);
   };
 
   const navigateToHistory = () => {
-    navigation.navigate('AllHistoryScreen');
-  };
-
-  const AllHistoryScreen = () => {
-    return (
-      <View>
-        <Text>All History Screen</Text>
-      </View>
-    );
+    navigation.navigate('AllHistory');
   };
 
   const onAppointmentPress = (appointmentId) => {
@@ -180,8 +210,7 @@ const AppointmentsScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      
+    <View style={{ flex: 1 }}>  
       <View style={[styles.container,{ alignItems: 'center' }]}>
         <Text style={[styles.title, { fontSize: 20,   marginTop: -45 }]}>My Appointments:</Text>
 
@@ -220,7 +249,7 @@ const AppointmentsScreen = () => {
           <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.date}</Text>
         </View>
         <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-          <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.subject}</Text>
+          <Text style={{ textAlign: 'center', textAlignVertical: 'center', fontSize: 13 }}>{appointment.subject}</Text>
         </View>
         <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
           <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.time}</Text>
@@ -268,10 +297,13 @@ const AppointmentsScreen = () => {
           <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.date}</Text>
         </View>
         <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-          <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.subject}</Text>
+          <Text style={{ textAlign: 'center', textAlignVertical: 'center', fontSize: 13 }}>{appointment.subject}</Text>
         </View>
         <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-          <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.rating}</Text>
+        <StarRating
+          rating={appointment.rating}
+          onRatingPress={(rating) => handleRating(appointment.id, rating)}
+        />
         </View>
       </View>
     </TouchableOpacity>
@@ -375,6 +407,12 @@ const sStyles = StyleSheet.create({
         },
         buttonContent: {
         height: 50,
+        },
+        ratingRow: {
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginVertical: 5,
         },
         });
 

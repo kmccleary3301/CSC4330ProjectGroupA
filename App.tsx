@@ -22,6 +22,7 @@ import AppHeader from './AppHeader';
 import SubjectSearchScreen from './screens/SubjectSearchScreen';
 import AptRequestScreen from './screens/AptRequestScreen';
 import AppointmentsScreen from './screens/AppointmentsScreen';
+import AllHistoryScreen from './screens/AllHistoryScreen';
 
 
 
@@ -172,6 +173,7 @@ function App(): React.ReactElement{
             name="EditProfileScreen"
             component={EditProfileScreen}
         />
+
         <Stack.Screen
             name="AptRequestScreen"
             component={AptRequestScreen}
@@ -182,6 +184,12 @@ function App(): React.ReactElement{
             component={AppointmentsScreen}
             options={getScreenOptions('internal')}
           />
+          <Stack.Screen
+            name="AllHistoryScreen"
+            component={AllHistoryScreen}
+            options={getScreenOptions('internal')}
+/>
+
       </Stack.Navigator>
     </NavigationContainer>
     </Drawer>
