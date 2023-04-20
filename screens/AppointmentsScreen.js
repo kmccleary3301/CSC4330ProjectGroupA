@@ -202,7 +202,7 @@ const AppointmentsScreen = () => {
   };
 
   const navigateToHistory = () => {
-    navigation.navigate('AllHistory');
+    navigation.navigate('AllHistoryScreen');
   };
 
   const onAppointmentPress = (appointmentId) => {
