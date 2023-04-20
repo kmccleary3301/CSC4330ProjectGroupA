@@ -24,7 +24,7 @@ const SubjectAddScreen = ({ navigation }) => {
   const [pronouns, setPronouns] = useState('');
 
   const handleNext = () => {
-    // Perform registration logic and navigate to the next screen
+    
    navigation.navigate('HomeScreen');
   };
 
