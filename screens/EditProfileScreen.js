@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import { View, Text, StyleSheet, Pressable, TextInput, Picker } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import NavBarContainer from '../NavBar';
-import ImagePicker from 'react-native-image-picker';
 
 
 
