@@ -14,17 +14,17 @@ import { AuthProvider, useAuthValue } from '../AuthContext';
 const EditProfileScreen = ({ route }) => {
   const { userProfile, onUpdateProfile } = route.params; // Get userProfile and onUpdateProfile from route params
   const navigation = useNavigation();
-  const [name, setName] = useState(userProfile.name);
+  const [firstName, setFirstName] = useState(userProfile.name);
   const [email, setEmail] = useState(userProfile.email);
   const [pronouns, setPronouns] = useState(userProfile.pronouns);
   const [selectedSubject, setSelectedSubject] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
 
   const [subject1, setSubject1] = useState(userProfile.subject1);
-const [subject2, setSubject2] = useState(userProfile.subject2);
-const [subject3, setSubject3] = useState(userProfile.subject3);
-const [subject4, setSubject4] = useState(userProfile.subject4);
-const [subject5, setSubject5] = useState(userProfile.subject5);
+  const [subject2, setSubject2] = useState(userProfile.subject2);
+  const [subject3, setSubject3] = useState(userProfile.subject3);
+  const [subject4, setSubject4] = useState(userProfile.subject4);
+  const [subject5, setSubject5] = useState(userProfile.subject5);
 
 
   const [userSubjects, setUserSubjects] = useState([
@@ -57,7 +57,7 @@ const [subject5, setSubject5] = useState(userProfile.subject5);
   const updateUserProfile = e => {
       e.preventDefault();
       handleSaveChanges(
-        name, 
+        firstName, 
         email, 
         pronouns, 
         subject1, 
@@ -71,8 +71,7 @@ const [subject5, setSubject5] = useState(userProfile.subject5);
   }
   
 
-  const handleSaveChanges = async (
-    name, 
+  const handleSaveChanges = async (name, 
     email, 
     pronouns, 
     subject1, 
@@ -105,8 +104,7 @@ const [subject5, setSubject5] = useState(userProfile.subject5);
       });
       }catch(err) {console.error(err);
       alert(err.message);}
-    // await updateUserProfile(updatedUserProfile);
-    // onUpdateProfile(updatedUserProfile);
+    onUpdateProfile(updatedUserProfile);
     navigation.goBack();
   };
 
@@ -200,15 +198,19 @@ const [subject5, setSubject5] = useState(userProfile.subject5);
             </Pressable>
           </View>
 
+
           <View style={styles.profileInfoContainer}>
+          <form onSubmit={updateUserProfile}>
             <View style={styles.nameContainer}>
               <Text style={styles.profileInfoLabel}>Name:          </Text>
               <TextInput
               style={styles.profileInfoValue}
-              value={name}
-              onChangeText={setName}
+              value={firstName}
+              onChangeText={setFirstName}
             />
             </View>
+            </form>
+            
 
           <View style={styles.nameContainer}>
             <Text style={styles.profileInfoLabel}>Email:    </Text>
@@ -266,7 +268,7 @@ const [subject5, setSubject5] = useState(userProfile.subject5);
 
           <Pressable
             style={[styles.saveChangesButton, styles.saveChangesButton]}
-            onPress={handleSaveChanges}>
+            onPress={updateUserProfile}>
             <Text style={styles.buttonText}>Save changes</Text>
           </Pressable>
         </View>
