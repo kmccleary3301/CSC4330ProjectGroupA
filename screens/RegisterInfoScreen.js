@@ -28,7 +28,7 @@ const RegisterInfoScreen = ({ navigation }) => {
     e.preventDefault();
     addProfileInfo(firstName, lastName, pronouns)
     .then(() => {
-        navigation.navigate('HomeScreen')
+        navigation.navigate('SubjectAddScreen')
     });
 }
 

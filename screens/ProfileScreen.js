@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     button: {
       width: 175,
       height: 50,
-      marginTop: 75,    //subject to change if styling changes are made
+      marginTop: 50,    //subject to change if styling changes are made
       marginBottom: 10,
       borderRadius: 30,
       borderColor: tan,

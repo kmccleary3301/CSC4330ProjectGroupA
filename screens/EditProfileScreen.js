@@ -21,10 +21,10 @@ const EditProfileScreen = ({ route }) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const [subject1, setSubject1] = useState(userProfile.subject1);
-const [subject2, setSubject2] = useState(userProfile.subject2);
-const [subject3, setSubject3] = useState(userProfile.subject3);
-const [subject4, setSubject4] = useState(userProfile.subject4);
-const [subject5, setSubject5] = useState(userProfile.subject5);
+  const [subject2, setSubject2] = useState(userProfile.subject2);
+  const [subject3, setSubject3] = useState(userProfile.subject3);
+  const [subject4, setSubject4] = useState(userProfile.subject4);
+  const [subject5, setSubject5] = useState(userProfile.subject5);
 
 
   const [userSubjects, setUserSubjects] = useState([
@@ -307,7 +307,7 @@ const [subject5, setSubject5] = useState(userProfile.subject5);
       saveChangesButton: {
         width: 175,
         height: 50,
-        marginTop: 50, //subject to change as page evolves
+        marginTop: 30, //subject to change as page evolves
         borderRadius: 30,
         borderColor: tan,
         borderWidth: 4.5,
