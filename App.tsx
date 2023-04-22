@@ -30,6 +30,9 @@ import VerifyEmail from './screens/VerifyEmail';
 import { AuthProvider } from './AuthContext';
 import {auth} from './firebase';
 import {onAuthStateChanged} from 'firebase/auth';
+import { UserTypeProvider } from './UserTypeContext';
+
+import { getDoc, doc } from 'firebase/firestore';
 
 import { useAccessibilityInfo } from '@react-native-community/hooks';
 
@@ -59,13 +62,20 @@ function App(): React.ReactElement{
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [timeActive, setTimeActive] = useState(false);
-
-
+  const [initialUserType, setInitialUserType] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user)
-    })
+    onAuthStateChanged(auth, async (user) => {
+      setCurrentUser(user);
+      if (user) {
+        const userRef = doc(firebase.firestore(), `users/${user.uid}`);
+        const userData = await getDoc(userRef);
+        const userType = userData.data()?.userType;
+        setInitialUserType(userType);
+      }
+      setLoading(false);
+    });
 
     const timer = setTimeout(() => {
       setHideSplashScreen(true);
@@ -131,8 +141,8 @@ function App(): React.ReactElement{
   
   return (
     
+    <UserTypeProvider initialUserType={initialUserType}>
    <Drawer
-   
     type="overlay"
     content={
       <SideMenu
@@ -208,6 +218,7 @@ function App(): React.ReactElement{
       </AuthProvider>
     </NavigationContainer>
     </Drawer>
+    </UserTypeProvider>
     
   );
 }
