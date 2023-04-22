@@ -28,7 +28,7 @@ import SubjectAddScreen from './screens/SubjectAddScreen';
 
 import VerifyEmail from './screens/VerifyEmail';
 import { AuthProvider } from './AuthContext';
-import {auth} from './firebase';
+import {db,auth} from './firebase';
 import {onAuthStateChanged} from 'firebase/auth';
 import { UserTypeProvider } from './UserTypeContext';
 
@@ -69,7 +69,7 @@ function App(): React.ReactElement{
     onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
       if (user) {
-        const userRef = doc(firebase.firestore(), `users/${user.uid}`);
+        const userRef = doc(db, `users/${user.uid}`);
         const userData = await getDoc(userRef);
         const userType = userData.data()?.userType;
         setInitialUserType(userType);
