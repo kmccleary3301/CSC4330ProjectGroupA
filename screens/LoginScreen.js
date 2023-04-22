@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,6 +9,9 @@ import { useNavigation } from '@react-navigation/native';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility.ts';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
+import {signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged} from 'firebase/auth';
+import {auth} from '../firebase';
+import {useAuthValue} from '../AuthContext';
 
 const LoginScreen = () => {
 
@@ -20,23 +22,27 @@ const LoginScreen = () => {
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
 
 // login user then checks if verified, if verified, navigate to home page,
-  // if not, redirect to verify-email page
+//   if not, redirect to login page
   const login = e => {
     e.preventDefault()
     signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      if(!auth.currentUser.emailVerified) {
-        sendEmailVerification(auth.currentUser)
-        .then(() => {
+      .then(() => {
+        if (!auth.currentUser.emailVerified) {
+          sendEmailVerification(auth.currentUser)
+            .then(() => {
+              setTimeActive(true)
+              navigation.navigate('LoginScreen')
+            })
+            .catch(err => alert(err.message))
+        } else {
           setTimeActive(true)
-          navigation.navigate('VerifyEmail')
-        })
-      .catch(err => alert(err.message))
-      }else{
-        navigation.navigate('ProfileScreen')
-      }
-    })
-    .catch(err => setError(err.message))
+          navigation.navigate('HomeScreen')
+        }
+      })
+      .catch(err => {
+        setError('Email or password is incorrect')
+        console.log(err)
+      })
   };
 
   return (
@@ -55,7 +61,6 @@ const LoginScreen = () => {
       </View>
       <Text style={styles.title}>Log In</Text>      
       <View style={styles.inputContainer}>
-        <form onSubmit={login} name='login_form'>
         <TextInput
           style={styles.inputField}
           placeholder='Email'
@@ -88,7 +93,6 @@ const LoginScreen = () => {
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-        </form>
         <View style={styles.linkContainer}>
           <Text style={styles.linkText}>Forgot your password?</Text>
           <TouchableOpacity
