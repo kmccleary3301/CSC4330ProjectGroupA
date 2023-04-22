@@ -10,23 +10,41 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
-
+import {auth, db} from '../firebase';
+import {doc, setDoc, updateDoc, getDoc} from "firebase/firestore";
+import {useAuthValue} from '../AuthContext'
 
 const RegisterInfoScreen = ({ navigation }) => {
 
 
 
-
-  const [email, setEmail] = useState('');
-  
-  const [userType, setUserType] = useState('');
-
+  const {currentUser} = useAuthValue();
+  const [email, setEmail] = useState('');  
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [pronouns, setPronouns] = useState('');
 
-  const handleNext = () => {
-    // Perform registration logic and navigate to the next screen
-   navigation.navigate('HomeScreen');
-  };
+  const profileInfo = e => {
+    e.preventDefault();
+    addProfileInfo(firstName, lastName, pronouns)
+    .then(() => {
+        navigation.navigate('HomeScreen')
+    });
+}
+
+  const addProfileInfo = async (firstName, lastName, pronouns) => {
+    const user = auth.currentUser;
+    try {
+        await updateDoc(doc(db, "users", user?.uid), {
+          firstName,
+          lastName,
+          pronouns,
+      });
+  }   catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+};
 
   return (
     <View style={[styles.container, { justifyContent: 'start', paddingTop: 120, marginTop: 0 }]}>
@@ -47,18 +65,21 @@ const RegisterInfoScreen = ({ navigation }) => {
         <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
           We just need a few more things before your account is created.
         </Text>
-        <Picker
-          style={[styles.picker, { paddingLeft: 5 }]}
-          selectedValue={userType}
-          onValueChange={(itemValue) => setUserType(itemValue)}
-          prompt="I am a..."
-          mode="dropdown"
-        >
-          <Picker.Item label="I am a..." value="" />
-          <Picker.Item label="Student" value="student" />
-          <Picker.Item label="Tutor" value="tutor" />
-          <Picker.Item label="Administrator" value="administrator" />
-        </Picker>
+        <form onSubmit={profileInfo}>
+        <TextInput
+          style={styles.inputField}
+          onChange={e => setFirstName(e.target.value)}
+          value={firstName}
+          placeholder="First Name"          
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.inputField}
+          onChange={e => setLastName(e.target.value)}
+          value={lastName}
+          placeholder="Last Name"          
+          autoCapitalize="none"
+        />
         <Picker
           style={[styles.picker, { paddingLeft: 5 }]}
           selectedValue={pronouns}
@@ -74,14 +95,15 @@ const RegisterInfoScreen = ({ navigation }) => {
           <Picker.Item label="She/they" value="She/they" />
         </Picker>
         
-        <TouchableOpacity onPress={handleNext}
+        <TouchableOpacity onPress={profileInfo}
           style={[styles.button, styles.loginButton, { width: '50%' }]}
         >
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
+        </form>
         <View style={[styles.linkContainer, { marginTop: 16 }]}>
           <Text style={styles.linkText}>Already have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+          <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
             <Text style={styles.link}>Login</Text>
           </TouchableOpacity>
         </View>
