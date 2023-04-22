@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   Image,
+  Button
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility.ts';
@@ -19,6 +21,8 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const {setTimeActive} = useAuthValue();
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
 
 // login user then checks if verified, if verified, navigate to home page,
@@ -46,6 +50,7 @@ const LoginScreen = () => {
   };
 
   return (
+    <form onSubmit={login} name='login_form'>
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         <View style={{ width: 300, height: 200 }}>
@@ -89,9 +94,10 @@ const LoginScreen = () => {
         </View>
         <TouchableOpacity
           style={[styles.button, styles.loginButton]}
-          onPress={() => navigation.navigate('HomeScreen')}
+          // onPress={() => navigation.navigate('HomeScreen')}
+          
         >
-          <Text style={styles.buttonText}>Login</Text>
+          <button type='submit'><Text style={styles.buttonText}>Login</Text></button>
         </TouchableOpacity>
         <View style={styles.linkContainer}>
           <Text style={styles.linkText}>Forgot your password?</Text>
@@ -104,6 +110,7 @@ const LoginScreen = () => {
         </View>
       </View>
     </View>
+    </form>
   );
 };
 
