@@ -40,7 +40,7 @@ const ProfileScreen = () => {
   });
 
   const {currentUser} = useAuthValue();
-  const user = currentUser;
+  const user = auth.currentUser;
 
   useEffect(() => {
     const getUserProfile = async () => {

@@ -2,6 +2,11 @@ import React, {useState} from "react";
 import { View, Text, StyleSheet, Pressable, TextInput, Picker } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import NavBarContainer from '../NavBar';
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { auth, db } from '../firebase';
+import ProfileScreen from "./ProfileScreen";
+import { AuthProvider, useAuthValue } from '../AuthContext';
+
 
 
 
@@ -15,6 +20,21 @@ const EditProfileScreen = ({ route }) => {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const [subject1, setSubject1] = useState(userProfile.subject1);
+const [subject2, setSubject2] = useState(userProfile.subject2);
+const [subject3, setSubject3] = useState(userProfile.subject3);
+const [subject4, setSubject4] = useState(userProfile.subject4);
+const [subject5, setSubject5] = useState(userProfile.subject5);
+
+
+  const [userSubjects, setUserSubjects] = useState([
+    userProfile.subject1,
+    userProfile.subject2,
+    userProfile.subject3,
+    userProfile.subject4,
+    userProfile.subject5,
+  ]);
+  
 
   const handleSubjectChange = (subject) => {
     if (userSubjects.length >= 5) {
@@ -30,6 +50,68 @@ const EditProfileScreen = ({ route }) => {
       alert(`You have already added "${subject}" as one of your subjects.`);
     }
   };
+
+  const {currentUser} = useAuthValue();
+  const user = auth.currentUser;
+
+  const updateUserProfile = e => {
+      e.preventDefault();
+      handleSaveChanges(
+        name, 
+        email, 
+        pronouns, 
+        subject1, 
+        subject2,
+        subject3, 
+        subject4, 
+        subject5
+      ).then(() => {
+          navigation.navigate('ProfileScreen')
+      });
+  }
+  
+
+  const handleSaveChanges = async (
+    name, 
+    email, 
+    pronouns, 
+    subject1, 
+    subject2,
+    subject3, 
+    subject4, 
+    subject5) => {
+    const filteredSubjects = userSubjects.filter(subject => subject !== ''); // Filter out empty strings
+    const updatedUserProfile = {
+      ...userProfile,
+      name: name,
+      email: email,
+      pronouns: pronouns,
+      subject1: filteredSubjects[0] || "",
+      subject2: filteredSubjects[1] || "",
+      subject3: filteredSubjects[2] || "",
+      subject4: filteredSubjects[3] || "",
+      subject5: filteredSubjects[4] || "",
+    }
+    try {
+      await updateDoc(doc(db, "users", user?.uid), {
+        name, 
+        email, 
+        pronouns, 
+        subject1, 
+        subject2,
+        subject3, 
+        subject4, 
+        subject5,
+      });
+      }catch(err) {console.error(err);
+      alert(err.message);}
+    // await updateUserProfile(updatedUserProfile);
+    // onUpdateProfile(updatedUserProfile);
+    navigation.goBack();
+  };
+
+  
+  
   
   
 
@@ -85,14 +167,6 @@ const EditProfileScreen = ({ route }) => {
     'Womens Studies'
   ];
 
-  const [userSubjects, setUserSubjects] = useState([
-    userProfile.subject1,
-    userProfile.subject2,
-    userProfile.subject3,
-    userProfile.subject4,
-    userProfile.subject5,
-  ]);
-
 
   // Function to toggle dropdown visibility
   const toggleDropdown = () => {
@@ -103,22 +177,7 @@ const EditProfileScreen = ({ route }) => {
     navigation.goBack();
   }
 
-  const handleSaveChanges = () => {
-    const filteredSubjects = userSubjects.filter(subject => subject !== ''); // Filter out empty strings
-    const updatedUserProfile = {
-      ...userProfile,
-      name: name,
-      email: email,
-      pronouns: pronouns,
-      subject1: filteredSubjects[0] || "",
-      subject2: filteredSubjects[1] || "",
-      subject3: filteredSubjects[2] || "",
-      subject4: filteredSubjects[3] || "",
-      subject5: filteredSubjects[4] || "",
-    };
-    onUpdateProfile(updatedUserProfile);
-    navigation.goBack();
-  };
+
   
 
   const handleDeleteSubject = (index) => {
@@ -156,7 +215,8 @@ const EditProfileScreen = ({ route }) => {
             <TextInput
               style={styles.profileInfoValue}
               value={email}
-              onChangeText={setEmail}
+              onChange={e => setEmail(e.target.value)}
+              placeholder={userProfile.email}
           />          
           </View>
 
@@ -268,14 +328,6 @@ const EditProfileScreen = ({ route }) => {
           fontFamily: 'SF',
           marginRight: 35,
         },
-      saveChangesButton: {
-        backgroundColor: blue,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 30,
-        borderColor: tan,
-        borderWidth: 4,
-      },
       value: {
         color: 'tan',
       },
