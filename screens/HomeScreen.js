@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,10 @@ import { BarChart } from 'react-native-chart-kit';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { DatePickerModal } from 'react-native-paper-dates';
+import {useAuthValue} from '../AuthContext';
+import {signOut} from 'firebase/auth';
+import {auth, db} from '../firebase';
+import {getDoc, doc} from 'firebase/firestore';
 
 import AptRequestScreen from './AptRequestScreen';
 
@@ -26,11 +30,23 @@ const lightBlue = '#C9D3FF';
 
  const HomeScreen = () => {
    const navigation = useNavigation();
-
+   const {currentUser} = useAuthValue();
+   const [userProfile, setUserProfile] = useState('');
+   const user = currentUser;
    const getLocalDate = () => {
     const now = new Date();
     return new Date(now.getTime() - now.getTimezoneOffset() * 60000);
   };
+
+  useEffect(() => {
+    const getUserProfile = async () => {
+      const docRef = doc(db, "users", user?.uid);
+      const docSnap = await getDoc(docRef);
+      setUserProfile(docSnap.data())
+      //console.log("data:", userProfile.firstName);
+      };
+    getUserProfile();
+  }, []);
   
   const [selectedDate, setSelectedDate] = useState(getLocalDate());
 
@@ -152,6 +168,7 @@ const lightBlue = '#C9D3FF';
     return (
         <View style={{ flex: 1 }}>
       <View style={styles.container}>
+      <Text style={[styles.title, {fontSize: 20, marginTop: -55} ]}>Hello,{userProfile.firstName}</Text>
         <Text style={[styles.title, {fontSize: 20, marginTop: -35} ]}>Select an Appointment:</Text>
          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
          <Text style={[styles.title, { fontSize: 20, marginTop: -92, marginLeft: 60, fontFamily: 'SF' }]}>Change Date:</Text>

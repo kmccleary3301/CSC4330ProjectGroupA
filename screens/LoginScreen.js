@@ -19,6 +19,26 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
 
+// login user then checks if verified, if verified, navigate to home page,
+  // if not, redirect to verify-email page
+  const login = e => {
+    e.preventDefault()
+    signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      if(!auth.currentUser.emailVerified) {
+        sendEmailVerification(auth.currentUser)
+        .then(() => {
+          setTimeActive(true)
+          navigation.navigate('VerifyEmail')
+        })
+      .catch(err => alert(err.message))
+      }else{
+        navigation.navigate('ProfileScreen')
+      }
+    })
+    .catch(err => setError(err.message))
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -33,14 +53,14 @@ const LoginScreen = () => {
           />
         </View>
       </View>
-      <Text style={styles.title}>Log In</Text>
-     
+      <Text style={styles.title}>Log In</Text>      
       <View style={styles.inputContainer}>
+        <form onSubmit={login} name='login_form'>
         <TextInput
           style={styles.inputField}
           placeholder='Email'
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          onChange={e => setEmail(e.target.value)}
           autoCapitalize='none'
           keyboardType='email-address'
         />
@@ -49,7 +69,7 @@ const LoginScreen = () => {
             style={styles.inputField}
             placeholder='Password'
             value={password}
-            onChangeText={(text) => setPassword(text)}
+            onChange={e => setPassword(e.target.value)}
             autoCapitalize='none'
             secureTextEntry={!passwordVisibility}
           />
@@ -68,6 +88,7 @@ const LoginScreen = () => {
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
+        </form>
         <View style={styles.linkContainer}>
           <Text style={styles.linkText}>Forgot your password?</Text>
           <TouchableOpacity
