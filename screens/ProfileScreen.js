@@ -28,30 +28,39 @@ const ProfileScreen = () => {
     subject3: "Computer Science",
     subject4: "English",
     subject5: "Geology",
+    profilePicture: require('../assets/icons/profileAvatar.png'),
   });
 
+
+ 
   const handleUpdateProfile = (updatedUserProfile) => {
     setUserProfile(updatedUserProfile);
-  }
-
+  };
 
   const handleEditProfile = () => {
-     navigation.navigate('EditProfileScreen', {userProfile: userProfile})
+     navigation.navigate('EditProfileScreen', {userProfile, onUpdateProfile: handleUpdateProfile})
   };
+
 
   return (
     <View style={{ flex: 1 }}>
     <View style={styles.container}>
       <Text style={[styles.title]}>My Profile</Text>
-        <View style={styles.profileContainor}>
-          {/* <View style={styles.profilePicPlaceholder}></View> */}
-          <Text style={styles.profileInfo}>{userProfile.name}                {[userProfile.pronouns]}</Text>
-          <Text style={styles.profileInfo}>{userProfile.email}</Text>
-          <Text style={styles.userType}>{userProfile.userType}</Text>
-          <Text style={styles.school}>{userProfile.school}</Text>
+
+        <View style={styles.profileContainer}>
+          <View style={styles.pictureContainer}>
+            <Image style={styles.profilePic} source={userProfile.profilePicture} />
+          </View>
+          <View style={styles.profileInfoContainer}>
+            <Text style={styles.profileInfo}>{userProfile.name} {[userProfile.pronouns]}</Text>
+            <Text style={styles.profileInfo}>{userProfile.email}</Text>
+            <Text style={styles.userType}>{userProfile.userType}</Text>
+            <Text style={styles.school}>{userProfile.school}</Text>
+          </View>
         </View>
+
         <Text style={styles.subtitle}>My Subjects:</Text>
-        <View style={styles.subjectsContainor}>
+        <View style={styles.subjectsContainer}>
           <Text style={styles.subjects}>{userProfile.subject1}</Text>
           <Text style={styles.subjects}>{userProfile.subject2}</Text>
           <Text style={styles.subjects}>{userProfile.subject3}</Text>
@@ -111,7 +120,7 @@ const styles = StyleSheet.create({
       paddingTop: 120,
     },
     title: {
-      fontSize: 20,
+      fontSize: 25,
       marginTop: -75,
       fontWeight: 'bold',
       color: tan,
@@ -154,25 +163,29 @@ const styles = StyleSheet.create({
       fontFamily: 'SF',
       fontSize: 17,
     },
-    profileContainor: {
-      alignItems: 'flex-start', 
-      justifyContent: 'center',
+    profileContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 10,
     },
-    subjectsContainor: {
+    profileInfoContainer: {
+      marginLeft: 10,
+    },
+    subjectsContainer: {
       marginTop: 40,
       alignItems: 'center',
       justifyContent: 'center',
     },
     // couldnt get image imports so temporary placeholder
-    profilePicPlaceholder: {
-      width: 50, 
-      height: 50,
-      borderRadius: 25, // Set border radius to half og width/height to make it circular
-      backgroundColor: 'pink'
+    profilePic: {
+      width: 105, 
+      height: 105,
+      borderRadius: 25, 
+      marginTop: 8,
     },
-    pictureContainor: {
+    pictureContainer: {
       flexDirection: 'row',
-      justifyContent: 'center',
+      marginBottom: 10,
       alignItems: 'center',
     },
 

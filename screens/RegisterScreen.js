@@ -11,8 +11,9 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
 import {auth, db} from '../firebase';
-import {createUserWithEmailAndPassword} from 'firebase/auth'
+import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} from 'firebase/auth'
 import {doc, setDoc} from "firebase/firestore";
+import {useAuthValue} from '../AuthContext'
 
 const RegisterScreen = ({ navigation }) => {
   
@@ -21,6 +22,7 @@ const RegisterScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userType, setUserType] = useState('');
   const [error , setError] = useState('');
+  const {setTimeActive} = useAuthValue();
 
   const validatePassword = () => {
     let isValid = true
@@ -39,22 +41,32 @@ const RegisterScreen = ({ navigation }) => {
     if(validatePassword()) {
       // Create a new user with email and password using firebase
         createUserWithEmailAndPassword(auth, email, password)
-        .then((res) => {
-            console.log(res.user)
+        .then(() => {
+          sendEmailVerification(auth.currentUser)
+          .then(() => {
+            setTimeActive(true)
+            navigation.navigate('VerifyEmail')
           })
-        .catch(err => setError(err.message))
+        }).catch(err => setError(err.message))
+        .then (() => {
+          updateProfile(auth.currentUser, {displayName: name})
+        }).catch(err => alert(err.message))
+        .then (() => {
+            addProfile(email, userType)
+        }).catch(err => setError(err.message))
     }
+    setUserType('')
     setEmail('')
     setPassword('')
     setConfirmPassword('')
   }
 
-  const addProfile = async (name, email) => {
+  const addProfile = async (email, userType) => {
     const user = auth.currentUser;
     try {
-        await setDoc(doc(db, "users", user?.uid), {
+        await setDoc(doc(db, "users", user.uid), {
             uid: user.uid,
-            name,
+            userType,
             email,
         });
     }   catch (err) {
@@ -84,11 +96,12 @@ const RegisterScreen = ({ navigation }) => {
           Create a new account with your university email.
         </Text>
         
-
+        <form onSubmit={handleRegister} name='registration_form'>
+          
         <Picker
           style={[styles.picker, { paddingLeft: 5 }]}
           selectedValue={userType}
-          onValueChange={(itemValue) => setUserType(itemValue)}
+          onChange={e => setUserType(e.target.value)}
           prompt="I am a..."
           mode="dropdown"
         >
@@ -99,8 +112,8 @@ const RegisterScreen = ({ navigation }) => {
         </Picker>
 
 
-        <form onSubmit={handleRegister} name='registration_form'>
-        <input
+        
+        <TextInput
           style={styles.inputField}
           onChange={e => setEmail(e.target.value)}
           value={email}
@@ -108,7 +121,7 @@ const RegisterScreen = ({ navigation }) => {
           
           autoCapitalize="none"
         />
-        <input
+        <TextInput
           style={styles.inputField}
           onChange={e => setPassword(e.target.value)}
           value={password}
@@ -116,7 +129,7 @@ const RegisterScreen = ({ navigation }) => {
           
           autoCapitalize="none"
         />
-        <input
+        <TextInput
           style={styles.inputField}
           onChange={e => setConfirmPassword(e.target.value)}
           value={confirmPassword}

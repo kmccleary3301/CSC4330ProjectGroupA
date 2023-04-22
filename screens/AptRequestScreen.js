@@ -8,6 +8,10 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import NavBarContainer from '../NavBar';
+import {auth, db} from '../firebase';
+//import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} from 'firebase/auth'
+//import {doc, setDoc} from "firebase/firestore";
+//import {useAuthValue} from '../AuthContext'
 
 const tan = '#FAE8CD';
 const blue = '#182640';
@@ -23,9 +27,27 @@ const AptRequestScreen = ({ route }) => {
       navigation.goBack();
     };
   
-    const onConfirm = () => {
-      // Handle confirm logic here
-    };
+    const onConfirm = async () => {
+      // Access Firestore instance
+      //const db = firebase.firestore();
+      // Create a new appointment request object
+      const appointmentRequest = {
+        appointmentId: appointment.id,
+        studentId: firebase.auth().currentUser.uid,
+        notes: notes,
+        status: 'pending',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      // Add the appointment request to Firestore
+    try {
+      await db.collection('appointmentRequests').add(appointmentRequest);
+      console.log('Appointment request added successfully');
+    } catch (error) {
+      console.error('Error adding appointment request: ', error);
+    }
+    
+    navigation.goBack();
+  };
   
     return (
       <View style={{ flex: 1 }}>

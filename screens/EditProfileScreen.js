@@ -11,35 +11,79 @@ const EditProfileScreen = ({ route }) => {
   const [name, setName] = useState(userProfile.name);
   const [email, setEmail] = useState(userProfile.email);
   const [pronouns, setPronouns] = useState(userProfile.pronouns);
-  const [userSubjects, setUserSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
 
 
-  // Function to handle subject selection
   const handleSubjectChange = (subject) => {
-    setSelectedSubject(subject);
+    if (!userSubjects.includes(subject)) {
+      const updatedUserSubjects = [...userSubjects, subject];
+      setUserSubjects(updatedUserSubjects);
+    }
+    setShowDropdown(false);
   };
+  
 
   // should alphabetize them for sure
   const subjects = [
     'Accounting',
-    'Science',
-    'English Literature',
-    'English',
-    'Computer Science',
-    'Geography',
-    'Geology',
-    'Calculus',
-    'Algebra',
-    'Architecture',
-    'Art History',
     'Anthropology',
+    'Art History',
+    'Astronomy',
+    'Biology',
+    'Business Administration',
+    'Chemistry',
+    'Communications',
+    'Computer Science',
+    'Creative Writing',
+    'Criminal Justice',
+    'Digital Media',
+    'Economics',
+    'Education',
+    'Engineering',
+    'English',
+    'English Literature',
+    'Environmental Science',
+    'Film Studies',
+    'French',
+    'Geography',
+    'Global Studies',
     'History',
+    'International Relations',
+    'Journalism',
+    'Law',
+    'Linguistics',
+    'Marketing',
+    'Mathematics',
+    'Mechanical Engineering',
+    'Music',
+    'Neuroscience',
+    'Philosophy',
+    'Physics',
+    'Political Science',
+    'Psychology',
+    'Public Health',
+    'Religious Studies',
     'Social Work',
     'Sociology',
-    'Pyschology',
+    'Spanish',
+    'Statistics',
+    'Sustainability Studies',
+    'Theater',
+    'Theology',
+    'Urban Studies',
+    'Visual Arts',
+    'Womens Studies'
   ];
+
+  const [userSubjects, setUserSubjects] = useState([
+    userProfile.subject1,
+    userProfile.subject2,
+    userProfile.subject3,
+    userProfile.subject4,
+    userProfile.subject5,
+  ]);
+
 
   // Function to toggle dropdown visibility
   const toggleDropdown = () => {
@@ -51,22 +95,30 @@ const EditProfileScreen = ({ route }) => {
   }
 
   const handleSaveChanges = () => {
+    const filteredSubjects = userSubjects.filter(subject => subject !== ''); // Filter out empty strings
     const updatedUserProfile = {
       ...userProfile,
       name: name,
       email: email,
       pronouns: pronouns,
-      subjects: userSubjects ?? []
+      subject1: filteredSubjects[0] || "",
+      subject2: filteredSubjects[1] || "",
+      subject3: filteredSubjects[2] || "",
+      subject4: filteredSubjects[3] || "",
+      subject5: filteredSubjects[4] || "",
     };
-    onUpdateProfile(updatedUserProfile); 
+    onUpdateProfile(updatedUserProfile);
     navigation.goBack();
   };
+  
 
   const handleDeleteSubject = (index) => {
     const updatedSubjects = [...userSubjects];
     updatedSubjects.splice(index, 1);
     setUserSubjects(updatedSubjects);
-  };
+    console.log(updatedSubjects);
+};
+
   
   
 
@@ -74,7 +126,7 @@ const EditProfileScreen = ({ route }) => {
       <View style={{ flex: 1 }}>
         <View style={styles.container}>
 
-          <View style={styles.cancelContainor}>
+          <View style={styles.cancelContainer}>
             <Pressable
               onPress = {handleCancel}>
               <Text style={styles.cancelText}>Cancel</Text>
@@ -114,79 +166,33 @@ const EditProfileScreen = ({ route }) => {
 
           <Text style={styles.subtitle}>My Subjects: </Text>
           
-          <View style={styles.subjectsContainor}>
-          {userProfile.subject1 && (
-            <View style={styles.subjectContainor}>
-              <Pressable
-                onPress={() => handleDeleteSubject(0)}>
+          <View style={styles.subjectsContainer}>
+          {userSubjects.map((subject, index) => (
+            <View key={index} style={styles.subjectContainer}>
+              <Pressable onPress={() => handleDeleteSubject(index)}>
                 <Text style={styles.deleteButtonText}>-</Text>
               </Pressable>
-              <Text style={styles.subjectsText}>{userProfile.subject1}</Text>
+              <Text style={styles.subjectsText}>{subject}</Text>
             </View>
-          )}
-          {userProfile.subject2 && (
-            <View style={styles.subjectContainor}>
-              <Pressable
-                onPress={() => handleDeleteSubject(1)}>
-                <Text style={styles.deleteButtonText}>-</Text>
-              </Pressable>
-              <Text style={styles.subjectsText}>{userProfile.subject2}</Text>
-            </View>
-          )}
-          {userProfile.subject3 && (
-            <View style={styles.subjectContainor}>
-              <Pressable
-                onPress={() => handleDeleteSubject(2)}>
-                <Text style={styles.deleteButtonText}>-</Text>
-              </Pressable>
-              <Text style={styles.subjectsText}>{userProfile.subject3}</Text>
-            </View>
-          )}
-          {userProfile.subject4 && (
-            <View style={styles.subjectContainor}>
-              <Pressable
-                onPress={() => handleDeleteSubject(3)}>
-                <Text style={styles.deleteButtonText}>-</Text>
-              </Pressable>
-              <Text style={styles.subjectsText}>{userProfile.subject4}</Text>
-            </View>
-          )}
-          {userProfile.subject5 && (
-            <View style={styles.subjectContainor}>
-              <Pressable
-                onPress={() => handleDeleteSubject(4)}>
-                <Text style={styles.deleteButtonText}>-</Text>
-              </Pressable>
-              <Text style={styles.subjectsText}>{userProfile.subject5}</Text>
-            </View>
-          )}
+          ))}
           <View>
-          <View style={styles.subjectContainor}>
-            <Pressable
-              onPress={() => toggleDropdown()}
-            >
-              <Text style={styles.deleteButtonText}>+</Text>
-            </Pressable>
-            {showDropdown ? ( 
-              <Picker
-                selectedValue={selectedSubject}
-                onValueChange={handleSubjectChange}
-              >
-                {subjects.map((subject, index) => (
-                  <Picker.Item
-                    key={index}
-                    label={subject}
-                    value={subject}
-                  />
-                ))}
-              </Picker>
-            ) : (
-              <Text style={styles.subjectsText}>Add course</Text> 
-            )}
+            <View style={styles.subjectContainer}>
+              <Pressable onPress={() => toggleDropdown()}>
+                <Text style={styles.deleteButtonText}>+</Text>
+              </Pressable>
+              {showDropdown ? (
+                <Picker selectedValue={selectedSubject} onValueChange={handleSubjectChange}>
+                  {subjects.map((subject, index) => (
+                    <Picker.Item key={index} label={subject} value={subject} />
+                  ))}
+                </Picker>
+              ) : (
+                <Text style={styles.subjectsText}>Add course</Text>
+              )}
+            </View>
           </View>
         </View>
-        </View>
-        
+
         
 
           <Pressable
@@ -220,7 +226,7 @@ const EditProfileScreen = ({ route }) => {
           backgroundColor: blue,
           padding: 5,
       },
-      cancelContainor: {
+      cancelContainer: {
         position: 'absolute',
         top: 0,
         left: 0,
@@ -271,7 +277,7 @@ const EditProfileScreen = ({ route }) => {
         fontFamily: 'Vikendi',
         marginTop: 40,
       },
-      subjectsContainor: {
+      subjectsContainer: {
         marginTop: 10,
         alignItems: 'flex-start', 
         justifyContent: 'center',
@@ -283,7 +289,7 @@ const EditProfileScreen = ({ route }) => {
         fontSize: 20,
         alignSelf: 'flex-start',
       }, 
-      subjectContainor: {
+      subjectContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
