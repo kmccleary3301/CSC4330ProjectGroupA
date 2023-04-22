@@ -38,6 +38,8 @@ import { useAccessibilityInfo } from '@react-native-community/hooks';
 
 
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from "./types";
 
 
 const Stack = createNativeStackNavigator();
@@ -147,7 +149,7 @@ function App(): React.ReactElement{
     content={
       <SideMenu
         onClose={() => setDrawerOpen(false)}
-        onLogout={() => console.log('Logout')}
+        onLogout={() => {console.log('Logout'); useNavigation<StackNavigationProp<RootStackParamList>>('InitialScreen'); }}
         onHelpCenter={() => console.log('Help Center')}
         onPrivacyPolicy={() => console.log('Privacy Policy')}
         onSettings={() => console.log('Settings')}
@@ -164,61 +166,25 @@ function App(): React.ReactElement{
       mainOverlay: { opacity: ratio / 2, backgroundColor: 'black' },
     })}
   >
-    <NavigationContainer>
-      <AuthProvider value={{currentUser, timeActive, setTimeActive}}>
-      <Stack.Navigator initialRouteName='InitialScreen'>
-        <Stack.Screen name="MySplashScreen" component={MySplashScreen} options={{headerShown: false}} />
-        <Stack.Screen name="InitialScreen" component={InitialScreen}
-          options={{headerShown: false}}    
-        />
-        <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={getScreenOptions('external')}
-      />
-        <Stack.Screen name="RegisterScreen" component={RegisterScreen}
-        options={getScreenOptions('external')} />
-        <Stack.Screen name="SubjectAddScreen" component={SubjectAddScreen}
-        options={getScreenOptions('external')} />
-        <Stack.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-          options={getScreenOptions('internal')}
-        />
-        <Stack.Screen name="RegisterInfoScreen" component={RegisterInfoScreen}
-        options={getScreenOptions('external')} />
-        <Stack.Screen name="VerifyEmail" component={VerifyEmail}
-        options={getScreenOptions('external')} />
-
-          <Stack.Screen
-            name="SubjectSearchScreen"
-            component={SubjectSearchScreen}
-            options={getScreenOptions('internal')}
-          />
-        <Stack.Screen
-            name="ProfileScreen"
-            component={ProfileScreen}
-            options={getScreenOptions('internal')}
-        />
-        <Stack.Screen
-            name="EditProfileScreen"
-            component={EditProfileScreen}
-            options={getScreenOptions('internal')}
-        />
-        <Stack.Screen
-            name="AptRequestScreen"
-            component={AptRequestScreen}
-            options={getScreenOptions('internal')}
-          />
-          <Stack.Screen
-            name="AppointmentsScreen"
-            component={AppointmentsScreen}
-            options={getScreenOptions('internal')}
-          />
-          
-      </Stack.Navigator>
-      </AuthProvider>
-    </NavigationContainer>
+      <NavigationContainer>
+        <AuthProvider value={{currentUser, timeActive, setTimeActive}}>
+          <Stack.Navigator initialRouteName='InitialScreen'>
+            <Stack.Screen name="MySplashScreen"      component={MySplashScreen}      options={{headerShown: false}}/>
+            <Stack.Screen name="InitialScreen"       component={InitialScreen}       options={{headerShown: false}}/>
+            <Stack.Screen name="LoginScreen"         component={LoginScreen}         options={getScreenOptions('external')}/>
+            <Stack.Screen name="RegisterScreen"      component={RegisterScreen}      options={getScreenOptions('external')}/>
+            <Stack.Screen name="SubjectAddScreen"    component={SubjectAddScreen}    options={getScreenOptions('external')}/>
+            <Stack.Screen name="HomeScreen"          component={HomeScreen}          options={getScreenOptions('internal')}/>
+            <Stack.Screen name="RegisterInfoScreen"  component={RegisterInfoScreen}  options={getScreenOptions('external')}/>
+            <Stack.Screen name="VerifyEmail"         component={VerifyEmail}         options={getScreenOptions('external')}/>
+            <Stack.Screen name="SubjectSearchScreen" component={SubjectSearchScreen} options={getScreenOptions('internal')}/>
+            <Stack.Screen name="ProfileScreen"       component={ProfileScreen}       options={getScreenOptions('internal')}/>
+            <Stack.Screen name="EditProfileScreen"   component={EditProfileScreen}   options={getScreenOptions('internal')}/>
+            <Stack.Screen name="AptRequestScreen"    component={AptRequestScreen}    options={getScreenOptions('internal')}/>
+            <Stack.Screen name="AppointmentsScreen"  component={AppointmentsScreen}  options={getScreenOptions('internal')}/>
+          </Stack.Navigator>
+        </AuthProvider>
+      </NavigationContainer>
     </Drawer>
     </UserTypeProvider>
     
