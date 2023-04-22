@@ -28,13 +28,18 @@ import SubjectAddScreen from './screens/SubjectAddScreen';
 
 import VerifyEmail from './screens/VerifyEmail';
 import { AuthProvider } from './AuthContext';
-import {auth} from './firebase';
+import {db,auth} from './firebase';
 import {onAuthStateChanged} from 'firebase/auth';
+import { UserTypeProvider } from './UserTypeContext';
+
+import { getDoc, doc } from 'firebase/firestore';
 
 import { useAccessibilityInfo } from '@react-native-community/hooks';
 
 
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from "./types";
 
 
 const Stack = createNativeStackNavigator();
@@ -59,13 +64,20 @@ function App(): React.ReactElement{
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [timeActive, setTimeActive] = useState(false);
-
-
+  const [initialUserType, setInitialUserType] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user)
-    })
+    onAuthStateChanged(auth, async (user) => {
+      setCurrentUser(user);
+      if (user) {
+        const userRef = doc(db, `users/${user.uid}`);
+        const userData = await getDoc(userRef);
+        const userType = userData.data()?.userType;
+        setInitialUserType(userType);
+      }
+      setLoading(false);
+    });
 
     const timer = setTimeout(() => {
       setHideSplashScreen(true);
@@ -131,13 +143,13 @@ function App(): React.ReactElement{
   
   return (
     
+    <UserTypeProvider initialUserType={initialUserType}>
    <Drawer
-   
     type="overlay"
     content={
       <SideMenu
         onClose={() => setDrawerOpen(false)}
-        onLogout={() => console.log('Logout')}
+        onLogout={() => {console.log('Logout'); useNavigation<StackNavigationProp<RootStackParamList>>('InitialScreen'); }}
         onHelpCenter={() => console.log('Help Center')}
         onPrivacyPolicy={() => console.log('Privacy Policy')}
         onSettings={() => console.log('Settings')}
@@ -154,62 +166,27 @@ function App(): React.ReactElement{
       mainOverlay: { opacity: ratio / 2, backgroundColor: 'black' },
     })}
   >
-    <NavigationContainer>
-      <AuthProvider value={{currentUser, timeActive, setTimeActive}}>
-      <Stack.Navigator initialRouteName='InitialScreen'>
-        <Stack.Screen name="MySplashScreen" component={MySplashScreen} options={{headerShown: false}} />
-        <Stack.Screen name="InitialScreen" component={InitialScreen}
-          options={{headerShown: false}}    
-        />
-        <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={getScreenOptions('external')}
-      />
-        <Stack.Screen name="RegisterScreen" component={RegisterScreen}
-        options={getScreenOptions('external')} />
-        <Stack.Screen name="SubjectAddScreen" component={SubjectAddScreen}
-        options={getScreenOptions('external')} />
-        <Stack.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-          options={getScreenOptions('internal')}
-        />
-        <Stack.Screen name="RegisterInfoScreen" component={RegisterInfoScreen}
-        options={getScreenOptions('external')} />
-        <Stack.Screen name="VerifyEmail" component={VerifyEmail}
-        options={getScreenOptions('external')} />
-
-          <Stack.Screen
-            name="SubjectSearchScreen"
-            component={SubjectSearchScreen}
-            options={getScreenOptions('internal')}
-          />
-        <Stack.Screen
-            name="ProfileScreen"
-            component={ProfileScreen}
-            options={getScreenOptions('internal')}
-        />
-        <Stack.Screen
-            name="EditProfileScreen"
-            component={EditProfileScreen}
-            options={getScreenOptions('internal')}
-        />
-        <Stack.Screen
-            name="AptRequestScreen"
-            component={AptRequestScreen}
-            options={getScreenOptions('internal')}
-          />
-          <Stack.Screen
-            name="AppointmentsScreen"
-            component={AppointmentsScreen}
-            options={getScreenOptions('internal')}
-          />
-          
-      </Stack.Navigator>
-      </AuthProvider>
-    </NavigationContainer>
+      <NavigationContainer>
+        <AuthProvider value={{currentUser, timeActive, setTimeActive}}>
+          <Stack.Navigator initialRouteName='InitialScreen'>
+            <Stack.Screen name="MySplashScreen"      component={MySplashScreen}      options={{headerShown: false}}/>
+            <Stack.Screen name="InitialScreen"       component={InitialScreen}       options={{headerShown: false}}/>
+            <Stack.Screen name="LoginScreen"         component={LoginScreen}         options={getScreenOptions('external')}/>
+            <Stack.Screen name="RegisterScreen"      component={RegisterScreen}      options={getScreenOptions('external')}/>
+            <Stack.Screen name="SubjectAddScreen"    component={SubjectAddScreen}    options={getScreenOptions('external')}/>
+            <Stack.Screen name="HomeScreen"          component={HomeScreen}          options={getScreenOptions('internal')}/>
+            <Stack.Screen name="RegisterInfoScreen"  component={RegisterInfoScreen}  options={getScreenOptions('external')}/>
+            <Stack.Screen name="VerifyEmail"         component={VerifyEmail}         options={getScreenOptions('external')}/>
+            <Stack.Screen name="SubjectSearchScreen" component={SubjectSearchScreen} options={getScreenOptions('internal')}/>
+            <Stack.Screen name="ProfileScreen"       component={ProfileScreen}       options={getScreenOptions('internal')}/>
+            <Stack.Screen name="EditProfileScreen"   component={EditProfileScreen}   options={getScreenOptions('internal')}/>
+            <Stack.Screen name="AptRequestScreen"    component={AptRequestScreen}    options={getScreenOptions('internal')}/>
+            <Stack.Screen name="AppointmentsScreen"  component={AppointmentsScreen}  options={getScreenOptions('internal')}/>
+          </Stack.Navigator>
+        </AuthProvider>
+      </NavigationContainer>
     </Drawer>
+    </UserTypeProvider>
     
   );
 }

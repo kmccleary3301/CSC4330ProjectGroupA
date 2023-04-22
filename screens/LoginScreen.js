@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   Image,
+  Button
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility.ts';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
+import {signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged} from 'firebase/auth';
+import {auth} from '../firebase';
+import {useAuthValue} from '../AuthContext';
 
 const LoginScreen = () => {
 
@@ -17,9 +21,36 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const {setTimeActive} = useAuthValue();
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
 
+// login user then checks if verified, if verified, navigate to home page,
+//   if not, redirect to login page
+  const login = e => {
+    e.preventDefault()
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        if (!auth.currentUser.emailVerified) {
+          sendEmailVerification(auth.currentUser)
+            .then(() => {
+              setTimeActive(true)
+              navigation.navigate('LoginScreen')
+            })
+            .catch(err => alert(err.message))
+        } else {
+          setTimeActive(true)
+          navigation.navigate('HomeScreen')
+        }
+      })
+      .catch(err => {
+        setError('Email or password is incorrect')
+        console.log(err)
+      })
+  };
+
   return (
+    <form onSubmit={login} name='login_form'>
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         <View style={{ width: 300, height: 200 }}>
@@ -33,14 +64,13 @@ const LoginScreen = () => {
           />
         </View>
       </View>
-      <Text style={styles.title}>Log In</Text>
-     
+      <Text style={styles.title}>Log In</Text>      
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.inputField}
           placeholder='Email'
           value={email}
-          onChangeText={(text) => setEmail(text)}
+          onChange={e => setEmail(e.target.value)}
           autoCapitalize='none'
           keyboardType='email-address'
         />
@@ -49,7 +79,7 @@ const LoginScreen = () => {
             style={styles.inputField}
             placeholder='Password'
             value={password}
-            onChangeText={(text) => setPassword(text)}
+            onChange={e => setPassword(e.target.value)}
             autoCapitalize='none'
             secureTextEntry={!passwordVisibility}
           />
@@ -64,9 +94,10 @@ const LoginScreen = () => {
         </View>
         <TouchableOpacity
           style={[styles.button, styles.loginButton]}
-          onPress={() => navigation.navigate('HomeScreen')}
+          // onPress={() => navigation.navigate('HomeScreen')}
+          
         >
-          <Text style={styles.buttonText}>Login</Text>
+          <button type='submit'><Text style={styles.buttonText}>Login</Text></button>
         </TouchableOpacity>
         <View style={styles.linkContainer}>
           <Text style={styles.linkText}>Forgot your password?</Text>
@@ -79,6 +110,7 @@ const LoginScreen = () => {
         </View>
       </View>
     </View>
+    </form>
   );
 };
 
