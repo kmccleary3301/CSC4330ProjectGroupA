@@ -1,7 +1,5 @@
-//just need to implement the profile picture!!
 
-
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
   Image,
@@ -10,18 +8,28 @@ import {
   View,
   Pressable,
 } from "react-native";
+
 import NavBarContainer from '../NavBar';
 import EditProfileScreen from "./EditProfileScreen";
+import {doc, getDoc} from "firebase/firestore";
+import {auth, db} from '../firebase';
+import { StorageError } from "firebase/storage";
+import { updateProfile } from "firebase/auth";
+import { AuthProvider, useAuthValue } from '../AuthContext';
+
+
 
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
 
+  
+   
   const [userProfile, setUserProfile] = useState({
-    name: "Mike Tiger",
-    email:"mtiger1@lsu.edu",
+    name: 'Mike Tiger',
+    email:"",
     pronouns:"He/his/him",
-    userType:"Student",
+    userType:"",
     school:"Lousiana State University",
     subject1: "Astronomy",
     subject2: "Calculus",
@@ -30,6 +38,19 @@ const ProfileScreen = () => {
     subject5: "Geology",
     profilePicture: require('../assets/icons/profileAvatar.png'),
   });
+
+  const {currentUser} = useAuthValue();
+  const user = auth.currentUser;
+
+  useEffect(() => {
+    const getUserProfile = async () => {
+      const docRef = doc(db, "users", user?.uid);
+      const docSnap = await getDoc(docRef);
+      setUserProfile(docSnap.data())
+    };
+    getUserProfile();
+  }, []);
+  
 
 
  
@@ -53,8 +74,10 @@ const ProfileScreen = () => {
           </View>
           <View style={styles.profileInfoContainer}>
             <Text style={styles.profileInfo}>{userProfile.name} {[userProfile.pronouns]}</Text>
-            <Text style={styles.profileInfo}>{userProfile.email}</Text>
-            <Text style={styles.userType}>{userProfile.userType}</Text>
+            <h1>
+            <Text style={styles.profileInfo}>{currentUser.email}</Text>
+            <Text style={styles.userType}>{currentUser.userType}</Text>
+            </h1>
             <Text style={styles.school}>{userProfile.school}</Text>
           </View>
         </View>
@@ -74,8 +97,7 @@ const ProfileScreen = () => {
       </Pressable>
     </View>
     <NavBarContainer />
-  </View>
-  
+  </View>  
   );
 };
 

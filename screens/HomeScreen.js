@@ -22,8 +22,11 @@ import {signOut} from 'firebase/auth';
 import {auth, db} from '../firebase';
 import {getDoc, doc} from 'firebase/firestore';
 
+
 import AptRequestScreen from './AptRequestScreen';
 import { useUserType } from '../UserTypeContext';
+
+
 
 
 const blue = '#182640';
@@ -39,6 +42,8 @@ const lightBlue = '#C9D3FF';
     const now = new Date();
     return new Date(now.getTime() - now.getTimezoneOffset() * 60000);
   };
+
+  const { userType } = useUserType();
 
   useEffect(() => {
     const getUserProfile = async () => {
