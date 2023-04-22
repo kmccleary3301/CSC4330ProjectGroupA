@@ -188,10 +188,12 @@ function App(): React.ReactElement{
         <Stack.Screen
             name="ProfileScreen"
             component={ProfileScreen}
+            options={getScreenOptions('internal')}
         />
         <Stack.Screen
             name="EditProfileScreen"
             component={EditProfileScreen}
+            options={getScreenOptions('internal')}
         />
         <Stack.Screen
             name="AptRequestScreen"
