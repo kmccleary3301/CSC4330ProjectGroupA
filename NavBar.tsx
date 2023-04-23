@@ -72,7 +72,7 @@ const NavBarContainer = () => {
         screenName="AppointmentsScreen"
         text="My Appointments"
       />
-      <NavBarItem 
+      <NavBarItem
         iconSource={require('./assets/icons/profile.png')}
         screenName="ProfileScreen"
         text="Profile"

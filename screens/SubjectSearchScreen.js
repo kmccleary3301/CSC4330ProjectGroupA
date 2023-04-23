@@ -18,7 +18,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 //   navigation: SubjectSearchScreenNavigationProp;
 // };
 
-const SubjectSearchScreen = ({  }) => {
+const SubjectSearchScreen = ({ }) => {
   const [search, setSearch] = useState('');
   const [subject, setSubject] = useState('');
 

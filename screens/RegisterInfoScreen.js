@@ -10,16 +10,16 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
-import {auth, db} from '../firebase';
-import {doc, setDoc, updateDoc, getDoc} from "firebase/firestore";
-import {useAuthValue} from '../AuthContext'
+import { auth, db } from '../firebase';
+import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
+import { useAuthValue } from '../AuthContext'
 
 const RegisterInfoScreen = ({ navigation }) => {
 
 
 
-  const {currentUser} = useAuthValue();
-  const [email, setEmail] = useState('');  
+  const { currentUser } = useAuthValue();
+  const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [pronouns, setPronouns] = useState('');
@@ -27,24 +27,24 @@ const RegisterInfoScreen = ({ navigation }) => {
   const profileInfo = e => {
     e.preventDefault();
     addProfileInfo(firstName, lastName, pronouns)
-    .then(() => {
+      .then(() => {
         navigation.navigate('SubjectAddScreen')
-    });
-}
+      });
+  }
 
   const addProfileInfo = async (firstName, lastName, pronouns) => {
     const user = auth.currentUser;
     try {
-        await updateDoc(doc(db, "users", user?.uid), {
-          firstName,
-          lastName,
-          pronouns,
+      await updateDoc(doc(db, "users", user?.uid), {
+        firstName,
+        lastName,
+        pronouns,
       });
-  }   catch (err) {
+    } catch (err) {
       console.error(err);
       alert(err.message);
     }
-};
+  };
 
   return (
     <View style={[styles.container, { justifyContent: 'start', paddingTop: 120, marginTop: 0 }]}>
@@ -66,40 +66,40 @@ const RegisterInfoScreen = ({ navigation }) => {
           We just need a few more things before your account is created.
         </Text>
         <form onSubmit={profileInfo}>
-        <TextInput
-          style={styles.inputField}
-          onChange={e => setFirstName(e.target.value)}
-          value={firstName}
-          placeholder="First Name"          
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.inputField}
-          onChange={e => setLastName(e.target.value)}
-          value={lastName}
-          placeholder="Last Name"          
-          autoCapitalize="none"
-        />
-        <Picker
-          style={[styles.picker, { paddingLeft: 5 }]}
-          selectedValue={pronouns}
-          onValueChange={(itemValue) => setPronouns(itemValue)}
-          prompt="My pronouns are..."
-          mode="dropdown"
-        >
-          <Picker.Item label="My pronouns are..." value="" />
-          <Picker.Item label="He/him" value="He/him" />
-          <Picker.Item label="She/her" value="She/her" />
-          <Picker.Item label="They/them" value="They/them" />
-          <Picker.Item label="He/they" value="He/they" />
-          <Picker.Item label="She/they" value="She/they" />
-        </Picker>
-        
-        <TouchableOpacity onPress={profileInfo}
-          style={[styles.button, styles.loginButton, { width: '50%' }]}
-        >
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
+          <TextInput
+            style={styles.inputField}
+            onChange={e => setFirstName(e.target.value)}
+            value={firstName}
+            placeholder="First Name"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.inputField}
+            onChange={e => setLastName(e.target.value)}
+            value={lastName}
+            placeholder="Last Name"
+            autoCapitalize="none"
+          />
+          <Picker
+            style={[styles.picker, { paddingLeft: 5 }]}
+            selectedValue={pronouns}
+            onValueChange={(itemValue) => setPronouns(itemValue)}
+            prompt="My pronouns are..."
+            mode="dropdown"
+          >
+            <Picker.Item label="My pronouns are..." value="" />
+            <Picker.Item label="He/him" value="He/him" />
+            <Picker.Item label="She/her" value="She/her" />
+            <Picker.Item label="They/them" value="They/them" />
+            <Picker.Item label="He/they" value="He/they" />
+            <Picker.Item label="She/they" value="She/they" />
+          </Picker>
+
+          <TouchableOpacity onPress={profileInfo}
+            style={[styles.button, styles.loginButton, { width: '50%' }]}
+          >
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
         </form>
         <View style={[styles.linkContainer, { marginTop: 16 }]}>
           <Text style={styles.linkText}>Already have an account?</Text>
