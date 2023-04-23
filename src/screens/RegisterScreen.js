@@ -26,20 +26,24 @@ const RegisterScreen = ({ navigation }) => {
 
   const validatePassword = () => {
     let isValid = true
+    if (password.length < 6) {
+      alert('Password must be at least 6 characters long.')
+      isValid = false
+    }
     if (password !== '' && confirmPassword !== '') {
       if (password !== confirmPassword) {
+        alert('Passwords do not match.')
         isValid = false
-        setError('Passwords does not match')
       }
     }
-    return isValid
-  }
+    return isValid;
+  };
+  
 
   const handleRegister = e => {
     e.preventDefault()
-    setError('')
-    if (validatePassword()) {
-      // Create a new user with email and password using firebase
+    if (validatePassword()) {    
+      // Create a new user with email and password using firebase      
       createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
           sendEmailVerification(auth.currentUser)
@@ -49,16 +53,16 @@ const RegisterScreen = ({ navigation }) => {
             })
         }).catch(err => setError(err.message))
         .then(() => {
-          updateProfile(auth.currentUser, { displayName: name })
+          updateProfile(auth.currentUser)
         }).catch(err => alert(err.message))
         .then(() => {
           addProfile(email, userType)
         }).catch(err => setError(err.message))
+      setUserType('')
+      setEmail('')
+      setPassword('')
+      setConfirmPassword('')
     }
-    setUserType('')
-    setEmail('')
-    setPassword('')
-    setConfirmPassword('')
   }
 
   const addProfile = async (email, userType) => {
