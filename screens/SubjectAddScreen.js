@@ -18,14 +18,14 @@ const SubjectAddScreen = ({ navigation }) => {
 
 
   const [email, setEmail] = useState('');
-  
+
   const [userType, setUserType] = useState('');
 
   const [pronouns, setPronouns] = useState('');
 
   const handleNext = () => {
-    
-   navigation.navigate('HomeScreen');
+
+    navigation.navigate('HomeScreen');
   };
 
   return (
@@ -73,7 +73,7 @@ const SubjectAddScreen = ({ navigation }) => {
           <Picker.Item label="He/they" value="He/they" />
           <Picker.Item label="She/they" value="She/they" />
         </Picker>
-        
+
         <TouchableOpacity onPress={handleNext}
           style={[styles.button, styles.loginButton, { width: '50%' }]}
         >
