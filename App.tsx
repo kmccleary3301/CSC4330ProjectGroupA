@@ -27,7 +27,6 @@ import AppointmentsScreen from './screens/AppointmentsScreen';
 import RegisterInfoScreen from './screens/RegisterInfoScreen';
 import SubjectAddScreen from './screens/SubjectAddScreen';
 
-
 import VerifyEmail from './screens/VerifyEmail';
 import { AuthProvider } from './AuthContext';
 import { db, auth } from './firebase';
