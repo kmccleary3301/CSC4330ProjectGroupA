@@ -5,11 +5,11 @@ import styles from '../styles';
 
 const MySplashScreen = () => {
   const blue = '#182640';
-  const tan = '#FAE8CD';  
+  const tan = '#FAE8CD';
 
   return (
-    <View style={[styles.container, {backgroundColor: tan}]}>
-       <View style={styles.logoContainer}>
+    <View style={[styles.container, { backgroundColor: tan }]}>
+      <View style={styles.logoContainer}>
         <View style={{ width: 300, height: 200 }}>
           <Image
             style={{
@@ -18,7 +18,7 @@ const MySplashScreen = () => {
               resizeMode: 'contain',
               alignSelf: 'center',
               marginTop: 100,
-              
+
             }}
             source={require('../assets/logos/blue.png')}
           />
@@ -27,7 +27,5 @@ const MySplashScreen = () => {
     </View>
   );
 };
-
-
 
 export default MySplashScreen;

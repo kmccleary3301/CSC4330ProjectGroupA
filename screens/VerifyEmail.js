@@ -7,8 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 //import styles from '../styles.ts';
 
 const blue = '#182640';
-const tan = '#FAE8CD'; 
-const lightBlue = '#C9D3FF'; 
+const tan = '#FAE8CD';
+const lightBlue = '#C9D3FF';
 
 const VerifyEmail = () => {
   const { currentUser } = useAuthValue();
@@ -22,7 +22,7 @@ const VerifyEmail = () => {
         .then(() => {
           if (currentUser?.emailVerified) {
             clearInterval(interval);
-            navigate.navigate('HomeScreen'); // Navigate the user to their Home Screen once verification has been confirmed
+            navigate.navigate('RegisterInfoScreen'); // Navigate the user to the next step of registration once verification has been confirmed
           }
         })
         .catch((err) => {
