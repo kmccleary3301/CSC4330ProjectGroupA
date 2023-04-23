@@ -59,7 +59,7 @@ const HomeScreen = () => {
 
   const mockAppointments = [
     {
-      date: '2023-04-22',
+      date: '2023-04-23',
       appointments: [
         { id: 20, name: 'William White', rating: '4.9/5', subject: 'Geography', time: '3:30-4:30' },
         { id: 21, name: 'Alexander Walker', rating: '4.8/5', subject: 'Calculus', time: '3:30-4:30' },
@@ -137,7 +137,7 @@ const HomeScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={[styles.title, { fontSize: 20, marginTop: -55 }]}>Hello,{(userProfile.firstName ===undefined)?"1":"2"}</Text>
+        <Text style={[styles.title, { fontSize: 20, marginTop: -55 }]}>Hello,{(userProfile.firstName)}</Text>
         <Text style={[styles.title, { fontSize: 20, marginTop: -35 }]}> {userType === 'student'
           ? 'Select an Appointment:'
           : 'Upcoming appointments'}</Text>

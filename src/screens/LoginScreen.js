@@ -81,7 +81,7 @@ const LoginScreen = () => {
               value={password}
               onChange={e => setPassword(e.target.value)}
               autoCapitalize='none'
-              secureTextEntry={!passwordVisibility}
+              secureTextEntry={passwordVisibility}
             />
             <TouchableOpacity
               onPress={handlePasswordVisibility}
