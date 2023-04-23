@@ -30,7 +30,7 @@ const AppHeader = ({
       {menu && (
         <TouchableOpacity onPress={onMenuPress}>
           <Image
-            source={require('./assets/icons/menu.png')}
+            source={require('./src/assets/icons/menu.png')}
             style={{ width: IconSize, height: IconSize, tintColor: iconColor }}
             resizeMode="contain"
           />
@@ -49,14 +49,14 @@ const AppHeader = ({
     <View style={styles.titleView}>
       {!title && (
         <Image
-          source={require('./assets/icons/more.png')}
+          source={require('./src/assets/icons/more.png')}
           style={{ ...styles.logo, tintColor }}
           resizeMode="contain"
         />
       )}
       {title && (
         <Image
-        source={require('./assets/logos/blue.png')}
+        source={require('./src/assets/logos/blue.png')}
         style={{ ...styles.logo }}
         resizeMode="contain"
       />

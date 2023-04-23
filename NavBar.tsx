@@ -63,17 +63,17 @@ const NavBarContainer = () => {
   return (
     <View style={styles.navigationBar}>
       <NavBarItem
-        iconSource={require('./assets/icons/home.png')}
+        iconSource={require('./src/assets/icons/home.png')}
         screenName="HomeScreen"
         text="Home"
       />
       <NavBarItem
-        iconSource={require('./assets/icons/appointments.png')}
+        iconSource={require('./src/assets/icons/appointments.png')}
         screenName="AppointmentsScreen"
         text="My Appointments"
       />
       <NavBarItem
-        iconSource={require('./assets/icons/profile.png')}
+        iconSource={require('./src/assets/icons/profile.png')}
         screenName="ProfileScreen"
         text="Profile"
       />
