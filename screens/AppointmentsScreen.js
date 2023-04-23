@@ -12,6 +12,10 @@ import NavBarContainer from '../NavBar';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
+const blue = '#182640';
+const tan = '#FAE8CD';
+const lightBlue = '#C9D3FF';
+
 const AppointmentsScreen = () => {
   const navigation = useNavigation();
 
