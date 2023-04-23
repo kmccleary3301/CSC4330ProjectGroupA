@@ -6,33 +6,38 @@ import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from '../firebase';
 import ProfileScreen from "./ProfileScreen";
 import { AuthProvider, useAuthValue } from '../AuthContext';
+import { async } from "@firebase/util";
+import { last } from "rxjs";
 
 
 
 
 
 const EditProfileScreen = ({ route }) => {
-  const { userProfile, onUpdateProfile } = route.params; // Get userProfile and onUpdateProfile from route params
+  const {currentUser} = useAuthValue();
   const navigation = useNavigation();
-  const [name, setName] = useState(userProfile.name);
-  const [email, setEmail] = useState(userProfile.email);
-  const [pronouns, setPronouns] = useState(userProfile.pronouns);
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [email, setEmail] = useState();
+  const [pronouns, setPronouns] = useState();
   const [selectedSubject, setSelectedSubject] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const [subject1, setSubject1] = useState(userProfile.subject1);
-  const [subject2, setSubject2] = useState(userProfile.subject2);
-  const [subject3, setSubject3] = useState(userProfile.subject3);
-  const [subject4, setSubject4] = useState(userProfile.subject4);
-  const [subject5, setSubject5] = useState(userProfile.subject5);
+  const [subject1, setSubject1] = useState(currentUser.subject1);
+  const [subject2, setSubject2] = useState(currentUser.subject2);
+  const [subject3, setSubject3] = useState(currentUser.subject3);
+  const [subject4, setSubject4] = useState(currentUser.subject4);
+  const [subject5, setSubject5] = useState(currentUser.subject5);
 
+  
+  const user = auth.currentUser;
 
   const [userSubjects, setUserSubjects] = useState([
-    userProfile.subject1,
-    userProfile.subject2,
-    userProfile.subject3,
-    userProfile.subject4,
-    userProfile.subject5,
+    currentUser.subject1,
+    currentUser.subject2,
+    currentUser.subject3,
+    currentUser.subject4,
+    currentUser.subject5,
   ]);
 
 
@@ -51,13 +56,11 @@ const EditProfileScreen = ({ route }) => {
     }
   };
 
-  const { currentUser } = useAuthValue();
-  const user = auth.currentUser;
-
-  const updateUserProfile = e => {
+  const updatecurrentUser = e => {
     e.preventDefault();
     handleSaveChanges(
-      name,
+      firstName,
+      lastName,
       email,
       pronouns,
       subject1,
@@ -70,47 +73,70 @@ const EditProfileScreen = ({ route }) => {
     });
   }
 
-
   const handleSaveChanges = async (
-    name,
+    firstName,
+    lastName,
     email,
     pronouns,
     subject1,
     subject2,
     subject3,
     subject4,
-    subject5) => {
-    const filteredSubjects = userSubjects.filter(subject => subject !== ''); // Filter out empty strings
-    const updatedUserProfile = {
-      ...userProfile,
-      name: name,
-      email: email,
-      pronouns: pronouns,
-      subject1: filteredSubjects[0] || "",
-      subject2: filteredSubjects[1] || "",
-      subject3: filteredSubjects[2] || "",
-      subject4: filteredSubjects[3] || "",
-      subject5: filteredSubjects[4] || "",
-    }
-    try {
-      await updateDoc(doc(db, "users", user?.uid), {
-        name,
-        email,
-        pronouns,
-        subject1,
-        subject2,
-        subject3,
-        subject4,
-        subject5,
-      });
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
-    }
-    // await updateUserProfile(updatedUserProfile);
-    // onUpdateProfile(updatedUserProfile);
-    navigation.goBack();
-  };
+    subject5
+    ) => {
+      try {
+        await updateDoc(doc(db, "users", user?.uid), {
+          firstName,
+          lastName,
+          email,
+          pronouns,
+          subjects: [subject1, subject2, subject3, subject4, subject5]
+        });
+      } catch (err) {
+        console.log(err);
+        alert(`Error saving changes.`);
+      }
+    };
+  // const handleSaveChanges = async (
+  //   name,
+  //   email,
+  //   pronouns,
+  //   subject1,
+  //   subject2,
+  //   subject3,
+  //   subject4,
+  //   subject5) => {
+  //   const filteredSubjects = userSubjects.filter(subject => subject !== ''); // Filter out empty strings
+  //   const updatedcurrentUser = {
+  //     ...currentUser,
+  //     name: name,
+  //     email: email,
+  //     pronouns: pronouns,
+  //     subject1: filteredSubjects[0] || "",
+  //     subject2: filteredSubjects[1] || "",
+  //     subject3: filteredSubjects[2] || "",
+  //     subject4: filteredSubjects[3] || "",
+  //     subject5: filteredSubjects[4] || "",
+  //   }
+  //   try {
+  //     await updateDoc(doc(db, "users", user?.uid), {
+  //       name,
+  //       email,
+  //       pronouns,
+  //       subject1,
+  //       subject2,
+  //       subject3,
+  //       subject4,
+  //       subject5,
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert(err.message);
+  //   }
+  //   // await updatecurrentUser(updatedcurrentUser);
+  //   // onUpdateProfile(updatedcurrentUser);
+  //   navigation.goBack();
+  // };
 
 
 
@@ -204,11 +230,20 @@ const EditProfileScreen = ({ route }) => {
 
         <View style={styles.profileInfoContainer}>
           <View style={styles.nameContainer}>
-            <Text style={styles.profileInfoLabel}>Name:          </Text>
+            <Text style={styles.profileInfoLabel}>First Name:          </Text>
             <TextInput
               style={styles.profileInfoValue}
-              value={name}
-              onChangeText={setName}
+              value={firstName}
+              onChange={e => setFirstName(e.target.value)}
+            />
+          </View>
+
+          <View style={styles.nameContainer}>
+            <Text style={styles.profileInfoLabel}>Last Name:          </Text>
+            <TextInput
+              style={styles.profileInfoValue}
+              value={lastName}
+              onChange={e => setLastName(e.target.value)}
             />
           </View>
 
@@ -218,7 +253,7 @@ const EditProfileScreen = ({ route }) => {
               style={styles.profileInfoValue}
               value={email}
               onChange={e => setEmail(e.target.value)}
-              placeholder={userProfile.email}
+              placeholder={currentUser.email}
             />
           </View>
 
@@ -227,7 +262,8 @@ const EditProfileScreen = ({ route }) => {
             <TextInput
               style={styles.profileInfoValue}
               value={pronouns}
-              onChangeText={setPronouns}
+              onChange={e => setPronouns(e.target.value)}
+              placeholder={currentUser.pronouns}
             />
           </View>
         </View>
