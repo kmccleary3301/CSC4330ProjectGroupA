@@ -11,9 +11,9 @@ import { useNavigation } from '@react-navigation/native';
 import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility.ts';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles.ts';
-import {signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged} from 'firebase/auth';
-import {auth} from '../firebase';
-import {useAuthValue} from '../AuthContext';
+import { signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase';
+import { useAuthValue } from '../AuthContext';
 
 const LoginScreen = () => {
 
@@ -22,11 +22,11 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const {setTimeActive} = useAuthValue();
+  const { setTimeActive } = useAuthValue();
   const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
 
-// login user then checks if verified, if verified, navigate to home page,
-//   if not, redirect to login page
+  // login user then checks if verified, if verified, navigate to home page,
+  //   if not, redirect to login page
   const login = e => {
     e.preventDefault()
     signInWithEmailAndPassword(auth, email, password)
@@ -51,65 +51,65 @@ const LoginScreen = () => {
 
   return (
     <form onSubmit={login} name='login_form'>
-    <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <View style={{ width: 300, height: 200 }}>
-          <Image
-            style={{
-              width: '100%',
-              height: '100%',
-              resizeMode: 'contain',
-            }}
-            source={require('../assets/logos/tan.png')}
-          />
+      <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <View style={{ width: 300, height: 200 }}>
+            <Image
+              style={{
+                width: '100%',
+                height: '100%',
+                resizeMode: 'contain',
+              }}
+              source={require('../assets/logos/tan.png')}
+            />
+          </View>
         </View>
-      </View>
-      <Text style={styles.title}>Log In</Text>      
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.inputField}
-          placeholder='Email'
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          autoCapitalize='none'
-          keyboardType='email-address'
-        />
-        <View style={styles.passwordContainer}>
+        <Text style={styles.title}>Log In</Text>
+        <View style={styles.inputContainer}>
           <TextInput
             style={styles.inputField}
-            placeholder='Password'
-            value={password}
-            onChange={e => setPassword(e.target.value)}
+            placeholder='Email'
+            value={email}
+            onChange={e => setEmail(e.target.value)}
             autoCapitalize='none'
-            secureTextEntry={!passwordVisibility}
+            keyboardType='email-address'
           />
+          <View style={styles.passwordContainer}>
+            <TextInput
+              style={styles.inputField}
+              placeholder='Password'
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              autoCapitalize='none'
+              secureTextEntry={!passwordVisibility}
+            />
+            <TouchableOpacity
+              onPress={handlePasswordVisibility}
+              style={styles.passwordVisibilityContainer}
+            >
+              <Text style={styles.passwordVisibilityText}>
+                {passwordVisibility ? 'Hide' : 'Show'}
+              </Text>
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity
-            onPress={handlePasswordVisibility}
-            style={styles.passwordVisibilityContainer}
-          >
-            <Text style={styles.passwordVisibilityText}>
-              {passwordVisibility ? 'Hide' : 'Show'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={[styles.button, styles.loginButton]}
+            style={[styles.button, styles.loginButton]}
           // onPress={() => navigation.navigate('HomeScreen')}
-          
-        >
-          <button type='submit'><Text style={styles.buttonText}>Login</Text></button>
-        </TouchableOpacity>
-        <View style={styles.linkContainer}>
-          <Text style={styles.linkText}>Forgot your password?</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('RegisterScreen')}
+
           >
-            <Text style={styles.link}>Create an account</Text>
+            <button type='submit'><Text style={styles.buttonText}>Login</Text></button>
           </TouchableOpacity>
-          
+          <View style={styles.linkContainer}>
+            <Text style={styles.linkText}>Forgot your password?</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('RegisterScreen')}
+            >
+              <Text style={styles.link}>Create an account</Text>
+            </TouchableOpacity>
+
+          </View>
         </View>
       </View>
-    </View>
     </form>
   );
 };

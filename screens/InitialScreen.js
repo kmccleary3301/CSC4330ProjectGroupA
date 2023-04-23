@@ -15,15 +15,15 @@ const InitialScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-      <View style={{ width: 300, height: 200 }}>
-        <Image
-          style={{
-            width: '100%',
-            height: '100%',
-            resizeMode: 'contain',
-          }}
-          source={require('../assets/logos/tan.png')}
-        />
+        <View style={{ width: 300, height: 200 }}>
+          <Image
+            style={{
+              width: '100%',
+              height: '100%',
+              resizeMode: 'contain',
+            }}
+            source={require('../assets/logos/tan.png')}
+          />
         </View>
       </View>
       <Text style={styles.title}>SkillBridge</Text>
