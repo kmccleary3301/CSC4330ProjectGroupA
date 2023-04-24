@@ -20,6 +20,7 @@ import { subjectList } from '../utils/subjectList.js';
     const {currentUser} = useAuthValue();
     const [userType] = useState('');
     const [selectedSubjects, setSelectedSubjects] = useState([]);
+    const user = currentUser;
 
     const handleSubjectSelection = (value) => {
       if (selectedSubjects.includes(value)) {
@@ -31,8 +32,8 @@ import { subjectList } from '../utils/subjectList.js';
   
     const handleSaveChanges = async () => {
       try {
-        const user = auth.currentUser;
-        await updateDoc(doc(db, 'student', user?.uid), { selectedSubjects });
+        const type = user?.displayName;
+        await updateDoc(doc(db, type, user?.uid), { selectedSubjects });
         if (selectedSubjects.length === 5) {
           navigation.navigate('HomeScreen');
         } else {
@@ -79,9 +80,11 @@ import { subjectList } from '../utils/subjectList.js';
       </View>
       <Text style={[styles.title, { textAlign: 'center', marginBottom: 0, paddingBottom: 0 }]}>Subjects of Interest</Text>
       <View style={styles.registerBody}>
-        <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
-          Lastly, you'll just need to add your subjects of interest.
-        </Text>
+      <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
+          Lastly, you'll just need to add your subjects of {''}
+          {user?.displayName === 'student' || user?.displayName === 'tutor'
+          ? 'interest' : 'expertise'}.
+          </Text>
         {selectedSubjects.map((subject) => (
         <Text key={subject}>{subject}</Text>
       ))}
