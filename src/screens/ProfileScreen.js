@@ -39,16 +39,35 @@ const ProfileScreen = () => {
   const { currentUser } = useAuthValue();
   const user = auth.currentUser;
 
+  // useEffect(() => {
+  //   const getUserProfile = async () => {
+  //     const docRef = doc(db, "student", user?.uid);
+  //     const docSnap = await getDoc(docRef);
+  //     setUserProfile(docSnap.data())
+  //   };
+  //   getUserProfile();
+  // }, []);
+
   useEffect(() => {
     const getUserProfile = async () => {
-      const docRef = doc(db, "users", user?.uid);
+      const userType = user?.userType; // Assuming that you have a 'type' field in your user data that specifies whether the user is a student or tutor
+      let docRef;
+  
+      if (userType === 'student') {
+        docRef = doc(db, "student", user.uid);
+      } else if (userType === 'tutor') {
+        docRef = doc(db, "tutor", user.uid);
+      } else {
+        // Handle error case where user type is not recognized
+        return;
+      }
+  
       const docSnap = await getDoc(docRef);
-      setUserProfile(docSnap.data())
+      setUserProfile(docSnap.data());
     };
+  
     getUserProfile();
-  }, []);
-
-
+  }, [user]);
 
 
   const handleUpdateProfile = (updatedUserProfile) => {

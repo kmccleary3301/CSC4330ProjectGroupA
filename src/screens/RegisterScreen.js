@@ -14,6 +14,7 @@ import { auth, db } from '../../firebase';
 import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
 import { doc, setDoc } from "firebase/firestore";
 import { useAuthValue } from '../../AuthContext'
+//import { useUserType } from '../../UserTypeContext.js';
 
 const RegisterScreen = ({ navigation }) => {
 
@@ -38,8 +39,7 @@ const RegisterScreen = ({ navigation }) => {
     }
     return isValid;
   };
-  
-
+    
   const handleRegister = e => {
     e.preventDefault()
     if (validatePassword()) {    
@@ -53,7 +53,7 @@ const RegisterScreen = ({ navigation }) => {
             })
         }).catch(err => setError(err.message))
         .then(() => {
-          updateProfile(auth.currentUser)
+          updateProfile(auth.currentUser, {displayName: userType})
         }).catch(err => alert(err.message))
         .then(() => {
           addProfile(email, userType)
@@ -68,7 +68,8 @@ const RegisterScreen = ({ navigation }) => {
   const addProfile = async (email, userType) => {
     const user = auth.currentUser;
     try {
-      await setDoc(doc(db, "users", user.uid), {
+      const userDocRef = doc(db, userType, user.uid);
+      await setDoc(userDocRef, {
         uid: user.uid,
         userType,
         email,
@@ -79,6 +80,22 @@ const RegisterScreen = ({ navigation }) => {
     }
   }
 
+  const navigateToScreen = () => {
+    switch (userType) {
+      case 'student':
+        navigation.navigate('RegisterInfoScreen');
+        break;
+      case 'tutor':
+        navigation.navigate('TutorInfo');
+        // navigate to tutor screen
+        break;
+      case 'administrator':
+        // navigate to administrator screen
+        break;
+      default:
+        // do nothing
+    }
+  };
 
   return (
     <View style={[styles.container, { justifyContent: 'start', paddingTop: 120, marginTop: 0 }]}>
@@ -115,31 +132,24 @@ const RegisterScreen = ({ navigation }) => {
             <Picker.Item label="Administrator" value="administrator" />
           </Picker>
 
-
-
           <TextInput
             style={styles.inputField}
             onChange={e => setEmail(e.target.value)}
             value={email}
             placeholder="Email"
-
-            autoCapitalize="none"
-          />
+            autoCapitalize="none"/>
           <TextInput
             style={styles.inputField}
             onChange={e => setPassword(e.target.value)}
             value={password}
             placeholder="Password"
-
-            autoCapitalize="none"
-          />
+            autoCapitalize="none"/>
           <TextInput
             style={styles.inputField}
             onChange={e => setConfirmPassword(e.target.value)}
             value={confirmPassword}
             placeholder="Confirm Password"
-            autoCapitalize="none"
-          />
+            autoCapitalize="none"/>
 
           <TouchableOpacity
             style={[styles.button, styles.loginButton, { width: '50%' }]}

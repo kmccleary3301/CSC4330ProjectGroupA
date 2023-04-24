@@ -18,6 +18,7 @@ import { subjectList } from '../utils/subjectList.js';
 
   const SubjectAddScreen = ({ navigation }) => {
     const {currentUser} = useAuthValue();
+    const [userType] = useState('');
     const [selectedSubjects, setSelectedSubjects] = useState([]);
 
     const handleSubjectSelection = (value) => {
@@ -31,13 +32,18 @@ import { subjectList } from '../utils/subjectList.js';
     const handleSaveChanges = async () => {
       try {
         const user = auth.currentUser;
-        await updateDoc(doc(db, 'users', user?.uid), { selectedSubjects });
-        navigation.navigate('HomeScreen');
+        await updateDoc(doc(db, 'student', user?.uid), { selectedSubjects });
+        if (selectedSubjects.length === 5) {
+          navigation.navigate('HomeScreen');
+        } else {
+          alert('Please select 5 subjects.');
+        }
       } catch (err) {
         console.log(err);
         alert('Error saving changes.');
       }
     };
+    
     const renderPicker = () => {
       return (
         <Picker

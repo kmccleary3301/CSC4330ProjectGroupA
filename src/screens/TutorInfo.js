@@ -13,39 +13,62 @@ import styles from '../../styles.js';
 import { auth, db } from '../../firebase';
 import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { useAuthValue } from '../../AuthContext'
-//import { useUserType } from '../../UserTypeContext';
+import { subjectList } from '../utils/subjectList.js';
 
-const RegisterInfoScreen = ({ navigation }) => {
+const TutorInfo = ({ navigation }) => {
 
-
-  //const [userType, setUserType] = useUserType('');
-  const { currentUser } = useAuthValue();
-  const [email, setEmail] = useState('');
+  const { currentUser } = useAuthValue();  
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [pronouns, setPronouns] = useState('');
-  //const [userType] = useState('');
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
 
-  const profileInfo = e => {
+  const handleSubjectSelection = (value) => {
+    if (selectedSubjects.includes(value)) {
+      setSelectedSubjects((prev) => prev.filter((subject) => subject !== value));
+    } else {
+      setSelectedSubjects((prev) => [...prev, value]);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    addProfileInfo(firstName, lastName, pronouns)
-      .then(() => {
-        navigation.navigate('SubjectAddScreen')
-      });
-  }
-
-  const addProfileInfo = async (firstName, lastName, pronouns) => {
     const user = auth.currentUser;
     try {
-      await updateDoc(doc(db, 'student' , user?.uid), {
+      // update tutor profile info
+      await updateDoc(doc(db, "tutor", user?.uid), {
         firstName,
         lastName,
         pronouns,
+        selectedSubjects
       });
+  
+      // navigate to next screen
+      navigation.navigate('HomeScreen');
     } catch (err) {
       console.error(err);
-      alert(err.message);
+      alert('Error saving changes.');
     }
+  };  
+
+  const renderPicker = () => {
+    return (
+      <Picker
+        style={[styles.picker, { paddingLeft: 5 }]}
+        selectedValue={''}
+        onValueChange={(value) => handleSubjectSelection(value)}
+        mode="dropdown"
+      >
+        <Picker.Item label="Select a subject" value="" />
+        {subjectList.map((subject) => (
+          <Picker.Item
+            key={subject.value || subject}
+            label={subject.value || subject}
+            value={subject.value || subject}
+          />
+        ))}
+      </Picker>
+    );
   };
 
   return (
@@ -67,7 +90,7 @@ const RegisterInfoScreen = ({ navigation }) => {
         <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
           We just need a few more things before your account is created.
         </Text>
-        <form onSubmit={profileInfo}>
+        {/* <form onSubmit={profileInfo}> */}
           <TextInput
             style={styles.inputField}
             onChange={e => setFirstName(e.target.value)}
@@ -97,16 +120,25 @@ const RegisterInfoScreen = ({ navigation }) => {
             <Picker.Item label="She/they" value="She/they" />
           </Picker>
 
-          <TouchableOpacity onPress={profileInfo}
+          <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
+          Lastly, you'll just need to add your subjects of expertise.
+        </Text>
+        {selectedSubjects.map((subject) => (
+        <Text key={subject}>{subject}</Text>
+      ))}
+      {selectedSubjects.length < 5 && renderPicker()}
+      <TouchableOpacity onPress={handleSubmit}>
+        <Text>Save Changes</Text>
+      </TouchableOpacity>
+
+          <TouchableOpacity onPress={handleSubmit}
             style={[styles.button, styles.loginButton, { width: '50%' }]}
           >
             <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
-        </form>
-        <View style={[styles.linkContainer, { marginTop: 16 }]}>
-          <Text style={styles.linkText}>Already have an account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
-            <Text style={styles.link}>Login</Text>
+        {/* </form> */}
+        <View style={[styles.linkContainer, { marginTop: 16 }]}>          
+          <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>            
           </TouchableOpacity>
         </View>
       </View>
@@ -115,7 +147,7 @@ const RegisterInfoScreen = ({ navigation }) => {
 };
 
 
-RegisterInfoScreen.navigationOptions = ({ navigation }) => ({
+TutorInfo.navigationOptions = ({ navigation }) => ({
   headerLeft: () => (
     <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
       <View style={{ marginLeft: 20, marginTop: 10 }}>
@@ -128,4 +160,4 @@ RegisterInfoScreen.navigationOptions = ({ navigation }) => ({
   ),
 });
 
-export default RegisterInfoScreen;
+export default TutorInfo;
