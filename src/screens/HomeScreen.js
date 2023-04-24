@@ -47,7 +47,8 @@ const HomeScreen = () => {
 
   useEffect(() => {
     const getUserProfile = async () => {
-      const docRef = doc(db, 'student', user?.uid);
+      const type = user?.displayName;
+      const docRef = doc(db, type, user?.uid);
       const docSnap = await getDoc(docRef);
       setUserProfile(docSnap.data())
       //console.log("data:", userProfile.firstName);
@@ -137,7 +138,7 @@ const HomeScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={[styles.title, { fontSize: 20, marginTop: -55 }]}>Hello,{(currentUser.firstName)}</Text>
+        <Text style={[styles.title, { fontSize: 20, marginTop: -55 }]}>Hello,{(userProfile.firstName)}</Text>
         <Text style={[styles.title, { fontSize: 20, marginTop: -35 }]}> {userType === 'student'
           ? 'Select an Appointment:'
           : 'Upcoming appointments'}</Text>
