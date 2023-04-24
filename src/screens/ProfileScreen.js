@@ -22,8 +22,10 @@ import { AuthProvider, useAuthValue } from '../../AuthContext';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();  
-  const [userProfile, setUserProfile] = useState({});
+  
   const [selectedSubjects, setSelectedSubjects] = useState([]);
+
+  const [userProfile, setUserProfile] = useState({});
   const { currentUser } = useAuthValue();
   const user = currentUser;  
   

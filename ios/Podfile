@@ -1,0 +1,41 @@
+platform :ios, '11.0'
+
+target 'skillbridge' do
+  project 'skillbridge.xcodeproj'
+
+  pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    'Core',
+    'CxxBridge',
+    'DevSupport',
+    'RCTText',
+    'RCTNetwork',
+    'RCTWebSocket',
+    'RCTAnimation',
+    'RCTImage',
+    'RCTActionSheet',
+    'RCTGeolocation',
+    'RCTLinkingIOS',
+    'RCTSettings',
+    'RCTBlob',
+    'RCTPushNotification',
+    'RCTVibration',
+    'RCTCameraRoll',
+    'RCTImagePicker',
+    'RCTAudio',
+    'RCTVideo',
+  ]
+
+  pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+
+  pod 'react-native-reanimated', '~> 2.3.0'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == 'react-native-reanimated'
+      target.build_configurations.each do |config|
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
+      end
+    end
+  end
+end
