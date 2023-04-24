@@ -28,6 +28,7 @@ import AppointmentsScreen from '../screens/AppointmentsScreen';
 import RegisterInfoScreen from '../screens/RegisterInfoScreen';
 import TutorInfo from '../screens/TutorInfo';
 import SubjectAddScreen from '../screens/SubjectAddScreen';
+import VerifyEmail from '../screens/VerifyEmail';
 
 import SideMenu from '../../SideMenu';
 import AppHeader from '../../AppHeader';
@@ -39,6 +40,7 @@ const Drawer = createDrawerNavigator();
 const AuthStack = () => {
   return (
     <Drawer.Navigator 
+      initialRouteName="InitialScreen"
       drawerContent={props => <CustomDrawer {...props} />}
       screenOptions={{
         headerShown: false,
@@ -66,59 +68,6 @@ const AuthStack = () => {
       <Drawer.Screen name="AptRequestScreen"    component={AptRequestScreen}/>
       <Drawer.Screen name="AppointmentsScreen"  component={AppointmentsScreen}/>
     </Drawer.Navigator>
-    /*
-    <Drawer.Navigator
-      drawerContent={props => <CustomDrawer {...props} />}
-      screenOptions={{
-        headerShown: false,
-        drawerActiveBackgroundColor: '#aa18ea',
-        drawerActiveTintColor: '#fff',
-        drawerInactiveTintColor: '#333',
-        drawerLabelStyle: {
-          marginLeft: -25,
-          fontFamily: 'Roboto-Medium',
-          fontSize: 15,
-        },
-      }}>
-      <Drawer.Screen
-        name="Home"
-        component={TabNavigator}
-        options={{
-          drawerIcon: ({color}) => (
-            <Ionicons name="home-outline" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          drawerIcon: ({color}) => (
-            <Ionicons name="person-outline" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Messages"
-        component={MessagesScreen}
-        options={{
-          drawerIcon: ({color}) => (
-            <Ionicons name="chatbox-ellipses-outline" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen name="Moments" component={MomentsScreen} options={{ drawerIcon: ({color}) => ( <Ionicons name="timer-outline" size={22} color={color} /> ), }}/>
-      <Drawer.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          drawerIcon: ({color}) => (
-            <Ionicons name="settings-outline" size={22} color={color} />
-          ),
-        }}
-      />
-    </Drawer.Navigator>
-    */
   );
 };
 
