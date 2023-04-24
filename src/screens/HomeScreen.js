@@ -55,7 +55,7 @@ const HomeScreen = () => {
     getUserProfile();
   }, []);
 
-    const displayTutorData
+  
     
     const [selectedDate, setSelectedDate] = useState(getLocalDate());
 
