@@ -16,11 +16,12 @@ const EditProfileScreen = () => {
   const navigation = useNavigation();
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [firstName, setFirstName] = useState([]);
-  const [lastName, setLastName] = useState([]);
-  const [email, setEmail] = useState([]);
-  const [pronouns, setPronouns] = useState([]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [pronouns, setPronouns] = useState("");
   const [selectedPronoun, setSelectedPronoun] = useState("");
+  const [currentSelectedSubject, setCurrentSelectedSubject] = useState("");
   const [showPicker, setShowPicker] = useState(false)
   const { currentUser } = useAuthValue();
   const user = currentUser;
@@ -58,19 +59,22 @@ const EditProfileScreen = () => {
 
 
   const handleSubjectChange = (subject) => {
+    setCurrentSelectedSubject(subject);
+
     if (selectedSubjects.length >= 5) {
-      alert("You have already added the maximum number of subjects.");
-      return;
+        alert("You have already added the maximum number of subjects.");
+        return;
     }
 
     if (!selectedSubjects.includes(subject)) {
-      const updatedUserSubjects = [...selectedSubjects, subject];
-      setSelectedSubjects(updatedUserSubjects);
-      setShowDropdown(false);
+        const updatedUserSubjects = [...selectedSubjects, subject];
+        setSelectedSubjects(updatedUserSubjects);
+        setShowDropdown(false);
     } else {
-      alert(`You have already added "${subject}" as one of your subjects.`);
+        alert(`You have already added "${subject}" as one of your subjects.`);
     }
 };
+
 
 
 
@@ -78,13 +82,23 @@ const EditProfileScreen = () => {
 const handleSaveChanges = async () => {
   try {
     const user = auth.currentUser;
-    await updateDoc(doc(db, 'student', user?.uid), 
-    { firstName, lastName, email, pronouns, selectedSubjects });
+    await updateDoc(doc(db, 'student', user?.uid),
+      { firstName, lastName, email, pronouns, selectedSubjects });
+    setUserProfile(prevState => ({
+      ...prevState,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      pronouns: pronouns,
+      selectedSubjects: selectedSubjects,
+    }));
+
   } catch (err) {
     console.log(err);
     alert('Error saving changes.');
   }
 };
+
 
 
 
@@ -190,7 +204,7 @@ const handleSaveChanges = async () => {
             <TextInput
               style={styles.profileInfoValue}
               value={userProfile.firstName}
-              // onChange={}
+              onChangeText={(text) => setFirstName(text)}
             />
           </View>
 
@@ -199,7 +213,8 @@ const handleSaveChanges = async () => {
             <TextInput
               style={styles.profileInfoValue}
               value={userProfile.lastName}
-              // onChange={}
+              onChangeText={(text) => setLastName(text)}
+
             />
           </View>
 
@@ -207,9 +222,9 @@ const handleSaveChanges = async () => {
             <Text style={styles.profileInfoLabel}>Email:    </Text>
             <TextInput
               style={styles.profileInfoValue}
-              value={email}
-              // onChange={}
-              placeholder={userProfile.email}
+              value={userProfile.email}
+              onChangeText={(text) => setEmail(text)}
+              
             />
           </View>
 
@@ -232,17 +247,6 @@ const handleSaveChanges = async () => {
         )}
 
         <Text style={styles.subtitle}>My Subjects: </Text>
-        {/* {userProfile.selectedSubjects ? (
-          <View style={styles.subjectsContainer}>
-            {userProfile.selectedSubjects.map((subject, index) => (
-              <Text key={index} style={styles.subjectsText}>
-                {subject}
-              </Text>
-            ))}
-          </View>
-        ) : (
-          <Text style={[styles.subjects, {marginTop: 7}]}>Loading...</Text>
-        )} */}
 
         <View style={styles.subjectsContainer}>
           {selectedSubjects.filter(subject => subject !== '').map((subject, index) => (
@@ -259,10 +263,10 @@ const handleSaveChanges = async () => {
                 <Text style={styles.deleteButtonText}>+</Text>
               </Pressable>
               {showDropdown ? (
-                <Picker selectedValue={selectedSubjects} onValueChange={handleSubjectChange}>
-                  {subjects.map((subject, index) => (
+                <Picker selectedValue={currentSelectedSubject} onValueChange={handleSubjectChange}>
+                {subjects.map((subject, index) => (
                     <Picker.Item key={index} label={subject} value={subject} />
-                  ))}
+                ))}
                 </Picker>
               ) : (
                 <Text style={styles.subjectsText}>Add course</Text>
