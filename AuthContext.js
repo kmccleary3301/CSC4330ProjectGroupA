@@ -1,6 +1,6 @@
-import React, {useContext} from 'react'
+import React, {useContext} from 'react';
 
-const AuthContext = React.createContext()
+const AuthContext = React.createContext();  
 
 export function AuthProvider({children, value}) {
   return (
@@ -11,6 +11,14 @@ export function AuthProvider({children, value}) {
 }
 
 export function useAuthValue(){
-  return useContext(AuthContext)
+  console.log("useAuthValue called");
+  console.log("argument:");
+  console.log(AuthContext);
+  const return_value = useContext(AuthContext);
+  console.log("returning:");
+  console.log(return_value);
+  return return_value;
+  //return useContext(AuthContext)
 }
+
 
