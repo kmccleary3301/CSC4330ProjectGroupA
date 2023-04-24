@@ -138,8 +138,8 @@ const HomeScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={[styles.title, { fontSize: 20, marginTop: 5 }]}>Welcome back, {(userProfile.firstName)}</Text>
-        <Text style={[styles.title, { fontSize: 20, marginTop: 5 }]}> {userType === 'student'
+        <Text style={[styles.title, { fontSize: 20, marginTop: -45 }]}>Welcome back, {(userProfile.firstName)}</Text>
+        <Text style={[styles.title, { fontSize: 20, marginTop: -25 }]}> {userType === 'student'
           ? 'Select an Appointment:'
           : 'Upcoming Appointments'}</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -233,6 +233,7 @@ const sStyles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'tan',
     fontFamily: 'Vikendi',
+    marginTop: 30,
   },
   table: {
     marginTop: 70,
