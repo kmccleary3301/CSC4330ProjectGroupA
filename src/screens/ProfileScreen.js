@@ -11,7 +11,7 @@ import {
 
 import NavBarContainer from '../../NavBar';
 import EditProfileScreen from "./EditProfileScreen";
-import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase';
 import { StorageError } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
@@ -25,9 +25,7 @@ const ProfileScreen = () => {
   const [userProfile, setUserProfile] = useState({});
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const { currentUser } = useAuthValue();
-  const user = currentUser;
-
-  
+  const user = currentUser;  
   
   useEffect(() => {
     const getUserProfile = async () => {
@@ -37,16 +35,13 @@ const ProfileScreen = () => {
       const data = docSnap.data();      
         setSelectedSubjects(data.selectedSubjects);   
       setUserProfile(data);
-    };
-  
+    };  
     getUserProfile();
   }, [user]);
-
 
   const handleUpdateProfile = (updatedUserProfile) => {
     setUserProfile(updatedUserProfile);
   };
-
   const handleEditProfile = () => {
     navigation.navigate('EditProfileScreen', { userProfile, onUpdateProfile: handleUpdateProfile })
   };
