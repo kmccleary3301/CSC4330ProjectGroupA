@@ -22,7 +22,7 @@ const EditProfileScreen = () => {
   const [pronouns, setPronouns] = useState("");
   const [selectedPronoun, setSelectedPronoun] = useState("");
   const [currentSelectedSubject, setCurrentSelectedSubject] = useState("");
-  const [showPicker, setShowPicker] = useState(false)
+  const [showPicker, setShowPicker] = useState(false);
   const { currentUser } = useAuthValue();
   const user = currentUser;
 
@@ -61,10 +61,10 @@ const EditProfileScreen = () => {
   const handleSubjectChange = (subject) => {
     setCurrentSelectedSubject(subject);
 
-    if (selectedSubjects.length >= 5) {
-        alert("You have already added the maximum number of subjects.");
-        return;
-    }
+    // if (selectedSubjects.length >= 5) {
+    //     alert("You have already added the maximum number of subjects.");
+    //     return;
+    // }
 
     if (!selectedSubjects.includes(subject)) {
         const updatedUserSubjects = [...selectedSubjects, subject];
