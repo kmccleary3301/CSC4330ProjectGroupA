@@ -22,8 +22,13 @@ import { AuthProvider, useAuthValue } from '../../AuthContext';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+
+
+
+
   const [userProfile, setUserProfile] = useState({
-    name: 'Mike Tiger',
+    firstName: "",
+    lastName: "",
     email: "",
     pronouns: "He/his/him",
     userType: "",
@@ -33,8 +38,10 @@ const ProfileScreen = () => {
     subject3: "Computer Science",
     subject4: "English",
     subject5: "Geology",
-    profilePicture: require('../assets/icons/profileAvatar.png'),
   });
+
+  const profilePicture = require('../assets/icons/profileAvatar.png');
+
 
   const { currentUser } = useAuthValue();
   const user = auth.currentUser;
@@ -67,15 +74,15 @@ const ProfileScreen = () => {
 
         <View style={styles.profileContainer}>
           <View style={styles.pictureContainer}>
-            <Image style={styles.profilePic} source={userProfile.profilePicture} />
+            <Image style={styles.profilePic} source={profilePicture} />
           </View>
           <View style={styles.profileInfoContainer}>
-            <Text style={styles.profileInfo}>{userProfile.name} {[userProfile.pronouns]}</Text>
-            <h1>
+            <Text style={styles.profileInfo}>{userProfile.firstName} {userProfile.lastName}</Text>
+            <Text style={styles.profileInfo}>{userProfile.pronouns}</Text>
               <Text style={styles.profileInfo}>{currentUser.email}</Text>
               <Text style={styles.userType}>{currentUser.userType}</Text>
-            </h1>
-            <Text style={styles.school}>{userProfile.school}</Text>
+            
+            {/* <Text style={styles.school}>{userProfile.school}</Text> */}
           </View>
         </View>
 
