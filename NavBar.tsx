@@ -22,7 +22,6 @@ import { doc, getDoc} from "firebase/firestore";
 
 
 
-
 type NavBarItemProps = {
   iconSource: ImageSourcePropType;
   screenName: keyof RootStackParamList;

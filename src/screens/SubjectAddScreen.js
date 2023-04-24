@@ -17,8 +17,7 @@ import { subjectList } from '../utils/subjectList.js';
 
 
   const SubjectAddScreen = ({ navigation }) => {
-    const {currentUser} = useAuthValue();
-    const [userType] = useState('');
+    const {currentUser} = useAuthValue();    
     const [selectedSubjects, setSelectedSubjects] = useState([]);
     const user = currentUser;
 
