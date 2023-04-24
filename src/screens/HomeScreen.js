@@ -138,10 +138,10 @@ const HomeScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={[styles.title, { fontSize: 20, marginTop: -55 }]}>Hello,{(userProfile.firstName)}</Text>
-        <Text style={[styles.title, { fontSize: 20, marginTop: -35 }]}> {userType === 'student'
+        <Text style={[styles.title, { fontSize: 20, marginTop: 5 }]}>Welcome back, {(userProfile.firstName)}</Text>
+        <Text style={[styles.title, { fontSize: 20, marginTop: 5 }]}> {userType === 'student'
           ? 'Select an Appointment:'
-          : 'Upcoming appointments'}</Text>
+          : 'Upcoming Appointments'}</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={[styles.title, { fontSize: 20, marginTop: -92, marginLeft: 60, fontFamily: 'SF' }]}>Change Date:</Text>
           <TouchableOpacity onPress={() => setOpen(true)} uppercase={false} mode="outlined">
