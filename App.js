@@ -61,8 +61,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <AuthProvider value={{ currentUser, timeActive, setTimeActive }}>
-        {/* <AppStack /> */}
         <AppStack />
+        {/* <AuthStack /> */}
       </AuthProvider>
     </NavigationContainer>
   );
