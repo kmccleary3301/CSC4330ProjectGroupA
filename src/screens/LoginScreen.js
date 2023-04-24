@@ -38,8 +38,12 @@ const LoginScreen = () => {
         }
       })
       .catch(err => {
-        setError('Email or password is incorrect')
-        console.log(err)
+        if (err.code === 'auth/user-not-found') {
+          setError('No user found with this email address');
+        } else {
+          setError('Email or password is incorrect');
+        }
+        console.log(err);
       })
   };
 
