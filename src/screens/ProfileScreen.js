@@ -11,7 +11,7 @@ import {
 
 import NavBarContainer from '../../NavBar';
 import EditProfileScreen from "./EditProfileScreen";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { auth, db } from '../../firebase';
 import { StorageError } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
@@ -21,49 +21,22 @@ import { AuthProvider, useAuthValue } from '../../AuthContext';
 
 
 const ProfileScreen = () => {
-  const navigation = useNavigation();
-  const [userProfile, setUserProfile] = useState({
-    name: 'Mike Tiger',
-    email: "",
-    pronouns: "He/his/him",
-    userType: "",
-    school: "Lousiana State University",
-    subject1: "Astronomy",
-    subject2: "Calculus",
-    subject3: "Computer Science",
-    subject4: "English",
-    subject5: "Geology",
-    profilePicture: require('../assets/icons/profileAvatar.png'),
-  });
-
+  const navigation = useNavigation();  
+  const [userProfile, setUserProfile] = useState({});
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
   const { currentUser } = useAuthValue();
-  const user = auth.currentUser;
+  const user = currentUser;
 
-  // useEffect(() => {
-  //   const getUserProfile = async () => {
-  //     const docRef = doc(db, "student", user?.uid);
-  //     const docSnap = await getDoc(docRef);
-  //     setUserProfile(docSnap.data())
-  //   };
-  //   getUserProfile();
-  // }, []);
-
+  
+  
   useEffect(() => {
     const getUserProfile = async () => {
-      const userType = user?.userType; // Assuming that you have a 'type' field in your user data that specifies whether the user is a student or tutor
-      let docRef;
-  
-      if (userType === 'student') {
-        docRef = doc(db, "student", user.uid);
-      } else if (userType === 'tutor') {
-        docRef = doc(db, "tutor", user.uid);
-      } else {
-        // Handle error case where user type is not recognized
-        return;
-      }
-  
+      const type = user?.displayName;
+      const docRef = doc(db, type, user?.uid);      
       const docSnap = await getDoc(docRef);
-      setUserProfile(docSnap.data());
+      const data = docSnap.data();      
+        setSelectedSubjects(data.selectedSubjects);   
+      setUserProfile(data);
     };
   
     getUserProfile();
@@ -83,29 +56,34 @@ const ProfileScreen = () => {
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <Text style={[styles.title]}>My Profile</Text>
-
+  
         <View style={styles.profileContainer}>
           <View style={styles.pictureContainer}>
             <Image style={styles.profilePic} source={userProfile.profilePicture} />
           </View>
           <View style={styles.profileInfoContainer}>
-            <Text style={styles.profileInfo}>{userProfile.name} {[userProfile.pronouns]}</Text>
-            <h1>
-              <Text style={styles.profileInfo}>{currentUser.email}</Text>
-              <Text style={styles.userType}>{currentUser.userType}</Text>
-            </h1>
+            <Text style={styles.profileInfo}>{userProfile.firstName} {[userProfile.pronouns]}</Text>
+  
+            <Text style={styles.profileInfo}>{userProfile.email}</Text>
+            <Text style={styles.userType}>{userProfile.userType}</Text>
+  
             <Text style={styles.school}>{userProfile.school}</Text>
           </View>
         </View>
-
+  
         <Text style={styles.subtitle}>My Subjects:</Text>
-        <View style={styles.subjectsContainer}>
-          <Text style={styles.subjects}>{userProfile.subject1}</Text>
-          <Text style={styles.subjects}>{userProfile.subject2}</Text>
-          <Text style={styles.subjects}>{userProfile.subject3}</Text>
-          <Text style={styles.subjects}>{userProfile.subject4}</Text>
-          <Text style={styles.subjects}>{userProfile.subject5}</Text>
-        </View>
+        {userProfile.selectedSubjects ? (
+          <View style={styles.subjectsContainer}>
+            {userProfile.selectedSubjects.map((subject, index) => (
+              <Text key={index} style={styles.subjects}>
+                {subject}
+              </Text>
+            ))}
+          </View>
+        ) : (
+          <Text style={{ color: "white" }}>Loading...</Text>
+        )}
+  
         <Pressable
           style={[styles.button, styles.editProfileButton]}
           onPress={handleEditProfile}>
@@ -115,7 +93,7 @@ const ProfileScreen = () => {
       <NavBarContainer />
     </View>
   );
-};
+  };
 
 const blue = '#182640';
 const tan = '#FAE8CD';

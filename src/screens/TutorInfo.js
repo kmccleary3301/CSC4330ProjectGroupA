@@ -18,6 +18,7 @@ import { subjectList } from '../utils/subjectList.js';
 const TutorInfo = ({ navigation }) => {
 
   const { currentUser } = useAuthValue();  
+  const user = currentUser;
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [pronouns, setPronouns] = useState('');
@@ -33,10 +34,10 @@ const TutorInfo = ({ navigation }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const user = auth.currentUser;
+    const type = user?.displayName;
     try {
       // update tutor profile info
-      await updateDoc(doc(db, "tutor", user?.uid), {
+      await updateDoc(doc(db, type, user?.uid), {
         firstName,
         lastName,
         pronouns,
@@ -121,8 +122,11 @@ const TutorInfo = ({ navigation }) => {
           </Picker>
 
           <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
-          Lastly, you'll just need to add your subjects of expertise.
-        </Text>
+          Lastly, you'll just need to add your subjects of {''}
+          {user?.displayName === 'student' || user?.displayName === 'tutor'
+          ? 'interest'
+          : 'expertise'}.
+          </Text>
         {selectedSubjects.map((subject) => (
         <Text key={subject}>{subject}</Text>
       ))}
