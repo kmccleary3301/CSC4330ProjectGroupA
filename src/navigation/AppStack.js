@@ -26,6 +26,7 @@ import SubjectSearchScreen from '../screens/SubjectSearchScreen';
 import AptRequestScreen from '../screens/AptRequestScreen';
 import AppointmentsScreen from '../screens/AppointmentsScreen';
 import RegisterInfoScreen from '../screens/RegisterInfoScreen';
+import TutorInfo from '../screens/TutorInfo';
 import SubjectAddScreen from '../screens/SubjectAddScreen';
 
 import SideMenu from '../../SideMenu';
@@ -54,6 +55,7 @@ const AuthStack = () => {
       <Drawer.Screen name="InitialScreen"       component={InitialScreen}/>
       <Drawer.Screen name="LoginScreen"         component={LoginScreen}/>
       <Drawer.Screen name="RegisterScreen"      component={RegisterScreen}/>
+      <Drawer.Screen name="TutorInfo"           component={TutorInfo}/>
       <Drawer.Screen name="SubjectAddScreen"    component={SubjectAddScreen}/>
       <Drawer.Screen name="HomeScreen"          component={HomeScreen}/>
       <Drawer.Screen name="RegisterInfoScreen"  component={RegisterInfoScreen}/>

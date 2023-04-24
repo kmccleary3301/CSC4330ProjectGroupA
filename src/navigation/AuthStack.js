@@ -12,6 +12,7 @@ import SubjectSearchScreen from '../screens/SubjectSearchScreen';
 import AptRequestScreen from '../screens/AptRequestScreen';
 import AppointmentsScreen from '../screens/AppointmentsScreen';
 import RegisterInfoScreen from '../screens/RegisterInfoScreen';
+import TutorInfo from '../screens/TutorInfo';
 import SubjectAddScreen from '../screens/SubjectAddScreen';
 import VerifyEmail from '../screens/VerifyEmail';
 
@@ -48,6 +49,7 @@ const AuthStack = () => {
       <Stack.Screen name="SubjectAddScreen"    component={SubjectAddScreen}/>
       <Stack.Screen name="HomeScreen"          component={HomeScreen}/>
       <Stack.Screen name="RegisterInfoScreen"  component={RegisterInfoScreen}/>
+      <Stack.Screen name="TutorInfo"           component={TutorInfo}/>
       <Stack.Screen name="VerifyEmail"         component={VerifyEmail}/>
       <Stack.Screen name="SubjectSearchScreen" component={SubjectSearchScreen}/>
       <Stack.Screen name="ProfileScreen"       component={ProfileScreen}/>

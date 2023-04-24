@@ -22,7 +22,10 @@ const VerifyEmail = () => {
         .then(() => {
           if (currentUser?.emailVerified) {
             clearInterval(interval);
-            navigate.navigate('RegisterInfoScreen'); // Navigate the user to the next step of registration once verification has been confirmed
+            if (currentUser.userType === 'student'){
+              navigate.navigate('RegisterInfoScreen'); // Navigate the user to the next step of registration once verification has been confirmed
+            } else (currentUser.userType === 'tutor')
+              navigate.navigate('TutorInfo'); // Navigate the user to the next step of registration once verification has been confirmed
           }
         })
         .catch((err) => {
