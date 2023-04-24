@@ -117,47 +117,44 @@ const RegisterScreen = ({ navigation }) => {
           Create a new account with your university email.
         </Text>
 
-        <form onSubmit={handleRegister} name='registration_form'>
+        <Picker
+          style={[styles.picker, { paddingLeft: 5 }]}
+          selectedValue={userType}
+          onValueChange={setUserType}
+          prompt="I am a..."
+          mode="dropdown"
+        >
+          <Picker.Item label="I am a..." value="" />
+          <Picker.Item label="Student" value="student" />
+          <Picker.Item label="Tutor" value="tutor" />
+          <Picker.Item label="Administrator" value="administrator" />
+        </Picker>
 
-          <Picker
-            style={[styles.picker, { paddingLeft: 5 }]}
-            selectedValue={userType}
-            onChange={e => setUserType(e.target.value)}
-            prompt="I am a..."
-            mode="dropdown"
-          >
-            <Picker.Item label="I am a..." value="" />
-            <Picker.Item label="Student" value="student" />
-            <Picker.Item label="Tutor" value="tutor" />
-            <Picker.Item label="Administrator" value="administrator" />
-          </Picker>
+        <TextInput
+          style={styles.inputField}
+          onChangeText={setEmail}
+          value={email}
+          placeholder="Email"
+          autoCapitalize="none"/>
+        <TextInput
+          style={styles.inputField}
+          onChangeText={setPassword}
+          value={password}
+          placeholder="Password"
+          autoCapitalize="none"/>
+        <TextInput
+          style={styles.inputField}
+          onChangeText={setConfirmPassword}
+          value={confirmPassword}
+          placeholder="Confirm Password"
+          autoCapitalize="none"/>
 
-          <TextInput
-            style={styles.inputField}
-            onChange={e => setEmail(e.target.value)}
-            value={email}
-            placeholder="Email"
-            autoCapitalize="none"/>
-          <TextInput
-            style={styles.inputField}
-            onChange={e => setPassword(e.target.value)}
-            value={password}
-            placeholder="Password"
-            autoCapitalize="none"/>
-          <TextInput
-            style={styles.inputField}
-            onChange={e => setConfirmPassword(e.target.value)}
-            value={confirmPassword}
-            placeholder="Confirm Password"
-            autoCapitalize="none"/>
-
-          <TouchableOpacity
-            style={[styles.button, styles.loginButton, { width: '50%' }]}
-            onPress={handleRegister}
-          >
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
-        </form>
+        <TouchableOpacity
+          style={[styles.button, styles.loginButton, { width: '50%' }]}
+          onPress={handleRegister}
+        >
+          <Text style={styles.buttonText}>Next</Text>
+        </TouchableOpacity>
         <View style={[styles.linkContainer, { marginTop: 16 }]}>
           <Text style={styles.linkText}>Already have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
