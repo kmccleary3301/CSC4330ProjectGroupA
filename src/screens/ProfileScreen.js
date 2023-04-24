@@ -51,6 +51,9 @@ const ProfileScreen = () => {
     navigation.navigate('EditProfileScreen', { userProfile, onUpdateProfile: handleUpdateProfile })
   };
 
+  const profilePicture = require('../assets/icons/profileAvatar.png');
+
+
 
   return (
     <View style={{ flex: 1 }}>
@@ -64,8 +67,8 @@ const ProfileScreen = () => {
           <View style={styles.profileInfoContainer}>
             <Text style={styles.profileInfo}>{userProfile.firstName} {userProfile.lastName}</Text>
             <Text style={styles.profileInfo}>{userProfile.pronouns}</Text>
-              <Text style={styles.profileInfo}>{currentUser.email}</Text>
-              <Text style={styles.userType}>{currentUser.userType}</Text>
+              <Text style={styles.profileInfo}>{userProfile.email}</Text>
+              <Text style={styles.userType}>{userProfile.userType}</Text>
             
             {/* <Text style={styles.school}>{userProfile.school}</Text> */}
           </View>
@@ -81,7 +84,7 @@ const ProfileScreen = () => {
             ))}
           </View>
         ) : (
-          <Text style={{ color: "white" }}>Loading...</Text>
+          <Text style={[styles.subjects, {marginTop: 7}]}>Loading...</Text>
         )}
   
         <Pressable
