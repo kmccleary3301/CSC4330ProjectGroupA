@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import {
   Text,
   StyleSheet,
@@ -15,6 +16,9 @@ import {
 } from "@react-navigation/native";
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from "./types"; // Import your RootStackParamList type from the types file
+import {db} from './firebase';
+import { useAuthValue } from "./AuthContext";
+import { doc, getDoc} from "firebase/firestore";
 
 
 
@@ -28,6 +32,11 @@ const NavBarContainer = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute();
 
+  const [userProfile, setUserProfile] = useState({});
+  const {currentUser} = useAuthValue();
+  const user = currentUser
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
+
   const NavBarItem: React.FC<NavBarItemProps> = ({
     iconSource,
     screenName,
@@ -38,6 +47,19 @@ const NavBarContainer = () => {
     };
 
     const isFocused = useIsFocused();
+
+    useEffect(() => {
+      const getUserProfile = async () => {
+        const type = user?.displayName;
+        const docRef = doc(db, type, user?.uid);      
+        const docSnap = await getDoc(docRef);
+        const data = docSnap.data();      
+        setSelectedSubjects(data.selectedSubjects);   
+        setUserProfile(data);
+      };
+    
+      getUserProfile();
+    }, [user]);
 
     return (
       <TouchableOpacity style={styles.navBarIcon} onPress={onPress}>
