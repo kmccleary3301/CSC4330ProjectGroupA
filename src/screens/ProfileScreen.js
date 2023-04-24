@@ -11,19 +11,20 @@ import {
 
 import NavBarContainer from '../../NavBar';
 import EditProfileScreen from "./EditProfileScreen";
-import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
-import { auth, db } from '../../firebase';
-import { StorageError } from "firebase/storage";
-import { updateProfile } from "firebase/auth";
-import { AuthProvider, useAuthValue } from '../../AuthContext';
+
+import { doc, getDoc} from "firebase/firestore";
+import { db } from '../../firebase';
+import { useAuthValue } from '../../AuthContext';
 
 
 
 
 const ProfileScreen = () => {
   const navigation = useNavigation();  
-  const [userProfile, setUserProfile] = useState({});
+  
   const [selectedSubjects, setSelectedSubjects] = useState([]);
+
+  const [userProfile, setUserProfile] = useState({});
   const { currentUser } = useAuthValue();
   const user = currentUser;
 
