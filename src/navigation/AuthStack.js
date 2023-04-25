@@ -37,7 +37,7 @@ const AuthStack = () => {
       <View style={{paddingHorizontal: 20, flexDirection: "row", justifyContent: 'space-between', padding: 5}}>
         <Ionicons name="bug-outline" color={'#000000'} size={32} 
           onPress={() => {
-            navigation.navigate('TutorsListScreen', {
+            navigation.navigate('RateTutorScreen', {
               test_argument: "Hello"
             });
           }}
