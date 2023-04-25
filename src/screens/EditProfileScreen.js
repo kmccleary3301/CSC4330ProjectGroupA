@@ -78,14 +78,13 @@ const EditProfileScreen = () => {
   const handlePronounChange = (itemValue) => {
     setSelectedPronoun(itemValue);
     setShowPicker(false);
+    setPronouns(itemValue); // Update the pronouns state
     setUserProfile(prevState => ({
       ...prevState,
       pronouns: itemValue,
     }));
   };
 
- 
-  
 
 
 
