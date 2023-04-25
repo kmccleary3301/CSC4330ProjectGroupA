@@ -48,18 +48,6 @@ const NavBarContainer = () => {
 
     const isFocused = useIsFocused();
 
-    useEffect(() => {
-      const getUserProfile = async () => {
-        const type = user?.displayName;
-        const docRef = doc(db, type, user?.uid);      
-        const docSnap = await getDoc(docRef);
-        const data = docSnap.data();      
-        setSelectedSubjects(data.selectedSubjects);   
-        setUserProfile(data);
-      };
-    
-      getUserProfile();
-    }, [user]);
 
     return (
       <TouchableOpacity style={styles.navBarIcon} onPress={onPress}>

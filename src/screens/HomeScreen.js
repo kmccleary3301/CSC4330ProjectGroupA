@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles';
-//import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Font from 'expo-font'
 import { Ionicons } from '@expo/vector-icons';
 import NavBarContainer from '../../NavBar';
@@ -20,7 +19,7 @@ import { DatePickerModal } from 'react-native-paper-dates';
 import { useAuthValue } from '../../AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../firebase';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, collection, query, where, getDocs } from 'firebase/firestore';
 
 
 import AptRequestScreen from './AptRequestScreen';
@@ -37,6 +36,8 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const { currentUser } = useAuthValue();
   const [userProfile, setUserProfile] = useState('');
+  const [availabilities, setAvailabilities] = useState([]);
+
   const user = currentUser;
   const getLocalDate = () => {
     const now = new Date();
@@ -50,34 +51,41 @@ const HomeScreen = () => {
       const type = user?.displayName;
       const docRef = doc(db, type, user?.uid);
       const docSnap = await getDoc(docRef);
-      setUserProfile(docSnap.data())      
+      setUserProfile(docSnap.data());
+      fetchAvailabilities();
     };
     getUserProfile();
   }, []);
 
+  const fetchAvailabilities = async () => {
+    // Get the user's selectedSubjects
+    const selectedSubjects = userProfile.selectedSubjects;
   
-    
-    const [selectedDate, setSelectedDate] = useState(getLocalDate());
+    if (selectedSubjects && selectedSubjects.length > 0) {
+      // Query the appointments collection for open appointments with matching subjects
+      const appointmentsRef = collection(db, 'appointments');
+      const q = query(appointmentsRef, where('status', '==', 'open'), where('subjects', 'array-contains-any', selectedSubjects));
+      const querySnapshot = await getDocs(q);
+  
+      // Process and store the appointment data
+      const fetchedAvailabilities = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(appointment => {
+        const appointmentDate = new Date(appointment.date);
+        return appointmentDate >= getLocalDate();
+      });
+  
+      setAvailabilities(fetchedAvailabilities);
+    } else {
+      // Handle the case when the selectedSubjects array is undefined or empty
+      // You might want to show a message to the user or provide a default list of items
+    }
+  };
 
-  
+  const [selectedDate, setSelectedDate] = useState(getLocalDate());
+  const [appointments, setAppointments] = useState([]);
+
   const formattedSelectedDate = selectedDate.toISOString().substring(0, 10);
 
-
-
-
-  const dateAppointments = mockAppointments.find(
-    (appointmentDate) => appointmentDate.date === formattedSelectedDate
-  );
-
-  const appointments = dateAppointments ? dateAppointments.appointments : [];
-  
-
-
-  const [selectedEntry, setSelectedEntry] = useState(null);
-  const [showError, setShowError] = useState(false);
-
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
-
 
   const onSelectAppointment = () => {
     if (selectedAppointmentId === null) {
@@ -99,22 +107,29 @@ const HomeScreen = () => {
 
   const onSearchBySubject = () => {
     navigation.navigate('SubjectSearchScreen');
-  };
-
-
-  const [open, setOpen] = useState(false);
-
-  const onDismissSingle = React.useCallback(() => {
+    };
+    
+    const [open, setOpen] = useState(false);
+    
+    const onDismissSingle = React.useCallback(() => {
     setOpen(false);
-  }, [setOpen]);
-
-  const onConfirmSingle = React.useCallback(
+    }, [setOpen]);
+    
+    const onConfirmSingle = React.useCallback(
     (params) => {
-      setOpen(false);
-      const localDate = new Date(params.date.getTime() - params.date.getTimezoneOffset() * 60000);
-      setSelectedDate(localDate);
-    },
-    [setOpen, setSelectedDate]
+    setOpen(false);
+    const localDate = new Date(params.date.getTime() - params.date.getTimezoneOffset() * 60000);
+    setSelectedDate(localDate);
+  
+       // Filter the availabilities for the selected date
+  const filteredAppointments = availabilities.filter((availability) => {
+    const availabilityDate = new Date(availability.date);
+    return availabilityDate.toISOString().substring(0, 10) === localDate.toISOString().substring(0, 10);
+  });
+
+  setAppointments(filteredAppointments);
+},
+[setOpen, setSelectedDate, availabilities]
   );
 
   return (
