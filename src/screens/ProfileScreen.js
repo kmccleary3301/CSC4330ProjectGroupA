@@ -65,9 +65,7 @@ const ProfileScreen = () => {
             <Text style={styles.profileInfo}>{userProfile.pronouns}</Text>
               <Text style={styles.profileInfo}>{userProfile.email}</Text>
               <Text style={styles.userType}>{userProfile.userType}</Text>
-            
-            {/* <Text style={styles.school}>{userProfile.school}</Text> */}
-          </View>
+                    </View>
         </View>
   
         <Text style={styles.subtitle}>My Subjects:</Text>
