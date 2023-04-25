@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  Button,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
@@ -12,6 +13,7 @@ import { db } from "../../firebase";
 import { Ionicons } from "@expo/vector-icons";
 import {Picker} from '@react-native-picker/picker';
 import Checkbox from 'expo-checkbox';
+import { Firestore, doc, getDoc, setDoc, collection } from "firebase/firestore";
 
 const blue = '#182640';
 const tan = '#FAE8CD';
@@ -29,6 +31,7 @@ const ScheduleAvailabilityScreen = () => {
   const [openStartTimePicker, setOpenStartTimePicker] = useState(false);
   const [openEndTimePicker, setOpenEndTimePicker] = useState(false);
   const [toggleCheckbox, setToggleCheckbox] = useState(false)
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const navigation = useNavigation();
 
@@ -99,7 +102,8 @@ const ScheduleAvailabilityScreen = () => {
   
       // Add appointment to Firebase
       try {
-        await db.collection("appointments").add(appointment);
+        //await db.collection("appointments").add(appointment);
+        await setDoc(doc(db, "appointments", "test"+toString(date)), appointment);
         console.log("Appointment added successfully");
       } catch (error) {
         console.error("Error adding appointment: ", error);
@@ -110,9 +114,11 @@ const ScheduleAvailabilityScreen = () => {
   const onConfirm = async () => {
     if (selectedDate && startTime && endTime && validateTime(startTime, endTime)) {
       await createAppointments();
-      navigation.goBack(); // Navigate back to the home screen
+      setIsConfirmed(true);
+      setTimeout(() => {
+        navigation.goBack();
+      }, 2000);
     } else {
-      // Handle invalid input
       alert("Please make sure you have selected a date and a valid time range.");
     }
   };
@@ -174,6 +180,11 @@ const ScheduleAvailabilityScreen = () => {
   };
 
   return (
+    isConfirmed ? (
+        <View style={styles.confirmationContainer}>
+          <Text style={styles.confirmationText}>Confirmed</Text>
+        </View>
+      ) : (
     <View style={styles.container}>
       <Text style={styles.title}>Schedule Availability</Text>
     <View>
@@ -183,8 +194,9 @@ const ScheduleAvailabilityScreen = () => {
           <TouchableOpacity onPress={showDatePicker}>
             <Ionicons name="calendar" size={32} color={tan} />
           </TouchableOpacity>
+          {selectedDate && <Text style={styles.selectedDate}>{selectedDate.toLocaleDateString()}</Text>}
         </View>
-        {selectedDate && <Text style={styles.selectedDate}>{selectedDate.toLocaleDateString()}</Text>}
+       
         <DatePickerModal
           locale="en"
           mode="single"
@@ -197,25 +209,29 @@ const ScheduleAvailabilityScreen = () => {
       </View>
 
       <View>
-      <Text style={styles.label}>Time:</Text>
+      <Text style={[styles.label,{marginBottom:0} ]}>Time:</Text>
         <TouchableOpacity onPress={showTimePickerStart} style={styles.timeButton}>
-          <Text style={styles.timeButtonText}>{startTime ? startTime.toLocaleTimeString() : "Select start time"}</Text>
+          <Text style={styles.timeButtonText}>{startTime ? startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Select start time"}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={showTimePickerEnd} style={styles.timeButton}>
-          <Text style={styles.timeButtonText}>{endTime ? endTime.toLocaleTimeString() : "Select end time"}</Text>
+          <Text style={styles.timeButtonText}>{endTime ? endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Select end time"}</Text>
         </TouchableOpacity>
         <TimePickerModal
           visible={openStartTimePicker}
           onDismiss={onDismissStartTime}
           onConfirm={onConfirmStartTime}
           label="Select a starting time"
+          inputType="keyboard"
           //time = {startTime}
+          keyboardIcon="keyboard-outline"
+          clockIcon="clock-outline"
         />
         <TimePickerModal
           visible={openEndTimePicker}
           onDismiss={onDismissEndTime}
           onConfirm={onConfirmEndTime}
           label="Select an ending time"
+          inputType="keyboard"
         />
       </View>
 
@@ -235,7 +251,7 @@ const ScheduleAvailabilityScreen = () => {
             <Picker
                 selectedValue={customFrequency}
                 onValueChange={(itemValue) => setCustomFrequency(itemValue)}
-                style={styles.picker}
+                style={[styles.picker, {marginTop: 0}]}
             >
                 <Picker.Item label="Daily" value="Daily" />
                 <Picker.Item label="Weekly" value="Weekly" />
@@ -244,24 +260,26 @@ const ScheduleAvailabilityScreen = () => {
           </View>
           {customFrequency === "Weekly" && (
             <View>
-              <Text style={styles.label}>Select Days</Text>
+              <Text style={[styles.label,{marginTop:0}]}>Select Days</Text>
               <View style={styles.dayOptionsContainer}>
               {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day, index) => (
-             <Checkbox
-                key={index}
-                title={day}
-                checked={selectedDays.includes(index)}
-                onPress={() => {
-                setSelectedDays((prevSelectedDays) => {
-                    if (prevSelectedDays.includes(index)) { // If day is already selected, remove it from selectedDays
-                    return prevSelectedDays.filter((prevIndex) => prevIndex !== index);
-                    } else { // If day is not selected, add it to selectedDays
-                    return [...prevSelectedDays, index];
-                    }
-                });
-                }}
-            />
-            ))}
+                <View style={styles.dayOption} key={index}>
+                    <Text style={styles.dayText}>{day}</Text>
+                    <Checkbox
+                    title={day}
+                    checked={selectedDays.includes(index)}
+                    onPress={() => {
+                        setSelectedDays((prevSelectedDays) => {
+                        if (prevSelectedDays.includes(index)) {
+                            return prevSelectedDays.filter((prevIndex) => prevIndex !== index);
+                        } else {
+                            return [...prevSelectedDays, index];
+                        }
+                        });
+                    }}
+                    />
+                </View>
+                ))}
             </View>
             </View>
           )}
@@ -275,8 +293,8 @@ const ScheduleAvailabilityScreen = () => {
                 mode="multiple"
                 onConfirm={(dates) => {
                     setShowDatePicker(false);
-                    setSelectedDates(dates);
-                }}
+                    setSelectedDates(dates.map((date) => new Date(date)));
+                  }}
                 date={selectedDates}
             />
             </View>
@@ -293,6 +311,7 @@ const ScheduleAvailabilityScreen = () => {
   </TouchableOpacity>
 </View>
 </View>
+      )
   );
 };
      
@@ -318,11 +337,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     },
     label: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop:30,
-    marginBottom: 30,
-    color: tan,
+        fontSize: 18,
+        fontWeight: "bold",
+        marginTop:15,
+        marginBottom: 20,
+        color: tan,
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -465,7 +484,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         paddingVertical: 5,
-        marginTop: 5,
+        marginTop: 15,
         alignSelf: 'center',
         width: 250,
       },
@@ -482,6 +501,24 @@ const styles = StyleSheet.create({
             flexWrap: 'wrap',
         },
     },
+    dayOption: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+      },
+      dayText: {
+        color: tan,
+        marginRight: 10,
+      },
+      confirmationContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+confirmationText: {
+  fontSize: 30,
+  color: tan,
+},
     });
     
     export default ScheduleAvailabilityScreen;
