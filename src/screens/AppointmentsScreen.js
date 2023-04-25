@@ -264,12 +264,7 @@ const AppointmentsScreen = () => {
             <Text style={{ color: 'beige', fontSize: 16, fontFamily: 'SF', marginTop: 10 }}>See all history</Text>
           </TouchableOpacity>
         </View>
-
       </View>
-
-
-
-
       <NavBarContainer />
     </View>
   );
@@ -278,14 +273,14 @@ const AppointmentsScreen = () => {
 const sStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: blue,
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'tan',
+    color: tan,
     fontFamily: 'Vikendi',
   },
   table: {

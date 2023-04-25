@@ -22,6 +22,7 @@ import AptRequestScreen from '../screens/AptRequestScreen';
 import AppointmentsScreen from '../screens/AppointmentsScreen';
 import RegisterInfoScreen from '../screens/RegisterInfoScreen';
 import SubjectAddScreen from '../screens/SubjectAddScreen';
+import ScheduleAvailabilityScreen from '../screens/ScheduleAvailabilityScreen';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
