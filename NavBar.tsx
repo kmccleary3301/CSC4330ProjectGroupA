@@ -79,6 +79,11 @@ const NavBarContainer = () => {
         text="Home"
       />
       <NavBarItem
+        iconSource={require('./src/assets/icons/calender-outline.png')}
+        screenName="TutorsListScreen"
+        text="Available Tutors"
+      />
+      <NavBarItem
         iconSource={require('./src/assets/icons/appointments.png')}
         screenName="AppointmentsScreen"
         text="My Appointments"

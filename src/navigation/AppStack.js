@@ -29,6 +29,8 @@ import RegisterInfoScreen from '../screens/RegisterInfoScreen';
 import TutorInfo from '../screens/TutorInfo';
 import SubjectAddScreen from '../screens/SubjectAddScreen';
 import VerifyEmail from '../screens/VerifyEmail';
+import TutorsListScreen from '../screens/TutorsListScreen';
+
 
 import SideMenu from '../../SideMenu';
 import AppHeader from '../../AppHeader';
