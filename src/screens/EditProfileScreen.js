@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Pressable, TextInput, Picker } from "react-native";
+import { View, Text, StyleSheet, Pressable, TextInput, Picker, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import NavBarContainer from '../../NavBar';
 import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
@@ -72,13 +72,17 @@ const EditProfileScreen = () => {
 
   const handlePronounsPress = () => {
     setShowPicker(!showPicker);
+    if (!selectedPronoun && userProfile.pronouns) {
+      setSelectedPronoun(userProfile.pronouns);
+    }
   };
+  
 
   
   const handlePronounChange = (itemValue) => {
     setSelectedPronoun(itemValue);
     setShowPicker(false);
-    setPronouns(itemValue); // Update the pronouns state
+    setPronouns(itemValue); 
     setUserProfile(prevState => ({
       ...prevState,
       pronouns: itemValue,
@@ -203,12 +207,14 @@ const renderPronounPicker = () => {
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
 
+
         <View style={styles.cancelContainer}>
           <Pressable
             onPress={handleCancel}>
             <Text style={styles.cancelText}>Cancel</Text>
           </Pressable>
         </View>
+        <ScrollView>
 
         <View style={styles.profileInfoContainer}>
           <View style={styles.nameContainer}>
@@ -280,6 +286,7 @@ const renderPronounPicker = () => {
           onPress={handleSaveChanges}>
           <Text style={styles.buttonText}>Save changes</Text>
         </Pressable>
+        </ScrollView>
       </View>
       <NavBarContainer />
     </View>
@@ -395,7 +402,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     backgroundColor: tan,
-    marginBottom: 20,
   },
   pronounPicker: {
     height: 30,
@@ -403,7 +409,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     backgroundColor: tan,
-    marginBottom: 20,
   },
 });
 
