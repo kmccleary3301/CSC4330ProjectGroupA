@@ -1,173 +1,136 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, TextInput, Picker } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import NavBarContainer from '../../NavBar';
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase';
 import ProfileScreen from "./ProfileScreen";
 import { AuthProvider, useAuthValue } from '../../AuthContext';
+import { subjectList } from '../utils/subjectList.js';
 
 
 
 
 
-const EditProfileScreen = ({ route }) => {
-  const { userProfile, onUpdateProfile } = route.params; // Get userProfile and onUpdateProfile from route params
+const EditProfileScreen = () => {
+  const [userProfile, setUserProfile] = useState({});
   const navigation = useNavigation();
-  const [name, setName] = useState(userProfile.name);
-  const [email, setEmail] = useState(userProfile.email);
-  const [pronouns, setPronouns] = useState(userProfile.pronouns);
-  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
-
-  const [subject1, setSubject1] = useState(userProfile.subject1);
-  const [subject2, setSubject2] = useState(userProfile.subject2);
-  const [subject3, setSubject3] = useState(userProfile.subject3);
-  const [subject4, setSubject4] = useState(userProfile.subject4);
-  const [subject5, setSubject5] = useState(userProfile.subject5);
-
-
-  const [userSubjects, setUserSubjects] = useState([
-    userProfile.subject1,
-    userProfile.subject2,
-    userProfile.subject3,
-    userProfile.subject4,
-    userProfile.subject5,
-  ]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [pronouns, setPronouns] = useState("");
+  const [selectedPronoun, setSelectedPronoun] = useState("");
+  const [currentSelectedSubject, setCurrentSelectedSubject] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
+  const { currentUser } = useAuthValue();
+  const user = currentUser;
 
 
-  const handleSubjectChange = (subject) => {
-    if (userSubjects.length >= 5) {
-      alert("You have already added the maximum number of subjects.");
-      return;
-    }
 
-    if (!userSubjects.includes(subject)) {
-      const updatedUserSubjects = [...userSubjects, subject];
-      setUserSubjects(updatedUserSubjects);
-      setShowDropdown(false);
-    } else {
-      alert(`You have already added "${subject}" as one of your subjects.`);
-    }
+
+  useEffect(() => {
+    const getUserProfile = async () => {
+      const type = user?.displayName;
+      const docRef = doc(db, type, user?.uid);      
+      const docSnap = await getDoc(docRef);
+      const data = docSnap.data();      
+      setSelectedSubjects(data.selectedSubjects);   
+      setUserProfile(data);
+      setFirstName(data.firstName);
+      setLastName(data.lastName);
+      setEmail(data.email);
+      setPronouns(data.pronouns);
+    };
+  
+    getUserProfile();
+  }, [user]);
+
+
+  const handlePronounsPress = () => {
+    setShowPicker(!showPicker);
   };
 
-  const { currentUser } = useAuthValue();
-  const user = auth.currentUser;
-
-  const updateUserProfile = e => {
-    e.preventDefault();
-    handleSaveChanges(
-      name,
-      email,
-      pronouns,
-      subject1,
-      subject2,
-      subject3,
-      subject4,
-      subject5
-    ).then(() => {
-      navigation.navigate('ProfileScreen')
-    });
-  }
+  
+  const handlePronounChange = (itemValue) => {
+    setSelectedPronoun(itemValue);
+    setShowPicker(false);
+    setUserProfile(prevState => ({
+      ...prevState,
+      pronouns: itemValue,
+    }));
+  };
 
 
-  const handleSaveChanges = async (
-    name,
-    email,
-    pronouns,
-    subject1,
-    subject2,
-    subject3,
-    subject4,
-    subject5) => {
-    const filteredSubjects = userSubjects.filter(subject => subject !== ''); // Filter out empty strings
-    const updatedUserProfile = {
-      ...userProfile,
-      name: name,
+
+
+
+const handleSaveChanges = async () => {
+  try {
+    const user = auth.currentUser;
+    await updateDoc(doc(db, 'student', user?.uid),
+      { firstName, lastName, email, pronouns, selectedSubjects });
+    setUserProfile(prevState => ({
+      ...prevState,
+      firstName: firstName,
+      lastName: lastName,
       email: email,
       pronouns: pronouns,
-      subject1: filteredSubjects[0] || "",
-      subject2: filteredSubjects[1] || "",
-      subject3: filteredSubjects[2] || "",
-      subject4: filteredSubjects[3] || "",
-      subject5: filteredSubjects[4] || "",
-    }
-    try {
-      await updateDoc(doc(db, "users", user?.uid), {
-        name,
-        email,
-        pronouns,
-        subject1,
-        subject2,
-        subject3,
-        subject4,
-        subject5,
-      });
-    } catch (err) {
-      console.error(err);
-      alert(err.message);
-    }
-    // await updateUserProfile(updatedUserProfile);
-    // onUpdateProfile(updatedUserProfile);
+      selectedSubjects: selectedSubjects,
+    }));
     navigation.goBack();
-  };
+
+  } catch (err) {
+    console.log(err);
+    alert('Error saving changes.');
+  }
+};
+
+
+const handleSubjectSelection = (value) => {
+  if (selectedSubjects.includes(value)) {
+    setSelectedSubjects((prev) => prev.filter((subject) => subject !== value));
+  } else {
+    if (selectedSubjects.length < 7) {
+      setSelectedSubjects((prev) => [...prev, value]);
+    } else {
+      alert('You cannot add more than 7 courses.');
+    }
+  }
+};
+
+
+
+const renderPicker = () => {
+  return (
+    <Picker
+    style={styles.picker}
+      selectedValue={''}
+      onValueChange={(value) => handleSubjectSelection(value)}
+    >
+      <Picker.Item label="Select a subject" value="" />
+      {subjectList.map((subject) => (
+        <Picker.Item
+          key={subject.value || subject}
+          label={subject.value || subject}
+          value={subject.value || subject}
+        />
+      ))}
+    </Picker>
+  );
+};
 
 
 
 
-
-
-  // should alphabetize them for sure
-  const subjects = [
-    'Accounting',
-    'Anthropology',
-    'Art History',
-    'Astronomy',
-    'Biology',
-    'Business Administration',
-    'Chemistry',
-    'Communications',
-    'Computer Science',
-    'Creative Writing',
-    'Criminal Justice',
-    'Digital Media',
-    'Economics',
-    'Education',
-    'Engineering',
-    'English',
-    'English Literature',
-    'Environmental Science',
-    'Film Studies',
-    'French',
-    'Geography',
-    'Global Studies',
-    'History',
-    'International Relations',
-    'Journalism',
-    'Law',
-    'Linguistics',
-    'Marketing',
-    'Mathematics',
-    'Mechanical Engineering',
-    'Music',
-    'Neuroscience',
-    'Philosophy',
-    'Physics',
-    'Political Science',
-    'Psychology',
-    'Public Health',
-    'Religious Studies',
-    'Social Work',
-    'Sociology',
-    'Spanish',
-    'Statistics',
-    'Sustainability Studies',
-    'Theater',
-    'Theology',
-    'Urban Studies',
-    'Visual Arts',
-    'Womens Studies'
+  const pronounsPicker = [
+    "She/Her",
+    "He/Him",
+    "They/Them",
+    "Other"
   ];
+  
 
 
   // Function to toggle dropdown visibility
@@ -181,11 +144,11 @@ const EditProfileScreen = ({ route }) => {
 
 
 
-
+//should replace course with empty string
   const handleDeleteSubject = (index) => {
-    const updatedSubjects = [...userSubjects];
+    const updatedSubjects = [...selectedSubjects];
     updatedSubjects.splice(index, 1);
-    setUserSubjects(updatedSubjects.filter(subject => subject !== ''));
+    setSelectedSubjects(updatedSubjects.filter(subject => subject !== ''));
   };
 
 
@@ -204,11 +167,21 @@ const EditProfileScreen = ({ route }) => {
 
         <View style={styles.profileInfoContainer}>
           <View style={styles.nameContainer}>
-            <Text style={styles.profileInfoLabel}>Name:          </Text>
+            <Text style={styles.profileInfoLabel}>First Name:          </Text>
             <TextInput
               style={styles.profileInfoValue}
-              value={name}
-              onChangeText={setName}
+              placeholder={userProfile.firstName}
+              onChangeText={(text) => setFirstName(text)}
+            />
+          </View>
+
+          <View style={styles.nameContainer}>
+            <Text style={styles.profileInfoLabel}>Last Name:          </Text>
+            <TextInput
+              style={styles.profileInfoValue}
+              placeholder={userProfile.lastName}
+              onChangeText={(text) => setLastName(text)}
+
             />
           </View>
 
@@ -216,28 +189,37 @@ const EditProfileScreen = ({ route }) => {
             <Text style={styles.profileInfoLabel}>Email:    </Text>
             <TextInput
               style={styles.profileInfoValue}
-              value={email}
-              onChange={e => setEmail(e.target.value)}
               placeholder={userProfile.email}
+              onChangeText={(text) => setEmail(text)}
+              
             />
           </View>
 
-          <View style={styles.nameContainer}>
-            <Text style={styles.profileInfoLabel}>Pronouns: </Text>
-            <TextInput
-              style={styles.profileInfoValue}
-              value={pronouns}
-              onChangeText={setPronouns}
-            />
-          </View>
+        <View style={styles.nameContainer}>
+         <Text style={styles.profileInfoLabel}>Pronouns: </Text>
+          <Pressable onPress={handlePronounsPress}>
+            <Text style={styles.profileInfoValue}>{userProfile.pronouns || selectedPronoun}</Text>
+          </Pressable>
         </View>
+      </View>
+        {showPicker && (
+        <Picker
+          selectedValue={selectedPronoun}
+          onValueChange={handlePronounChange}
+        >
+          {pronounsPicker.map((pronoun, index) => (
+            <Picker.Item key={index} label={pronoun} value={pronoun} />
+          ))}
+        </Picker>
+      )}
+
 
 
 
         <Text style={styles.subtitle}>My Subjects: </Text>
 
         <View style={styles.subjectsContainer}>
-          {userSubjects.filter(subject => subject !== '').map((subject, index) => (
+          {selectedSubjects.filter(subject => subject !== '').map((subject, index) => (
             <View key={index} style={styles.subjectContainer}>
               <Pressable onPress={() => handleDeleteSubject(index)}>
                 <Text style={styles.deleteButtonText}>-</Text>
@@ -250,15 +232,7 @@ const EditProfileScreen = ({ route }) => {
               <Pressable onPress={() => toggleDropdown()}>
                 <Text style={styles.deleteButtonText}>+</Text>
               </Pressable>
-              {showDropdown ? (
-                <Picker selectedValue={selectedSubject} onValueChange={handleSubjectChange}>
-                  {subjects.map((subject, index) => (
-                    <Picker.Item key={index} label={subject} value={subject} />
-                  ))}
-                </Picker>
-              ) : (
-                <Text style={styles.subjectsText}>Add course</Text>
-              )}
+              {renderPicker()}
             </View>
           </View>
         </View>
@@ -309,7 +283,7 @@ const styles = StyleSheet.create({
   saveChangesButton: {
     width: 175,
     height: 50,
-    marginTop: 30, //subject to change as page evolves
+    marginTop: 0, //subject to change as page evolves
     borderRadius: 30,
     borderColor: tan,
     borderWidth: 4.5,
@@ -379,7 +353,15 @@ const styles = StyleSheet.create({
   },
   profileInfoContainer: {
     marginTop: 30,
-  }
+  }, 
+  picker: {
+    height: 50,
+    borderColor: tan,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: tan,
+    marginBottom: 20,
+  },
 });
 
 
