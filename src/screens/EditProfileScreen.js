@@ -12,6 +12,9 @@ import { subjectList } from '../utils/subjectList.js';
 
 
 
+
+
+
 const EditProfileScreen = () => {
   const [userProfile, setUserProfile] = useState({});
   const navigation = useNavigation();
@@ -48,6 +51,25 @@ const EditProfileScreen = () => {
   }, [user]);
 
 
+
+  // const sendEmail = async () => {
+  //   const options = {
+  //     recipients: [userProfile.email],
+  //     subject: 'Profile updated',
+  //     body: 'Your profile has been updated successfully.',
+  //     isHtml: false,
+  //   };
+  
+  //   try {
+  //     await MailComposer.composeAsync(options);
+  //     console.log('Email sent successfully');
+  //   } catch (error) {
+  //     console.log('Error sending email:', error);
+  //   }
+  // };
+  
+
+
   const handlePronounsPress = () => {
     setShowPicker(!showPicker);
   };
@@ -62,6 +84,8 @@ const EditProfileScreen = () => {
     }));
   };
 
+ 
+  
 
 
 
@@ -79,6 +103,9 @@ const handleSaveChanges = async () => {
       pronouns: pronouns,
       selectedSubjects: selectedSubjects,
     }));
+
+
+      
     navigation.goBack();
 
   } catch (err) {
@@ -121,6 +148,23 @@ const renderPicker = () => {
   );
 };
 
+const renderPronounPicker = () => {
+  return (
+    <Picker
+      selectedValue={selectedPronoun}
+      onValueChange={handlePronounChange}
+      style={styles.pronounPicker}
+    >
+      {pronounsPicker.map((pronoun, index) => (
+        <Picker.Item key={index} label={pronoun} value={pronoun} />
+      ))}
+    </Picker>
+  );
+};
+
+
+
+
 
 
 
@@ -128,6 +172,8 @@ const renderPicker = () => {
     "She/Her",
     "He/Him",
     "They/Them",
+    "He/They",
+    "She/They",
     "Other"
   ];
   
@@ -194,28 +240,18 @@ const renderPicker = () => {
               
             />
           </View>
+          <View style={styles.nameContainer}>
+            <Text style={styles.profileInfoLabel}>Pronouns: </Text>
+            {showPicker ? (
+              renderPronounPicker()
+            ) : (
+              <Pressable onPress={handlePronounsPress}>
+                <Text style={styles.profileInfoValue}>{userProfile.pronouns || selectedPronoun}</Text>
+              </Pressable>
+            )}
+          </View>
 
-        <View style={styles.nameContainer}>
-         <Text style={styles.profileInfoLabel}>Pronouns: </Text>
-          <Pressable onPress={handlePronounsPress}>
-            <Text style={styles.profileInfoValue}>{userProfile.pronouns || selectedPronoun}</Text>
-          </Pressable>
-        </View>
       </View>
-        {showPicker && (
-        <Picker
-          selectedValue={selectedPronoun}
-          onValueChange={handlePronounChange}
-        >
-          {pronounsPicker.map((pronoun, index) => (
-            <Picker.Item key={index} label={pronoun} value={pronoun} />
-          ))}
-        </Picker>
-      )}
-
-
-
-
         <Text style={styles.subtitle}>My Subjects: </Text>
 
         <View style={styles.subjectsContainer}>
@@ -356,6 +392,14 @@ const styles = StyleSheet.create({
   }, 
   picker: {
     height: 50,
+    borderColor: tan,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: tan,
+    marginBottom: 20,
+  },
+  pronounPicker: {
+    height: 30,
     borderColor: tan,
     borderWidth: 1,
     borderRadius: 5,
