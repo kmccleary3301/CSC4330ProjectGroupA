@@ -242,7 +242,6 @@ const renderPronounPicker = () => {
               style={styles.profileInfoValue}
               placeholder={userProfile.email}
               onChangeText={(text) => setEmail(text)}
-              
             />
           </View>
           <View style={styles.nameContainer}>
@@ -385,6 +384,7 @@ const styles = StyleSheet.create({
     color: tan,
     fontFamily: 'SF',
     fontSize: 17,
+    
   },
   nameContainer: {
     flex: 1,
@@ -392,6 +392,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginTop: 15,
+    flexWrap: 'wrap',
   },
   profileInfoContainer: {
     marginTop: 30,
@@ -409,6 +410,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     backgroundColor: tan,
+    textAlign: 'right',
   },
 });
 
