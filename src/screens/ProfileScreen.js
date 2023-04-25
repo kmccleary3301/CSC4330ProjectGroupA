@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import {
   Image,
   StyleSheet,
@@ -29,17 +29,19 @@ const ProfileScreen = () => {
   const { currentUser } = useAuthValue();
   const user = currentUser;  
   
-  useEffect(() => {
-    const getUserProfile = async () => {
-      const type = user?.displayName;
-      const docRef = doc(db, type, user?.uid);      
-      const docSnap = await getDoc(docRef);
-      const data = docSnap.data();      
-        setSelectedSubjects(data.selectedSubjects);   
-      setUserProfile(data);
-    };  
-    getUserProfile();
-  }, [user]);
+  useFocusEffect(
+    React.useCallback(() => {
+      const getUserProfile = async () => {
+        const type = user?.displayName;
+        const docRef = doc(db, type, user?.uid);
+        const docSnap = await getDoc(docRef);
+        const data = docSnap.data();
+        setUserProfile(data);
+      };
+      getUserProfile();
+    }, [user])
+  );
+  
 
   const handleUpdateProfile = (updatedUserProfile) => {
     setUserProfile(updatedUserProfile);
