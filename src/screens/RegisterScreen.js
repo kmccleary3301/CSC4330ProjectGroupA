@@ -12,12 +12,15 @@ import { Ionicons } from '@expo/vector-icons';
 import styles from '../../styles.js';
 import { auth, db } from '../../firebase';
 import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { useAuthValue } from '../../AuthContext'
 //import { useUserType } from '../../UserTypeContext.js';
 
 const RegisterScreen = ({ navigation }) => {
 
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [pronouns, setPronouns] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -56,7 +59,7 @@ const RegisterScreen = ({ navigation }) => {
           updateProfile(auth.currentUser, {displayName: userType})
         }).catch(err => alert(err.message))
         .then(() => {
-          addProfile(email, userType)
+          addProfile(email, userType, pronouns, lastName, firstName)
         }).catch(err => setError(err.message))
       setUserType('')
       setEmail('')
@@ -65,14 +68,19 @@ const RegisterScreen = ({ navigation }) => {
     }
   }
 
-  const addProfile = async (email, userType) => {
+  const addProfile = async ( email, userType, pronouns, lastName, firstName) => {
     const user = auth.currentUser;
     try {
       const userDocRef = doc(db, userType, user.uid);
       await setDoc(userDocRef, {
-        uid: user.uid,
+        uid: user.uid,        
         userType,
         email,
+      });
+      await updateDoc(userDocRef, {
+        firstName,
+        lastName,
+        pronouns,        
       });
     } catch (err) {
       console.error(err);
@@ -80,22 +88,7 @@ const RegisterScreen = ({ navigation }) => {
     }
   }
 
-  const navigateToScreen = () => {
-    switch (userType) {
-      case 'student':
-        navigation.navigate('RegisterInfoScreen');
-        break;
-      case 'tutor':
-        navigation.navigate('TutorInfo');
-        // navigate to tutor screen
-        break;
-      case 'administrator':
-        // navigate to administrator screen
-        break;
-      default:
-        // do nothing
-    }
-  };
+  
 
   return (
     <View style={[styles.container, { justifyContent: 'start', paddingTop: 120, marginTop: 0 }]}>
@@ -118,7 +111,34 @@ const RegisterScreen = ({ navigation }) => {
         </Text>
 
         <form onSubmit={handleRegister} name='registration_form'>
-
+        <TextInput
+            style={styles.inputField}
+            onChange={e => setFirstName(e.target.value)}
+            value={firstName}
+            placeholder="First Name"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.inputField}
+            onChange={e => setLastName(e.target.value)}
+            value={lastName}
+            placeholder="Last Name"
+            autoCapitalize="none"
+          />
+          <Picker
+            style={[styles.picker, { paddingLeft: 5 }]}
+            selectedValue={pronouns}
+            onValueChange={(itemValue) => setPronouns(itemValue)}
+            prompt="My pronouns are..."
+            mode="dropdown"
+          >
+            <Picker.Item label="My pronouns are..." value="" />
+            <Picker.Item label="He/him" value="He/him" />
+            <Picker.Item label="She/her" value="She/her" />
+            <Picker.Item label="They/them" value="They/them" />
+            <Picker.Item label="He/they" value="He/they" />
+            <Picker.Item label="She/they" value="She/they" />
+          </Picker>
           <Picker
             style={[styles.picker, { paddingLeft: 5 }]}
             selectedValue={userType}
@@ -128,8 +148,7 @@ const RegisterScreen = ({ navigation }) => {
           >
             <Picker.Item label="I am a..." value="" />
             <Picker.Item label="Student" value="student" />
-            <Picker.Item label="Tutor" value="tutor" />
-            <Picker.Item label="Administrator" value="administrator" />
+            <Picker.Item label="Tutor" value="tutor" />            
           </Picker>
 
           <TextInput

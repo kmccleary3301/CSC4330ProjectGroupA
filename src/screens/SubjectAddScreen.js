@@ -5,7 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  Picker
+  Picker, 
+  StyleSheet
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,9 +18,9 @@ import { subjectList } from '../utils/subjectList.js';
 
 
   const SubjectAddScreen = ({ navigation }) => {
-    const {currentUser} = useAuthValue();
-    const [userType] = useState('');
+    const {currentUser} = useAuthValue();    
     const [selectedSubjects, setSelectedSubjects] = useState([]);
+    const user = currentUser;
 
     const handleSubjectSelection = (value) => {
       if (selectedSubjects.includes(value)) {
@@ -31,13 +32,9 @@ import { subjectList } from '../utils/subjectList.js';
   
     const handleSaveChanges = async () => {
       try {
-        const user = auth.currentUser;
-        await updateDoc(doc(db, 'student', user?.uid), { selectedSubjects });
-        if (selectedSubjects.length === 5) {
-          navigation.navigate('HomeScreen');
-        } else {
-          alert('Please select 5 subjects.');
-        }
+        const type = user?.displayName;
+        await updateDoc(doc(db, type, user?.uid), { selectedSubjects });        
+          navigation.navigate('HomeScreen');        
       } catch (err) {
         console.log(err);
         alert('Error saving changes.');
@@ -47,6 +44,7 @@ import { subjectList } from '../utils/subjectList.js';
     const renderPicker = () => {
       return (
         <Picker
+        style={styles1.picker}
           selectedValue={''}
           onValueChange={(value) => handleSubjectSelection(value)}
         >
@@ -79,16 +77,20 @@ import { subjectList } from '../utils/subjectList.js';
       </View>
       <Text style={[styles.title, { textAlign: 'center', marginBottom: 0, paddingBottom: 0 }]}>Subjects of Interest</Text>
       <View style={styles.registerBody}>
-        <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
-          Lastly, you'll just need to add your subjects of interest.
-        </Text>
+      <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
+          Lastly, you'll just need to add your subjects of {''}
+          {user?.displayName === 'student' || user?.displayName === 'tutor'
+          ? 'interest' : 'expertise'}.
+          </Text>
         {selectedSubjects.map((subject) => (
-        <Text key={subject}>{subject}</Text>
+        <Text style={styles1.subjectsText}
+        key={subject}>{subject}</Text>
       ))}
       {selectedSubjects.length < 5 && renderPicker()}
-      <TouchableOpacity onPress={handleSaveChanges}>
-        <Text>Save Changes</Text>
-      </TouchableOpacity>
+      <TouchableOpacity onPress={handleSaveChanges} style={styles1.saveChangesButton}>
+      <Text style={styles1.buttonText}>Save Changes</Text>
+     </TouchableOpacity>
+
 
         
         
@@ -112,6 +114,47 @@ SubjectAddScreen.navigationOptions = ({ navigation }) => ({
 });
 
 export default SubjectAddScreen;
+
+
+const blue = '#182640';
+const tan = '#FAE8CD';
+
+
+
+const styles1 = StyleSheet.create({
+  picker: {
+    height: 50,
+    borderColor: tan,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: tan,
+    marginBottom: 20,
+  },
+  subjectsText: {
+    color: tan,
+    fontFamily: 'SF',
+    fontSize: 20,
+    alignSelf: 'flex-start',
+  },
+  saveChangesButton: {
+    width: 175,
+    height: 50,
+    marginTop: 30, //subject to change as page evolves
+    borderRadius: 30,
+    borderColor: tan,
+    borderWidth: 4.5,
+    padding: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    backgroundColor: blue,
+  },
+  buttonText: {
+    color: tan,
+    fontSize: 20,
+    fontFamily: 'SF',
+  },
+});
 
 
 // These are old, but may need to be used in other files

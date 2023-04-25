@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import {
   Image,
   StyleSheet,
@@ -11,7 +11,7 @@ import {
 
 import NavBarContainer from '../../NavBar';
 import EditProfileScreen from "./EditProfileScreen";
-import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase';
 import { StorageError } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
@@ -22,34 +22,36 @@ import { AuthProvider, useAuthValue } from '../../AuthContext';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();  
-  const [userProfile, setUserProfile] = useState({});
+  
   const [selectedSubjects, setSelectedSubjects] = useState([]);
+
+  const [userProfile, setUserProfile] = useState({});
   const { currentUser } = useAuthValue();
-  const user = currentUser;
-
+  const user = currentUser;  
   
+  useFocusEffect(
+    React.useCallback(() => {
+      const getUserProfile = async () => {
+        const type = user?.displayName;
+        const docRef = doc(db, type, user?.uid);
+        const docSnap = await getDoc(docRef);
+        const data = docSnap.data();
+        setUserProfile(data);
+      };
+      getUserProfile();
+    }, [user])
+  );
   
-  useEffect(() => {
-    const getUserProfile = async () => {
-      const type = user?.displayName;
-      const docRef = doc(db, type, user?.uid);      
-      const docSnap = await getDoc(docRef);
-      const data = docSnap.data();      
-        setSelectedSubjects(data.selectedSubjects);   
-      setUserProfile(data);
-    };
-  
-    getUserProfile();
-  }, [user]);
-
 
   const handleUpdateProfile = (updatedUserProfile) => {
     setUserProfile(updatedUserProfile);
   };
-
   const handleEditProfile = () => {
     navigation.navigate('EditProfileScreen', { userProfile, onUpdateProfile: handleUpdateProfile })
   };
+
+  const profilePicture = require('../assets/icons/profileAvatar.png');
+
 
 
   return (
@@ -59,15 +61,15 @@ const ProfileScreen = () => {
   
         <View style={styles.profileContainer}>
           <View style={styles.pictureContainer}>
-            <Image style={styles.profilePic} source={userProfile.profilePicture} />
+            <Image style={styles.profilePic} source={profilePicture} />
           </View>
           <View style={styles.profileInfoContainer}>
-            <Text style={styles.profileInfo}>{userProfile.firstName} {[userProfile.pronouns]}</Text>
-  
-            <Text style={styles.profileInfo}>{userProfile.email}</Text>
-            <Text style={styles.userType}>{userProfile.userType}</Text>
-  
-            <Text style={styles.school}>{userProfile.school}</Text>
+            <Text style={styles.profileInfo}>{userProfile.firstName} {userProfile.lastName}</Text>
+            <Text style={styles.profileInfo}>{userProfile.pronouns}</Text>
+              <Text style={styles.profileInfo}>{userProfile.email}</Text>
+              <Text style={styles.userType}>{userProfile.userType}</Text>
+            
+            {/* <Text style={styles.school}>{userProfile.school}</Text> */}
           </View>
         </View>
   
@@ -81,7 +83,7 @@ const ProfileScreen = () => {
             ))}
           </View>
         ) : (
-          <Text style={{ color: "white" }}>Loading...</Text>
+          <Text style={[styles.subjects, {marginTop: 7}]}>Loading...</Text>
         )}
   
         <Pressable
