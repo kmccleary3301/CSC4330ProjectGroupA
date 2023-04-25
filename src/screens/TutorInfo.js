@@ -15,10 +15,13 @@ import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { useAuthValue } from '../../AuthContext'
 import { subjectList } from '../utils/subjectList.js';
 
-const RegisterInfoScreen = ({ navigation }) => {
+const TutorInfo = ({ navigation }) => {
 
   const { currentUser } = useAuthValue();  
-  const user = currentUser;  
+  const user = currentUser;
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [pronouns, setPronouns] = useState('');
   const [selectedSubjects, setSelectedSubjects] = useState([]);
 
   const handleSubjectSelection = (value) => {
@@ -35,7 +38,9 @@ const RegisterInfoScreen = ({ navigation }) => {
     try {
       // update tutor profile info
       await updateDoc(doc(db, type, user?.uid), {
-        
+        firstName,
+        lastName,
+        pronouns,
         selectedSubjects
       });
   
@@ -83,7 +88,39 @@ const RegisterInfoScreen = ({ navigation }) => {
       </View>
       <Text style={[styles.title, { textAlign: 'center', marginBottom: 0, paddingBottom: 0 }]}>Register</Text>
       <View style={styles.registerBody}>
-        
+        <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
+          We just need a few more things before your account is created.
+        </Text>
+        {/* <form onSubmit={profileInfo}> */}
+          <TextInput
+            style={styles.inputField}
+            onChange={e => setFirstName(e.target.value)}
+            value={firstName}
+            placeholder="First Name"
+            autoCapitalize="none"
+          />
+          <TextInput
+            style={styles.inputField}
+            onChange={e => setLastName(e.target.value)}
+            value={lastName}
+            placeholder="Last Name"
+            autoCapitalize="none"
+          />
+          <Picker
+            style={[styles.picker, { paddingLeft: 5 }]}
+            selectedValue={pronouns}
+            onValueChange={(itemValue) => setPronouns(itemValue)}
+            prompt="My pronouns are..."
+            mode="dropdown"
+          >
+            <Picker.Item label="My pronouns are..." value="" />
+            <Picker.Item label="He/him" value="He/him" />
+            <Picker.Item label="She/her" value="She/her" />
+            <Picker.Item label="They/them" value="They/them" />
+            <Picker.Item label="He/they" value="He/they" />
+            <Picker.Item label="She/they" value="She/they" />
+          </Picker>
+
           <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 16 }]}>
           Lastly, you'll just need to add your subjects of {''}
           {user?.displayName === 'student' || user?.displayName === 'tutor'
@@ -114,7 +151,7 @@ const RegisterInfoScreen = ({ navigation }) => {
 };
 
 
-RegisterInfoScreen.navigationOptions = ({ navigation }) => ({
+TutorInfo.navigationOptions = ({ navigation }) => ({
   headerLeft: () => (
     <TouchableOpacity onPress={() => navigation.navigate('InitialScreen')}>
       <View style={{ marginLeft: 20, marginTop: 10 }}>
@@ -127,4 +164,4 @@ RegisterInfoScreen.navigationOptions = ({ navigation }) => ({
   ),
 });
 
-export default RegisterInfoScreen;
+export default TutorInfo;

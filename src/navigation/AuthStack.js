@@ -1,5 +1,7 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {View} from 'react-native';
 
 import InitialScreen from '../screens/InitialScreen';
 import MySplashScreen from '../screens/MySplashScreen';
@@ -12,12 +14,45 @@ import SubjectSearchScreen from '../screens/SubjectSearchScreen';
 import AptRequestScreen from '../screens/AptRequestScreen';
 import AppointmentsScreen from '../screens/AppointmentsScreen';
 import RegisterInfoScreen from '../screens/RegisterInfoScreen';
+import TutorInfo from '../screens/TutorInfo';
 import SubjectAddScreen from '../screens/SubjectAddScreen';
 import VerifyEmail from '../screens/VerifyEmail';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+
+import { db, auth } from '../../firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
+  const navigation = useNavigation();
+
+  const HAMBURGER ={
+    headerRight: () => (
+      <View style={{paddingHorizontal: 20, flexDirection: "row"}}>
+        <Ionicons name="person-remove-outline" color={'#000000'} size={32} 
+          onPress={() => {
+            signOut(auth);
+            navigation.navigate("InitialScreen");
+          }}
+        />
+        <Ionicons name="reorder-three" color={'#000000'} size={32} 
+          onPress={() => console.log(auth)}
+        />
+        
+      </View>
+    ),
+    headerStyle: {
+      backgroundColor: '#1d3870',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+    headerTitleContainerStyle: { paddingHorizontal: 10 } 
+  };
   return (
     /*
     <Stack.Navigator initialRouteName='InitialScreen'>
@@ -39,21 +74,22 @@ const AuthStack = () => {
     </Stack.Navigator>
     */
 
-    <Stack.Navigator initialRouteName='InitialScreen'>
+    <Stack.Navigator initialRouteName='InitialScreen' style={{fill:"#0000FF"}}>
       
-      <Stack.Screen name="MySplashScreen"      component={MySplashScreen}/>
-      <Stack.Screen name="InitialScreen"       component={InitialScreen}/>
-      <Stack.Screen name="LoginScreen"         component={LoginScreen}/>
-      <Stack.Screen name="RegisterScreen"      component={RegisterScreen}/>
-      <Stack.Screen name="SubjectAddScreen"    component={SubjectAddScreen}/>
-      <Stack.Screen name="HomeScreen"          component={HomeScreen}/>
-      <Stack.Screen name="RegisterInfoScreen"  component={RegisterInfoScreen}/>
-      <Stack.Screen name="VerifyEmail"         component={VerifyEmail}/>
-      <Stack.Screen name="SubjectSearchScreen" component={SubjectSearchScreen}/>
-      <Stack.Screen name="ProfileScreen"       component={ProfileScreen}/>
-      <Stack.Screen name="EditProfileScreen"   component={EditProfileScreen}/>
-      <Stack.Screen name="AptRequestScreen"    component={AptRequestScreen}/>
-      <Stack.Screen name="AppointmentsScreen"  component={AppointmentsScreen}/>
+      <Stack.Screen name="MySplashScreen"      component={MySplashScreen} options={HAMBURGER}/>
+      <Stack.Screen name="InitialScreen"       component={InitialScreen} options={HAMBURGER}/>
+      <Stack.Screen name="LoginScreen"         component={LoginScreen} options={HAMBURGER}/>
+      <Stack.Screen name="RegisterScreen"      component={RegisterScreen} options={HAMBURGER}/>
+      <Stack.Screen name="SubjectAddScreen"    component={SubjectAddScreen} options={HAMBURGER}/>
+      <Stack.Screen name="HomeScreen"          component={HomeScreen} options={HAMBURGER}/>
+      <Stack.Screen name="RegisterInfoScreen"  component={RegisterInfoScreen} options={HAMBURGER}/>
+      <Stack.Screen name="TutorInfo"           component={TutorInfo} options={HAMBURGER}/>
+      <Stack.Screen name="VerifyEmail"         component={VerifyEmail} options={HAMBURGER}/>
+      <Stack.Screen name="SubjectSearchScreen" component={SubjectSearchScreen} options={HAMBURGER}/>
+      <Stack.Screen name="ProfileScreen"       component={ProfileScreen} options={HAMBURGER}/>
+      <Stack.Screen name="EditProfileScreen"   component={EditProfileScreen} options={HAMBURGER}/>
+      <Stack.Screen name="AptRequestScreen"    component={AptRequestScreen} options={HAMBURGER}/>
+      <Stack.Screen name="AppointmentsScreen"  component={AppointmentsScreen} options={HAMBURGER}/>
       
     </Stack.Navigator>
   );

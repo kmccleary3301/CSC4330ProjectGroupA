@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles';
-//import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Font from 'expo-font'
 import { Ionicons } from '@expo/vector-icons';
 import NavBarContainer from '../../NavBar';
@@ -20,7 +19,7 @@ import { DatePickerModal } from 'react-native-paper-dates';
 import { useAuthValue } from '../../AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../firebase';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, collection, query, where, getDocs } from 'firebase/firestore';
 
 
 import AptRequestScreen from './AptRequestScreen';
@@ -37,6 +36,8 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const { currentUser } = useAuthValue();
   const [userProfile, setUserProfile] = useState('');
+  const [availabilities, setAvailabilities] = useState([]);
+
   const user = currentUser;
   const getLocalDate = () => {
     const now = new Date();
@@ -47,54 +48,44 @@ const HomeScreen = () => {
 
   useEffect(() => {
     const getUserProfile = async () => {
-      const docRef = doc(db, "users", user?.uid);
+      const type = user?.displayName;
+      const docRef = doc(db, type, user?.uid);
       const docSnap = await getDoc(docRef);
-      setUserProfile(docSnap.data())
-      //console.log("data:", userProfile.firstName);
+      setUserProfile(docSnap.data());
+      fetchAvailabilities();
     };
     getUserProfile();
   }, []);
 
-  const [selectedDate, setSelectedDate] = useState(getLocalDate());
+  const fetchAvailabilities = async () => {
+    // Get the user's selectedSubjects
+    const selectedSubjects = userProfile.selectedSubjects;
+  
+    if (selectedSubjects && selectedSubjects.length > 0) {
+      // Query the appointments collection for open appointments with matching subjects
+      const appointmentsRef = collection(db, 'appointments');
+      const q = query(appointmentsRef, where('status', '==', 'open'), where('subjects', 'array-contains-any', selectedSubjects));
+      const querySnapshot = await getDocs(q);
+  
+      // Process and store the appointment data
+      const fetchedAvailabilities = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(appointment => {
+        const appointmentDate = new Date(appointment.date);
+        return appointmentDate >= getLocalDate();
+      });
+  
+      setAvailabilities(fetchedAvailabilities);
+    } else {
+      // Handle the case when the selectedSubjects array is undefined or empty
+      // You might want to show a message to the user or provide a default list of items
+    }
+  };
 
-  const mockAppointments = [
-    {
-      date: '2023-04-22',
-      appointments: [
-        { id: 20, name: 'William White', rating: '4.9/5', subject: 'Geography', time: '3:30-4:30' },
-        { id: 21, name: 'Alexander Walker', rating: '4.8/5', subject: 'Calculus', time: '3:30-4:30' },
-        { id: 22, name: 'Harper Thompson', rating: '4.7/5', subject: 'Astronomy', time: '3:30-4:30' },
-        { id: 23, name: 'Jacob Martin', rating: '4.6/5', subject: 'Comp Sci', time: '3:30-4:30' },
-        { id: 24, name: 'Isabella Clark', rating: '4.5/5', subject: 'Biology', time: '3:30-4:30' },
-        { id: 25, name: 'Ella Lee', rating: '4.4/5', subject: 'History', time: '3:30-4:30' },
-        { id: 26, name: 'Benjamin Hernandez', rating: '4.3/5', subject: 'Physics', time: '3:30-4:30' },
-        { id: 27, name: 'Michael Rodriguez', rating: '4.2/5', subject: 'Algebra', time: '3:30-4:30' },
-        { id: 28, name: 'Evelyn Lewis', rating: '4.1/5', subject: 'Chemistry', time: '3:30-4:30' },
-        { id: 29, name: 'Liam Hall', rating: '4.0/5', subject: 'English', time: '3:30-4:30' },
-        { id: 30, name: 'Abigail Scott', rating: '3.9/5', subject: 'Spanish', time: '3:30-4:30' },
-      ],
-    }];
+  const [selectedDate, setSelectedDate] = useState(getLocalDate());
+  const [appointments, setAppointments] = useState([]);
 
   const formattedSelectedDate = selectedDate.toISOString().substring(0, 10);
 
-
-
-
-  const dateAppointments = mockAppointments.find(
-    (appointmentDate) => appointmentDate.date === formattedSelectedDate
-  );
-
-  const appointments = dateAppointments ? dateAppointments.appointments : [];
-  console.log('Selected date:', formattedSelectedDate);
-  console.log('Appointments:', appointments);
-  console.log('Selected appointment ID:', selectedAppointmentId);
-
-
-  const [selectedEntry, setSelectedEntry] = useState(null);
-  const [showError, setShowError] = useState(false);
-
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
-
 
   const onSelectAppointment = () => {
     if (selectedAppointmentId === null) {
@@ -116,31 +107,38 @@ const HomeScreen = () => {
 
   const onSearchBySubject = () => {
     navigation.navigate('SubjectSearchScreen');
-  };
-
-
-  const [open, setOpen] = useState(false);
-
-  const onDismissSingle = React.useCallback(() => {
+    };
+    
+    const [open, setOpen] = useState(false);
+    
+    const onDismissSingle = React.useCallback(() => {
     setOpen(false);
-  }, [setOpen]);
-
-  const onConfirmSingle = React.useCallback(
+    }, [setOpen]);
+    
+    const onConfirmSingle = React.useCallback(
     (params) => {
-      setOpen(false);
-      const localDate = new Date(params.date.getTime() - params.date.getTimezoneOffset() * 60000);
-      setSelectedDate(localDate);
-    },
-    [setOpen, setSelectedDate]
+    setOpen(false);
+    const localDate = new Date(params.date.getTime() - params.date.getTimezoneOffset() * 60000);
+    setSelectedDate(localDate);
+  
+       // Filter the availabilities for the selected date
+  const filteredAppointments = availabilities.filter((availability) => {
+    const availabilityDate = new Date(availability.date);
+    return availabilityDate.toISOString().substring(0, 10) === localDate.toISOString().substring(0, 10);
+  });
+
+  setAppointments(filteredAppointments);
+},
+[setOpen, setSelectedDate, availabilities]
   );
 
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={[styles.title, { fontSize: 20, marginTop: -55 }]}>Hello,{(userProfile.firstName ===undefined)?"1":"2"}</Text>
-        <Text style={[styles.title, { fontSize: 20, marginTop: -35 }]}> {userType === 'student'
+        <Text style={[styles.title, { fontSize: 20, marginTop: -45 }]}>Welcome back, {(userProfile.firstName)}</Text>
+        <Text style={[styles.title, { fontSize: 20, marginTop: -25 }]}> {userType === 'student'
           ? 'Select an Appointment:'
-          : 'Upcoming appointments'}</Text>
+          : 'Upcoming Appointments'}</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={[styles.title, { fontSize: 20, marginTop: -92, marginLeft: 60, fontFamily: 'SF' }]}>Change Date:</Text>
           <TouchableOpacity onPress={() => setOpen(true)} uppercase={false} mode="outlined">
@@ -232,6 +230,7 @@ const sStyles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'tan',
     fontFamily: 'Vikendi',
+    marginTop: 30,
   },
   table: {
     marginTop: 70,
