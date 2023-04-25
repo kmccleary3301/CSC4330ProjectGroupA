@@ -100,6 +100,10 @@ const HomeScreen = () => {
     }
   };
 
+  const next = () => {
+    navigation.navigate('AptRequestScreen');
+  }
+
   const onAppointmentPress = (appointmentId) => {
     setShowError(false);
     setSelectedAppointmentId(appointmentId);
@@ -135,12 +139,15 @@ const HomeScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
+        <TouchableOpacity onPress={(next)}>
+        <Text style={[styles.title, { fontSize: 20, marginTop: -92, marginLeft: 30, fontFamily: 'SF' }]}>Test</Text>
+        </TouchableOpacity>
         <Text style={[styles.title, { fontSize: 20, marginTop: -45 }]}>Welcome back, {(userProfile.firstName)}</Text>
         <Text style={[styles.title, { fontSize: 20, marginTop: -25 }]}> {userType === 'student'
           ? 'Select an Appointment:'
           : 'Upcoming Appointments'}</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={[styles.title, { fontSize: 20, marginTop: -92, marginLeft: 60, fontFamily: 'SF' }]}>Change Date:</Text>
+          {/* <Text style={[styles.title, { fontSize: 20, marginTop: -92, marginLeft: 60, fontFamily: 'SF' }]}>Change Date:</Text> */}
           <TouchableOpacity onPress={() => setOpen(true)} uppercase={false} mode="outlined">
             <Ionicons name="calendar" size={45} color='#FAE8CD' style={{ marginRight: 30, marginTop: -35 }} />
           </TouchableOpacity>

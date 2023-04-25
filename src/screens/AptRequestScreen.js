@@ -8,51 +8,57 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import NavBarContainer from '../../NavBar';
-import { auth, db } from '../../firebase';
-//import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} from 'firebase/auth'
-//import {doc, setDoc} from "firebase/firestore";
-//import {useAuthValue} from '../../AuthContext'
+import { useAuthValue } from '../../AuthContext';
+//import { sendAppointmentNotification } from '../../functions';
+import { signOut } from 'firebase/auth';
+import { auth, db, functions } from '../../firebase';
+import { setDoc, getDoc, doc, collection, query, where, getDocs } from 'firebase/firestore';
+// const admin = require('firebase-admin');
+// admin.initializeApp();
 
 const tan = '#FAE8CD';
 const blue = '#182640';
 
 const AptRequestScreen = ({ route }) => {
   const [notes, setNotes] = useState('');
-
   const navigation = useNavigation();
+  const [appointment, setAppointment] = useState('');
+  const {currentUser} = useAuthValue();
+  const user = currentUser;
 
-  const appointment = route.params.appointment;
+  const sendAppointment = async( appointment) => {
+    try{
+    const appointmentRef = doc(db, 'appointments', appointment.uid)
+    await setDoc({
+      studentID: user?.uid,
+      tutorID: '789012',      
+      location: 'Library',
+    });
+    const studentRef = doc(db,'student', user?.uid);
+    await updateDoc(studentRef, {
+    appointment: appointmentRef.id
+  });
+  } catch (err) {
+    console.log(err);
+    alert(err.message);
+  }
+}
 
   const onCancel = () => {
     navigation.goBack();
   };
 
-  const onConfirm = async () => {
-    // Access Firestore instance
-    //const db = firebase.firestore();
-    // Create a new appointment request object
-    const appointmentRequest = {
-      appointmentId: appointment.id,
-      studentId: firebase.auth().currentUser.uid,
-      notes: notes,
-      status: 'pending',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    // Add the appointment request to Firestore
-    try {
-      await db.collection('appointmentRequests').add(appointmentRequest);
-      console.log('Appointment request added successfully');
-    } catch (error) {
-      console.error('Error adding appointment request: ', error);
-    }
+  
+    
 
-    navigation.goBack();
-  };
-
+   
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <Text style={styles.title}>Request appointment?</Text>
+        <TouchableOpacity onPress={sendAppointment} style={styles.cancelButton}>
+            <Text style={styles.buttonText}>Send</Text>
+          </TouchableOpacity>
         <Text style={styles.date}>
           {new Date().toLocaleDateString('en-US', {
             month: 'long',
@@ -99,7 +105,7 @@ const AptRequestScreen = ({ route }) => {
           <TouchableOpacity onPress={onCancel} style={styles.cancelButton}>
             <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onConfirm} style={styles.confirmButton}>
+          <TouchableOpacity onPress={sendAppointment} style={styles.confirmButton}>
             <Text style={styles.buttonText}>Confirm</Text>
           </TouchableOpacity>
         </View>
