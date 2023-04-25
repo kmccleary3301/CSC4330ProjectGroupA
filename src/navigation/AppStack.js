@@ -32,8 +32,8 @@ import VerifyEmail from '../screens/VerifyEmail';
 
 import SideMenu from '../../SideMenu';
 import AppHeader from '../../AppHeader';
-
 import TabNavigator from './TabNavigator';
+
 
 const Drawer = createDrawerNavigator();
 
