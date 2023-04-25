@@ -6,6 +6,7 @@ import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase';
 import ProfileScreen from "./ProfileScreen";
 import { AuthProvider, useAuthValue } from '../../AuthContext';
+import { subjectList } from '../utils/subjectList.js';
 
 
 
@@ -35,8 +36,12 @@ const EditProfileScreen = () => {
       const docRef = doc(db, type, user?.uid);      
       const docSnap = await getDoc(docRef);
       const data = docSnap.data();      
-        setSelectedSubjects(data.selectedSubjects);   
+      setSelectedSubjects(data.selectedSubjects);   
       setUserProfile(data);
+      setFirstName(data.firstName);
+      setLastName(data.lastName);
+      setEmail(data.email);
+      setPronouns(data.pronouns);
     };
   
     getUserProfile();
@@ -44,11 +49,11 @@ const EditProfileScreen = () => {
 
 
   const handlePronounsPress = () => {
-    setShowPicker(true);
+    setShowPicker(!showPicker);
   };
 
   
-  const handlePronounChange = (itemValue, itemIndex) => {
+  const handlePronounChange = (itemValue) => {
     setSelectedPronoun(itemValue);
     setShowPicker(false);
     setUserProfile(prevState => ({
@@ -56,24 +61,6 @@ const EditProfileScreen = () => {
       pronouns: itemValue,
     }));
   };
-
-
-  const handleSubjectChange = (subject) => {
-    setCurrentSelectedSubject(subject);
-
-    // if (selectedSubjects.length >= 5) {
-    //     alert("You have already added the maximum number of subjects.");
-    //     return;
-    // }
-
-    if (!selectedSubjects.includes(subject)) {
-        const updatedUserSubjects = [...selectedSubjects, subject];
-        setSelectedSubjects(updatedUserSubjects);
-        setShowDropdown(false);
-    } else {
-        alert(`You have already added "${subject}" as one of your subjects.`);
-    }
-};
 
 
 
@@ -92,6 +79,7 @@ const handleSaveChanges = async () => {
       pronouns: pronouns,
       selectedSubjects: selectedSubjects,
     }));
+    navigation.goBack();
 
   } catch (err) {
     console.log(err);
@@ -100,61 +88,40 @@ const handleSaveChanges = async () => {
 };
 
 
+const handleSubjectSelection = (value) => {
+  if (selectedSubjects.includes(value)) {
+    setSelectedSubjects((prev) => prev.filter((subject) => subject !== value));
+  } else {
+    if (selectedSubjects.length < 7) {
+      setSelectedSubjects((prev) => [...prev, value]);
+    } else {
+      alert('You cannot add more than 7 courses.');
+    }
+  }
+};
 
 
 
+const renderPicker = () => {
+  return (
+    <Picker
+    style={styles.picker}
+      selectedValue={''}
+      onValueChange={(value) => handleSubjectSelection(value)}
+    >
+      <Picker.Item label="Select a subject" value="" />
+      {subjectList.map((subject) => (
+        <Picker.Item
+          key={subject.value || subject}
+          label={subject.value || subject}
+          value={subject.value || subject}
+        />
+      ))}
+    </Picker>
+  );
+};
 
-  // should alphabetize them for sure
-  const subjects = [
-    'Accounting',
-    'Anthropology',
-    'Art History',
-    'Astronomy',
-    'Biology',
-    'Business Administration',
-    'Chemistry',
-    'Communications',
-    'Computer Science',
-    'Creative Writing',
-    'Criminal Justice',
-    'Digital Media',
-    'Economics',
-    'Education',
-    'Engineering',
-    'English',
-    'English Literature',
-    'Environmental Science',
-    'Film Studies',
-    'French',
-    'Geography',
-    'Global Studies',
-    'History',
-    'International Relations',
-    'Journalism',
-    'Law',
-    'Linguistics',
-    'Marketing',
-    'Mathematics',
-    'Mechanical Engineering',
-    'Music',
-    'Neuroscience',
-    'Philosophy',
-    'Physics',
-    'Political Science',
-    'Psychology',
-    'Public Health',
-    'Religious Studies',
-    'Social Work',
-    'Sociology',
-    'Spanish',
-    'Statistics',
-    'Sustainability Studies',
-    'Theater',
-    'Theology',
-    'Urban Studies',
-    'Visual Arts',
-    'Womens Studies'
-  ];
+
 
 
   const pronounsPicker = [
@@ -177,7 +144,7 @@ const handleSaveChanges = async () => {
 
 
 
-
+//should replace course with empty string
   const handleDeleteSubject = (index) => {
     const updatedSubjects = [...selectedSubjects];
     updatedSubjects.splice(index, 1);
@@ -203,7 +170,7 @@ const handleSaveChanges = async () => {
             <Text style={styles.profileInfoLabel}>First Name:          </Text>
             <TextInput
               style={styles.profileInfoValue}
-              value={userProfile.firstName}
+              placeholder={userProfile.firstName}
               onChangeText={(text) => setFirstName(text)}
             />
           </View>
@@ -212,7 +179,7 @@ const handleSaveChanges = async () => {
             <Text style={styles.profileInfoLabel}>Last Name:          </Text>
             <TextInput
               style={styles.profileInfoValue}
-              value={userProfile.lastName}
+              placeholder={userProfile.lastName}
               onChangeText={(text) => setLastName(text)}
 
             />
@@ -222,16 +189,16 @@ const handleSaveChanges = async () => {
             <Text style={styles.profileInfoLabel}>Email:    </Text>
             <TextInput
               style={styles.profileInfoValue}
-              value={userProfile.email}
+              placeholder={userProfile.email}
               onChangeText={(text) => setEmail(text)}
               
             />
           </View>
 
-          <View style={styles.nameContainer}>
-          <Text style={styles.profileInfoLabel}>Pronouns: </Text>
+        <View style={styles.nameContainer}>
+         <Text style={styles.profileInfoLabel}>Pronouns: </Text>
           <Pressable onPress={handlePronounsPress}>
-            <Text style={styles.profileInfoValue}>{userProfile.pronouns}</Text>
+            <Text style={styles.profileInfoValue}>{userProfile.pronouns || selectedPronoun}</Text>
           </Pressable>
         </View>
       </View>
@@ -244,7 +211,10 @@ const handleSaveChanges = async () => {
             <Picker.Item key={index} label={pronoun} value={pronoun} />
           ))}
         </Picker>
-        )}
+      )}
+
+
+
 
         <Text style={styles.subtitle}>My Subjects: </Text>
 
@@ -262,15 +232,7 @@ const handleSaveChanges = async () => {
               <Pressable onPress={() => toggleDropdown()}>
                 <Text style={styles.deleteButtonText}>+</Text>
               </Pressable>
-              {showDropdown ? (
-                <Picker selectedValue={currentSelectedSubject} onValueChange={handleSubjectChange}>
-                {subjects.map((subject, index) => (
-                    <Picker.Item key={index} label={subject} value={subject} />
-                ))}
-                </Picker>
-              ) : (
-                <Text style={styles.subjectsText}>Add course</Text>
-              )}
+              {renderPicker()}
             </View>
           </View>
         </View>
@@ -391,7 +353,15 @@ const styles = StyleSheet.create({
   },
   profileInfoContainer: {
     marginTop: 30,
-  }
+  }, 
+  picker: {
+    height: 50,
+    borderColor: tan,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: tan,
+    marginBottom: 20,
+  },
 });
 
 
