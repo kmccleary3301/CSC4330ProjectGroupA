@@ -17,9 +17,6 @@ import { StorageError } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import { AuthProvider, useAuthValue } from '../../AuthContext';
 
-
-
-
 const ProfileScreen = () => {
   const navigation = useNavigation();  
   

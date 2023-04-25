@@ -27,8 +27,7 @@ const LoginScreen = () => {
 
   // login user then checks if verified, if verified, navigate to home page,
   //   if not, redirect to login page
-  const login = e => {
-    e.preventDefault()
+  const login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         if (!auth.currentUser.emailVerified) {
@@ -44,13 +43,16 @@ const LoginScreen = () => {
         }
       })
       .catch(err => {
-        setError('Email or password is incorrect')
-        console.log(err)
+        if (err.code === 'auth/user-not-found') {
+          setError('No user found with this email address');
+        } else {
+          setError('Email or password is incorrect');
+        }
+        console.log(err);
       })
   };
 
   return (
-    <form onSubmit={login} name='login_form'>
       <View style={styles.container}>
         <View style={styles.logoContainer}>
           <View style={{ width: 300, height: 200 }}>
@@ -95,9 +97,9 @@ const LoginScreen = () => {
           <TouchableOpacity
             style={[styles.button, styles.loginButton]}
           // onPress={() => navigation.navigate('HomeScreen')}
-
+          onPress={login}
           >
-            <button type='submit'><Text style={styles.buttonText}>Login</Text></button>
+           <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
           <View style={styles.linkContainer}>
             <Text style={styles.linkText}>Forgot your password?</Text>
@@ -110,7 +112,6 @@ const LoginScreen = () => {
           </View>
         </View>
       </View>
-    </form>
   );
 };
 
