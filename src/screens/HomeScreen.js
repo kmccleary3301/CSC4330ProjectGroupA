@@ -6,9 +6,9 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../../styles';
 import * as Font from 'expo-font'
 import { Ionicons } from '@expo/vector-icons';
 import NavBarContainer from '../../NavBar';
@@ -21,12 +21,8 @@ import { signOut } from 'firebase/auth';
 import { auth, db } from '../../firebase';
 import { getDoc, doc, collection, query, where, getDocs } from 'firebase/firestore';
 
-
 import AptRequestScreen from './AptRequestScreen';
 import { useUserType } from '../../UserTypeContext';
-
-
-
 
 const blue = '#182640';
 const tan = '#FAE8CD';
@@ -36,15 +32,27 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const { currentUser } = useAuthValue();
   const [userProfile, setUserProfile] = useState('');
-  const [availabilities, setAvailabilities] = useState([]);
 
-  const user = currentUser;
   const getLocalDate = () => {
     const now = new Date();
     return new Date(now.getTime() - now.getTimezoneOffset() * 60000);
   };
 
+  const [availabilities, setAvailabilities] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(getLocalDate());
+  const [appointments, setAppointments] = useState([]);
+
+  const formattedSelectedDate = selectedDate.toISOString().substring(0, 10);
+
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+
+  const user = currentUser;
   const { userType } = useUserType();
+
+  const [layout, setLayout] = useState({
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  });
 
   useEffect(() => {
     const getUserProfile = async () => {
@@ -55,7 +63,31 @@ const HomeScreen = () => {
       fetchAvailabilities();
     };
     getUserProfile();
+    const handleLayout = () => {
+      setLayout({
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+      });
+    };
+    Dimensions.addEventListener('change', handleLayout);
+    return () => {
+      Dimensions.removeEventListener('change', handleLayout);
+    };
   }, []);
+
+  const text = 'Schedule Availability';
+  const adjustment = 1.2; // Change this value to adjust the font size
+  const minButtonWidthPercentage = 0.2;
+  const maxButtonWidthPercentage = 0.8;
+
+  const maxWidth = 400; // Set a maximum width for the button
+const maxFontSize = 30; // Set a maximum font size for the text
+  
+const fontSize = Math.min(maxFontSize, layout.width / Math.max(text.length, 1) * adjustment);
+const buttonWidth = Math.min(maxButtonWidthPercentage * layout.width, layout.width, maxWidth);
+
+const styles = getStyles({ buttonWidth, fontSize });
+
 
   const fetchAvailabilities = async () => {
     // Get the user's selectedSubjects
@@ -79,13 +111,6 @@ const HomeScreen = () => {
       // You might want to show a message to the user or provide a default list of items
     }
   };
-
-  const [selectedDate, setSelectedDate] = useState(getLocalDate());
-  const [appointments, setAppointments] = useState([]);
-
-  const formattedSelectedDate = selectedDate.toISOString().substring(0, 10);
-
-  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
   const onSelectAppointment = () => {
     if (selectedAppointmentId === null) {
@@ -133,16 +158,21 @@ const HomeScreen = () => {
   );
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <Text style={[styles.title, { fontSize: 20, marginTop: -45 }]}>Welcome back, {(userProfile.firstName)}</Text>
-        <Text style={[styles.title, { fontSize: 20, marginTop: -25 }]}> {userType === 'student'
+       <View style={{ flex: 1 }}>
+       <View style={styles.container}>
+        <Text style={[styles.title, { fontSize: 20 }]}>Welcome back, {(userProfile.firstName)}</Text>
+        {userProfile.userType === 'tutor' && (
+        <Button onPress={() => navigation.navigate('ScheduleAvailabilityScreen')} style={[styles.scheduleButton,{width:buttonWidth}]}>
+        <Text style={[styles.scheduleButtonText, { fontSize: fontSize }]}>Schedule Availability</Text>
+        </Button>
+        )}
+        <Text style={[styles.title, { fontSize: 20, marginTop: userType === 'tutor' ? 5 : 25 }]}> {userType === 'student'
           ? 'Select an Appointment:'
-          : 'Upcoming Appointments'}</Text>
+          : 'Upcoming Appointments:'}</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={[styles.title, { fontSize: 20, marginTop: -92, marginLeft: 60, fontFamily: 'SF' }]}>Change Date:</Text>
+          <Text style={[styles.title, { fontSize: 20, fontFamily: 'SF', marginBottom:20 }]}>Change Date:</Text>
           <TouchableOpacity onPress={() => setOpen(true)} uppercase={false} mode="outlined">
-            <Ionicons name="calendar" size={45} color='#FAE8CD' style={{ marginRight: 30, marginTop: -35 }} />
+            <Ionicons name="calendar" size={45} color='#FAE8CD' style={{ marginLeft: 20, marginTop: 10 }} />
           </TouchableOpacity>
           <DatePickerModal
             locale="en"
@@ -154,23 +184,26 @@ const HomeScreen = () => {
           />
 
         </View>
-        <Text style={[styles.title, { fontSize: 18, marginTop: 100, fontFamily: 'SF' }]}>
+        <Text style={[styles.title, { fontSize: 18, fontFamily: 'SF', marginTop:10 }]}>
           {selectedDate.toDateString() === new Date().toDateString() ? "Today, " : ""}
           {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
         </Text>
-
-        <ScrollView style={sStyles.table} contentContainerStyle={{ flexGrow: 1 }}>
-          <View style={sStyles.tableRow}>
-            <View style={sStyles.headerEntry}>
+        {appointments.length === 0 ? (
+        <Text style={styles.noAppointmentsText}>No scheduled appointments for today</Text>
+       ) : (
+        <>
+        <ScrollView style={styles.table} contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles.tableRow}>
+            <View style={styles.headerEntry}>
               <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Instructor Name</Text>
             </View>
-            <View style={sStyles.headerEntry}>
+            <View style={styles.headerEntry}>
               <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Rating</Text>
             </View>
-            <View style={sStyles.headerEntry}>
+            <View style={styles.headerEntry}>
               <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Subject</Text>
             </View>
-            <View style={sStyles.headerEntry}>
+            <View style={styles.headerEntry}>
               <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Time Slot</Text>
             </View>
           </View>
@@ -182,20 +215,20 @@ const HomeScreen = () => {
               <View
                 style={
                   selectedAppointmentId === appointment.id
-                    ? sStyles.selectedRow
-                    : sStyles.tableRow
+                    ? styles.selectedRow
+                    : styles.tableRow
                 }
               >
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
+                <View style={selectedAppointmentId === appointment.id ? styles.selectedEntry : styles.entry}>
                   <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.name}</Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
+                <View style={selectedAppointmentId === appointment.id ? styles.selectedEntry : styles.entry}>
                   <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.rating}</Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
+                <View style={selectedAppointmentId === appointment.id ? styles.selectedEntry : styles.entry}>
                   <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.subject}</Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
+                <View style={selectedAppointmentId === appointment.id ? styles.selectedEntry : styles.entry}>
                   <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.time}</Text>
                 </View>
               </View>
@@ -204,13 +237,15 @@ const HomeScreen = () => {
         </ScrollView>
         <Button
           mode="contained"
-          style={sStyles.button}
-          contentStyle={sStyles.buttonContent}
+          style={styles.button}
+          contentStyle={styles.buttonContent}
           onPress={onSelectAppointment}
           color={blue}
         >
-          <Text style={sStyles.buttonText}>Select</Text>
+          <Text style={styles.buttonText}>Select</Text>
         </Button>
+        </>
+      )}
       </View>
       <NavBarContainer />
     </View>
@@ -218,26 +253,26 @@ const HomeScreen = () => {
   );
 };
 
-const sStyles = StyleSheet.create({
+const getStyles = ({ buttonWidth, fontSize }) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: blue,
     alignItems: 'center',
-    justifyContent: 'center',
+    //justifyContent: 'center',
   },
   title: {
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: 'bold',
-    color: 'tan',
+    color: tan,
     fontFamily: 'Vikendi',
     marginTop: 30,
   },
   table: {
-    marginTop: 70,
+    marginTop: 20,
     width: '90%',
     borderWidth: 1,
-    borderColor: 'black',
-    maxHeight: '50%',
+    borderColor: '#fff',
+    maxHeight: '40%',
   },
   tableRow: {
     flexDirection: 'row',
@@ -280,8 +315,9 @@ const sStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   button: {
-    width: '32%',
+    width: '28%',
     height: '8%',
+    maxWidth: 150,
     marginTop: 20,
     marginBottom: 10,
     borderRadius: 30,
@@ -293,14 +329,45 @@ const sStyles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: blue,
   },
+  scheduleButton: {
+    width: buttonWidth,
+    height: '8%',
+    marginTop: 20,
+    marginBottom: 5,
+    borderRadius: 30,
+    borderColor: tan,
+    borderWidth: 4.5,
+    paddingTop: 5,
+    //padding: 0,
+    //alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    backgroundColor: tan,
+  },
+  scheduleButtonText: {
+    color: blue,
+    fontSize: fontSize,
+    fontFamily: 'Vikendi',
+    lineHeight: fontSize,
+    //fontWeight: 'bold',
+  },
   buttonText: {
     color: tan,
-    fontSize: 20,
+    fontSize: 24,
     fontFamily: 'SF',
-    //fontWeight: 'bold',
+    fontWeight: 'bold',
   },
   buttonContent: {
     //height: 50,
+  },
+  noAppointmentsText: {
+    color: tan,
+    fontSize: 20,
+    fontFamily: 'Vikendi',
+    marginTop: 40,
+    marginLeft: 20,
+    marginRight: 20,
+    textAlign: 'center',
   },
 });
 

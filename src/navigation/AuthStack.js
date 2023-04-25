@@ -17,6 +17,7 @@ import RegisterInfoScreen from '../screens/RegisterInfoScreen';
 import TutorInfo from '../screens/TutorInfo';
 import SubjectAddScreen from '../screens/SubjectAddScreen';
 import VerifyEmail from '../screens/VerifyEmail';
+import ScheduleAvailabilityScreen from '../screens/ScheduleAvailabilityScreen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
@@ -90,6 +91,7 @@ const AuthStack = () => {
       <Stack.Screen name="EditProfileScreen"   component={EditProfileScreen} options={HAMBURGER}/>
       <Stack.Screen name="AptRequestScreen"    component={AptRequestScreen} options={HAMBURGER}/>
       <Stack.Screen name="AppointmentsScreen"  component={AppointmentsScreen} options={HAMBURGER}/>
+      <Stack.Screen name="ScheduleAvailabilityScreen"  component={ScheduleAvailabilityScreen} options={HAMBURGER}/>
       
     </Stack.Navigator>
   );
