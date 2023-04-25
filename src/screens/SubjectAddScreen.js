@@ -32,12 +32,8 @@ import { subjectList } from '../utils/subjectList.js';
     const handleSaveChanges = async () => {
       try {
         const type = user?.displayName;
-        await updateDoc(doc(db, type, user?.uid), { selectedSubjects });
-        if (selectedSubjects.length === 5) {
-          navigation.navigate('HomeScreen');
-        } else {
-          alert('Please select 5 subjects.');
-        }
+        await updateDoc(doc(db, type, user?.uid), { selectedSubjects });        
+          navigation.navigate('HomeScreen');        
       } catch (err) {
         console.log(err);
         alert('Error saving changes.');
