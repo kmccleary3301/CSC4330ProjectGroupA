@@ -35,7 +35,7 @@ const lightBlue = '#C9D3FF';
 
 
 
-const AdminTutorEditScreen = () => {
+const StudentTutorEditScreen = () => {
   const navigation = useNavigation();
   const { currentUser } = useAuthValue();
   const [userProfile, setUserProfile] = useState('');
@@ -161,7 +161,7 @@ const AdminTutorEditScreen = () => {
 
 
   const modify_user_data = async function(uid, field, new_value){
-    const q = query(collection(db, "tutor"), where("uid", "==", uid));
+    const q = query(collection(db, "student"), where("uid", "==", uid));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc_get) => {
         var get_data = doc_get.data();
@@ -172,10 +172,10 @@ const AdminTutorEditScreen = () => {
 
   const remove_user = async function(uid) {
     setTutorList([]);
-    const q = query(collection(db, "tutor"), where("uid", "==", uid));
+    const q = query(collection(db, "student"), where("uid", "==", uid));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc_get) => {
-        deleteDoc(doc(db, "tutor" , doc_get.id));
+        deleteDoc(doc(db, "student" , doc_get.id));
     });
     fetch_tutors();
   }
@@ -308,10 +308,10 @@ const AdminTutorEditScreen = () => {
           mode="contained"
           style={sStyles.button}
           contentStyle={sStyles.buttonContent}
-          onPress={() => navigation.navigate("AdminStudentEditScreen")}
+          onPress={() => navigation.navigate("AdminTutorEditScreen")}
           color={blue}
         >
-          <Text style={sStyles.buttonText}>Students</Text>
+          <Text style={sStyles.buttonText}>Tutors</Text>
         </Button>
       </View>
       <NavBarContainer />
@@ -408,4 +408,4 @@ const sStyles = StyleSheet.create({
 
 
 
-export default AdminTutorEditScreen;
+export default StudentTutorEditScreen;
