@@ -18,6 +18,7 @@ import { getDoc, doc } from 'firebase/firestore';
 import MySplashScreen from './src/screens/MySplashScreen';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 
 
 async function loadFonts() {
@@ -55,11 +56,21 @@ export default function App() {
     }, 1000);
   
     SplashScreen.preventAutoHideAsync().catch(() => { });
-    setFontsLoaded(true);
-    SplashScreen.hideAsync().catch(() => { });
+  
+    // Call loadFonts function and set fontsLoaded state to true only after the fonts have been loaded
+    loadFonts()
+      .then(() => {
+        setFontsLoaded(true);
+        SplashScreen.hideAsync().catch(() => { });
+      })
+      .catch(console.error);
   
     return () => clearTimeout(timer);
   }, []);
+  
+  if (!fontsLoaded || !hideSplashScreen) {
+    return <MySplashScreen />;
+  }
   
 
   return (
