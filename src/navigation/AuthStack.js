@@ -38,7 +38,7 @@ const AuthStack = () => {
         <Ionicons name="bug-outline" color={'#000000'} size={32} 
           onPress={() => {
             navigation.navigate('RateTutorScreen', {
-              test_argument: "Hello"
+              test_argument: "hello"
             });
           }}
         />
@@ -96,6 +96,7 @@ const AuthStack = () => {
       <Stack.Screen name="TutorInfo"           component={TutorInfo} options={HAMBURGER}/>
       <Stack.Screen name="RateTutorScreen"     component={RateTutorScreen} options={HAMBURGER}/>
       <Stack.Screen name="TutorsListScreen"    component={TutorsListScreen} options={HAMBURGER}/>
+      
       <Stack.Screen name="VerifyEmail"         component={VerifyEmail} options={HAMBURGER}/>
       <Stack.Screen name="SubjectSearchScreen" component={SubjectSearchScreen} options={HAMBURGER}/>
       <Stack.Screen name="ProfileScreen"       component={ProfileScreen} options={HAMBURGER}/>
