@@ -18,7 +18,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from "./types"; // Import your RootStackParamList type from the types file
 import {db} from './firebase';
 import { useAuthValue } from "./AuthContext";
-import { doc, getDoc} from "firebase/firestore";
+import { doc, getDoc, getDocs, collection} from "firebase/firestore";
 
 
 
@@ -36,9 +36,26 @@ const NavBarContainer = () => {
   const {currentUser} = useAuthValue();
   const user = currentUser;
   const [selectedSubjects, setSelectedSubjects] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
   const userType = user?.displayName;
+  console.log("user id:", user?.uid);
 
-  console.log("usertype->", userType);
+
+  const get_admins = async function(){
+    console.log("admins");
+    const admins = await getDocs(collection(db, "Administrator"));
+    admins.forEach((doc_get) => {
+      console.log(doc_get.id, "=>", doc_get.data());
+      if (doc_get.id === user?.uid && doc_get.data().admin) {
+        setIsAdmin(true);
+      }
+    })
+  }
+  get_admins();
+
+  //console.log("admin_check ->", user?.admin_enabled);
+
+  //console.log("usertype->", userType);
   
 
   const NavBarItem: React.FC<NavBarItemProps> = ({
@@ -87,6 +104,12 @@ const NavBarContainer = () => {
         iconSource={require('./src/assets/icons/calender-outline.png')}
         screenName="TutorsListScreen"
         text="Available Tutors"
+      />}
+      {isAdmin === true &&
+      <NavBarItem
+        iconSource={require('./src/assets/icons/admin_skull.png')}
+        screenName="AdminTutorEditScreen"
+        text="Admin Edit"
       />}
       <NavBarItem
         iconSource={require('./src/assets/icons/appointments.png')}

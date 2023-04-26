@@ -20,7 +20,7 @@ import { DatePickerModal } from 'react-native-paper-dates';
 import { useAuthValue } from '../../AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../firebase';
-import { getDoc, doc, collection, query, where, getDocs, deleteDoc } from 'firebase/firestore';
+import { getDoc, doc, collection, query, where, getDocs, deleteDoc, setDoc } from 'firebase/firestore';
 
 
 import AptRequestScreen from './AptRequestScreen';
@@ -40,8 +40,19 @@ const AdminTutorEditScreen = () => {
   const { currentUser } = useAuthValue();
   const [userProfile, setUserProfile] = useState('');
   const [availabilities, setAvailabilities] = useState([]);
+  const [text, onChangeText] = React.useState('Useless Text');
+  const [tutorValues, setTutorValues] = useState({});
 
-  
+  const change_tutor_values = function(uid, field, value) {
+    console.log("setting get_tutor_values", tutorValues);
+    const get_tutor_values = tutorValues;
+    get_tutor_values[uid][field] = value;
+    setTutorValues({...get_tutor_values});
+    console.log(tutorValues);
+    modify_user_data(uid, field, value);
+  }
+
+
   const test_tutor_entry = {
     pronouns:"He/him",
     lastName:"Kinchen",
@@ -54,6 +65,8 @@ const AdminTutorEditScreen = () => {
   
   const [tutorList, setTutorList] = useState([]);
 
+
+
   const fetch_tutors = async function() {
     if (tutorList.length > 0) { return; }
     try {
@@ -65,6 +78,9 @@ const AdminTutorEditScreen = () => {
         console.log(doc_get.id, " => ", JSON.stringify(doc_get.data()));
         //array_tutors_return[array_tutors_return.length] = doc_get.data();
         //tutor_collection[doc_get.id] = doc_get.data();
+        const get_tutor_values = tutorValues;
+        get_tutor_values[doc_get.data().uid] = doc_get.data();
+        setTutorValues(get_tutor_values);
         tutorList.push(doc_get.data());
         setTutorList([...tutorList]);
       });
@@ -144,14 +160,28 @@ const AdminTutorEditScreen = () => {
   };
 
 
-  const remove_user = function(email) {
-    const q = query(collection(db, "tutor"), where("email", "==", email));
-    q.forEach((doc_get) => {
-        deleteDoc(db, 'tutor', doc_get);
-
+  const modify_user_data = async function(uid, field, new_value){
+    const q = query(collection(db, "tutor"), where("uid", "==", uid));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc_get) => {
+        var get_data = doc_get.data();
+        get_data[field] = new_value;
+        setDoc(doc(db, 'tutor', doc_get.id), get_data);
     });
-    console.log("query returned:");
-    console.log(q);
+  }
+
+  const remove_user = async function(uid) {
+    setTutorList([]);
+    const q = query(collection(db, "tutor"), where("uid", "==", uid));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc_get) => {
+        deleteDoc(doc(db, "tutor" , doc_get.id));
+    });
+    fetch_tutors();
+  }
+
+  const refresh_tutors = async function() {
+    setTutorList([]);
     fetch_tutors();
   }
 
@@ -176,7 +206,7 @@ const AdminTutorEditScreen = () => {
     },
     [setOpen, setSelectedDate, availabilities]
   );
-
+  
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -207,22 +237,25 @@ const AdminTutorEditScreen = () => {
         <ScrollView style={sStyles.table} contentContainerStyle={{ flexGrow: 1 }}>
           <View style={sStyles.tableRow}>
             <View style={sStyles.headerEntry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Tutor Name</Text>
+              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>First Name</Text>
+            </View>
+            <View style={sStyles.headerEntry}>
+              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>last Name</Text>
             </View>
             <View style={sStyles.headerEntry}>
               <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Email</Text>
             </View>
             <View style={sStyles.headerEntry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Subject</Text>
+              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Subjects</Text>
             </View>
             <View style={sStyles.headerEntry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Time Slot</Text>
+              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Delete</Text>
             </View>
           </View>
           {tutorList.map((tutor) => (
             <TouchableOpacity
               key={tutor.uid}
-              onPress={() => onTutorPress(tutor.uid)}
+              //onPress={() => onTutorPress(tutor.uid)}
             >
 
               <View
@@ -233,21 +266,28 @@ const AdminTutorEditScreen = () => {
                 }
               >
                 <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
-                  <TextInput style={{ textAlign: 'center', textAlignVertical: 'center' }} value={tutor.firstName+" "+tutor.lastName}/>
+                  <TextInput style={{ textAlign: 'center', textAlignVertical: 'center' }} value={tutorValues[tutor.uid]["firstName"]}
+                  onChangeText={value=>change_tutor_values(tutor.uid, "firstName", value)}/>
                 </View>
                 <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
-                  <TextInput style={{ textAlign: 'center', textAlignVertical: 'center' }} value={tutor.email}/>
+                  <TextInput style={{ textAlign: 'center', textAlignVertical: 'center' }} value={tutorValues[tutor.uid]["lastName"]}
+                  onChangeText={value=>change_tutor_values(tutor.uid, "lastName", value)}/>
                 </View>
                 <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
-                <TextInput style={{ textAlign: 'center', textAlignVertical: 'center' }} value={tutor.selectedSubjects}/>
+                  <TextInput style={{ textAlign: 'center', textAlignVertical: 'center' }} value={tutorValues[tutor.uid]["email"]}
+                  onChangeText={value=> change_tutor_values(tutor.uid, "email", value)}/>
                 </View>
                 <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
-                <TouchableOpacity>
+                <TextInput style={{ textAlign: 'center', textAlignVertical: 'center' }} value={tutorValues[tutor.uid]["selectedSubjects"]}
+                onChangeText={value=>change_tutor_values(tutor.uid, "selectedSubjects", value)}/>
+                </View>
+                <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
+                <TouchableOpacity style={{alignItems: 'center'}}>
                 <Ionicons name="skull-outline" color={'#000000'} size={32} 
                     onPress={() => {
-                        remove_user(tutor.email);
+                        remove_user(tutor.uid);
                     }}
-                    />
+                />
                 </TouchableOpacity>
                 </View>
               </View>
@@ -259,10 +299,10 @@ const AdminTutorEditScreen = () => {
           mode="contained"
           style={sStyles.button}
           contentStyle={sStyles.buttonContent}
-          onPress={onSelectTutor}
+          onPress={() => refresh_tutors()}
           color={blue}
         >
-          <Text style={sStyles.buttonText}>Select</Text>
+          <Text style={sStyles.buttonText}>Refresh</Text>
         </Button>
       </View>
       <NavBarContainer />
@@ -303,7 +343,7 @@ const sStyles = StyleSheet.create({
     paddingHorizontal: 5,
     fontSize: 10,
     height: 40,
-    width: '25%',
+    width: '20%',
     justifyContent: 'center',
   },
   entry: {
@@ -314,7 +354,7 @@ const sStyles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 10,
     height: 40,
-    width: '25%',
+    width: '20%',
     justifyContent: 'center',
   },
   selectedEntry: {
