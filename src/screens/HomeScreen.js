@@ -27,7 +27,8 @@ const lightBlue = '#C9D3FF';
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { currentUser } = useAuthValue();
-  const [userProfile, setUserProfile] = useState('');
+  const [userProfile, setUserProfile] = useState({ selectedSubjects: [] });
+
 
   const getLocalDate = () => {
     const now = new Date();
@@ -50,15 +51,21 @@ const HomeScreen = () => {
     height: Dimensions.get('window').height,
   });
 
+  const createDateWithOffset = (date) => {
+    const localDate = new Date(date);
+    const timezoneOffset = localDate.getTimezoneOffset() * 60000;
+    return new Date(localDate.getTime() - timezoneOffset);
+  };
+
   useEffect(() => {
     const getUserProfile = async () => {
       const type = user?.displayName;
       const docRef = doc(db, type, user?.uid);
       const docSnap = await getDoc(docRef);
+      console.log('first useEffect:');
+      console.log('before setUserProfile, Profile:', docSnap.data());
       setUserProfile(docSnap.data());
-      console.log('User Profile:', docSnap.data());
-      // Call fetchAvailabilities() after setting the userProfile
-      fetchAvailabilities();
+      
     };
     getUserProfile();
     const handleLayout = () => {
@@ -75,9 +82,24 @@ const HomeScreen = () => {
 
   useEffect(() => {
     if (userProfile) {
-      fetchAvailabilities();
+      fetchAvailabilities((fetchedAvailabilities) => {
+        // Filter the availabilities based on the selected date
+        const filteredAppointments = fetchedAvailabilities.filter((availability) => {
+          const availabilityDate = new Date(availability.date.seconds * 1000);
+          return formatDateWithoutTimezone(availabilityDate) === formatDateWithoutTimezone(formattedSelectedDate);
+        });
+  
+        console.log('Filtered Appointments:', filteredAppointments);
+        setAppointments(filteredAppointments);
+      });
     }
-  }, [userProfile]);
+  }, [userProfile, selectedDate]);
+
+  useEffect(() => {
+    fetchAvailabilities();
+    console.log('third useEffect:');
+    console.log('availabilities:', availabilities);
+  }, [userProfile, selectedDate]);
   
 
   const text = 'Schedule Availability';
@@ -94,8 +116,16 @@ const HomeScreen = () => {
   const styles = getStyles({ buttonWidth, fontSize });
 
 
-  const fetchAvailabilities = async () => {
-    // Check if userProfile and userProfile.selectedSubjects exist
+  const formatDateWithoutTimezone = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+  
+    return `${year}-${month}-${day}`;
+  };
+  
+  const fetchAvailabilities = async (callback) => {
     if (userProfile && userProfile.selectedSubjects) {
       const selectedSubjects = userProfile.selectedSubjects.map(subject => subject.toLowerCase());
   
@@ -106,37 +136,24 @@ const HomeScreen = () => {
   
         const fetchedAvailabilities = querySnapshot.docs.map(doc => {
           const availabilityData = doc.data();
-          const firstName = availabilityData.firstName;
-          const lastName = availabilityData.lastName;
-          const rating = availabilityData.rating;
-          const startTime = availabilityData.startTime;
-          const endTime = availabilityData.endTime;
-          const selectedSubjects = availabilityData.selectedSubjects;
-        
+          const startTime = createDateWithOffset(availabilityData.startTime.toDate());
+          const endTime = createDateWithOffset(availabilityData.endTime.toDate());
+  
           return {
             ...availabilityData,
             id: doc.id,
-            firstName: firstName,
-            lastName: lastName,
-            rating: rating,
             startTime: startTime,
             endTime: endTime,
-            selectedSubjects: selectedSubjects,
           };
         });
+  
         console.log('Fetched Availabilities:', fetchedAvailabilities);
         setAvailabilities(fetchedAvailabilities);
   
-        // Filter the availabilities based on the selected date
-        const filteredAppointments = fetchedAvailabilities.filter((availability) => {
-          const availabilityDate = availability.date.toDate();
-          return availabilityDate.toISOString().substring(0, 10) === formattedSelectedDate;
-        });
-        console.log('Filtered Appointments:', filteredAppointments);
-        setAppointments(filteredAppointments);
-      } else {
-        // Handle the case when the selectedSubjects array is undefined or empty
-        // You might want to show a message to the user or provide a default list of items
+        // Call the callback function with the fetched availabilities
+        if (callback) {
+          callback(fetchedAvailabilities);
+        }
       }
     } else {
       console.log("User profile or selected subjects not found");
@@ -172,10 +189,12 @@ const HomeScreen = () => {
     }, [setOpen]);
     
     const onConfirmSingle = React.useCallback(
-    (params) => {
-    setOpen(false);
-  },
-  [setOpen, setSelectedDate, availabilities]);
+      (params) => {
+        setOpen(false);
+        setSelectedDate(new Date(params.date));
+      },
+      [setOpen, setSelectedDate, availabilities]
+    );
 
   return (
     <View style={{ flex: 1 }}>
@@ -234,20 +253,20 @@ const HomeScreen = () => {
           />
         </View>
         <Text
-          style={[
-            styles.title,
-            { fontSize: 18, fontFamily: 'SF', marginTop: 10 },
-          ]}
-        >
-          {selectedDate.toDateString() === new Date().toDateString()
-            ? 'Today, '
-            : ''}
-          {selectedDate.toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-          })}
-        </Text>
+        style={[
+          styles.title,
+          { fontSize: 18, fontFamily: 'SF', marginTop: 10 },
+        ]}
+      >
+        {selectedDate.toDateString() === new Date().toDateString()
+          ? 'Today, '
+          : ''}
+        {selectedDate.toLocaleDateString('en-US', {
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        }).toString()}
+      </Text>
         {appointments.length === 0 ? (
           <Text style={styles.noAppointmentsText}>
             No availabilities for today
@@ -374,14 +393,22 @@ const HomeScreen = () => {
                           : styles.entry
                       }
                     >
-                      <Text
-                        style={{
-                          textAlign: 'center',
-                          textAlignVertical: 'center',
-                        }}
-                      >
-                        {availability.startTime} - {availability.endTime}
-                      </Text>
+                     <Text
+                      style={{
+                        textAlign: 'center',
+                        textAlignVertical: 'center',
+                      }}
+                    >
+                      {availability.startTime.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                      {' - '}
+                      {availability.endTime.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </Text>
                     </View>
                   </View>
                 </TouchableOpacity>
