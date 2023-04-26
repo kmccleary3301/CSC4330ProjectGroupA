@@ -22,6 +22,20 @@ const AppointmentsScreen = () => {
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
   // Your mock data for future and past appointments
+
+  const test_entry = {
+    id: 2,
+    name: 'TEST ENTRY',
+    rating: 4.5,
+    subject: 'Math',
+    time: '10:00 AM',
+    date: '2020-12-01',
+    duration: '1 hour',
+    location: 'Online',
+    status: 'Pending',
+    appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
+  };
+
   const futureAppointments = [
     // ...
 
@@ -77,7 +91,7 @@ const AppointmentsScreen = () => {
 
   ];
 
-  const pastAppointments = [
+  const pastAppointments_template = [
     // ...
     {
       id: 1,
@@ -155,6 +169,15 @@ const AppointmentsScreen = () => {
   const onAppointmentPress = (appointmentId) => {
     setSelectedAppointmentId(appointmentId);
   };
+  const [pastAppointments, setPastAppointments] = useState(pastAppointments_template);
+
+  setTimeout(function(){
+    console.log("Calling delayed action");
+    pastAppointments.push(test_entry);
+    setPastAppointments([...pastAppointments]);
+  }, 10000);
+
+
 
   return (
     <View style={{ flex: 1 }}>
