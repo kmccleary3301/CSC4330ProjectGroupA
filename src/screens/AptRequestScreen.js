@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,49 +9,77 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import NavBarContainer from '../../NavBar';
 import { auth, db } from '../../firebase';
-//import {createUserWithEmailAndPassword, sendEmailVerification, updateProfile} from 'firebase/auth'
-//import {doc, setDoc} from "firebase/firestore";
-//import {useAuthValue} from '../../AuthContext'
+import {updateProfile} from 'firebase/auth'
+import {doc, setDoc, getDoc} from "firebase/firestore";
+import {useAuthValue} from '../../AuthContext'
 
 const tan = '#FAE8CD';
 const blue = '#182640';
 
-const AptRequestScreen = ({ route }) => {
+const AptRequestScreen =  () => {
   const [notes, setNotes] = useState('');
-
   const navigation = useNavigation();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [pronouns, setPronouns] = useState('');
+  const [email, setEmail] = useState('');  
+  const [userProfile, setUserProfile] = useState({});
+  const { currentUser } = useAuthValue();
+  const user = currentUser;  
 
-  const appointment = route.params.appointment;
+  // useEffect(
+  //   React.useCallback(() => {
+  //     const getUserProfile = async () => {
+  //       const type = user?.displayName;
+  //       const docRef = doc(db, type, user?.uid);
+  //       const docSnap = await getDoc(docRef);
+  //       const data = docSnap.data();
+  //       setUserProfile(data);
+  //     };
+  //     getUserProfile();
+  //   }, [user])
+  // );
 
   const onCancel = () => {
     navigation.goBack();
   };
 
-  const onConfirm = async () => {
-    // Access Firestore instance
-    //const db = firebase.firestore();
-    // Create a new appointment request object
-    const appointmentRequest = {
-      appointmentId: appointment.id,
-      studentId: firebase.auth().currentUser.uid,
-      notes: notes,
-      status: 'pending',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    // Add the appointment request to Firestore
-    try {
-      await db.collection('appointmentRequests').add(appointmentRequest);
-      console.log('Appointment request added successfully');
-    } catch (error) {
-      console.error('Error adding appointment request: ', error);
+  const onConfirm = async () => {    
+    try{
+      const appointmentRef = doc(db, 'mail', user.uid);
+      await setDoc(appointmentRef, {
+        to: 'jkinc13@lsu.edu',        
+        message: {
+          subject: 'Hello from Firebase!',          
+          html: notes + user.uid,
+        }
+      });
+      
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
     }
-
-    navigation.goBack();
   };
+    
+    
+   
+    // /** add a welcome email */
+    // await firestore().collection("templates").doc("accepted").set({
+    //   subject: "Appointment accepted",
+    //   html: "Your appointment has been accepted",
+    // });
+
+    // /** add a cancel subscription template */
+    // await firestore().collection("templates").doc("declined").set({
+    //   subject: "Appointment declined",
+    //   html: "Your appointment has been declined",
+    // });
+
+  
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.container}>
+      <View style={styles.container}>      
         <Text style={styles.title}>Request appointment?</Text>
         <Text style={styles.date}>
           {new Date().toLocaleDateString('en-US', {
@@ -71,7 +99,7 @@ const AptRequestScreen = ({ route }) => {
               </View>
             ))}
           </View>
-          <View style={styles.dataRow}>
+          {/* <View style={styles.dataRow}>
             {[
               appointment.name,
               appointment.rating,
@@ -84,14 +112,14 @@ const AptRequestScreen = ({ route }) => {
                 </View>
               </View>
             ))}
-          </View>
+          </View> */}
         </View>
 
         <Text style={styles.notesTitle}>Notes for the instructor:</Text>
         <TextInput
           style={styles.notesInput}
-          onChangeText={setNotes}
-          value={notes}
+          onChangeText={(text) => setNotes(text)}
+          //value={notes}
           placeholder="Write any material or concepts you need help with"
         />
 
