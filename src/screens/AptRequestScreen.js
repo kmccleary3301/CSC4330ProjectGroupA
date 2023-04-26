@@ -58,8 +58,8 @@ const AptRequestScreen = function({route, navigation_tmp}){
       await setDoc(appointmentRef, {
         to: params_passed?.email,        
         message: {
-          subject: 'Hello from Firebase!',          
-          html: notes + user.uid,
+          subject: 'Appointment request from '+user.email,          
+          html: "Please reply confirming or declining this appointment.\n" + "Notes: " + notes,
         }
       });
       
