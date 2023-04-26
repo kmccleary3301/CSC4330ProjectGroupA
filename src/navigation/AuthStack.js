@@ -33,28 +33,31 @@ const Stack = createNativeStackNavigator();
 const AuthStack = () => {
   const navigation = useNavigation();
 
+  const blue = '#182640';
+  const tan = '#FAE8CD';
+
   const HAMBURGER ={
     headerRight: () => (
       <View style={{paddingHorizontal: 20, flexDirection: "row", justifyContent: 'space-between', padding: 5}}>
-        <Ionicons name="bug-outline" color={'#000000'} size={32} 
+        <Ionicons name="bug-outline" color={blue} size={32} 
           onPress={() => {
             navigation.navigate('AdminTutorEditScreen');
           }}
         />
-        <Ionicons name="exit-outline" color={'#000000'} size={32} 
+        <Ionicons name="exit-outline" color={blue} size={32} 
           onPress={() => {
             signOut(auth);
             navigation.navigate("InitialScreen");
           }}
         />
-        <Ionicons name="reorder-three" color={'#000000'} size={32} 
+        <Ionicons name="reorder-three" color={blue} size={32} 
           onPress={() => console.log(auth)}
         />
         
       </View>
     ),
     headerStyle: {
-      backgroundColor: '#1d3870',
+      backgroundColor: tan,
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -83,8 +86,8 @@ const AuthStack = () => {
     </Stack.Navigator>
     */
 
-    <Stack.Navigator initialRouteName='InitialScreen' style={{fill:"#0000FF"}}>
-      
+    <Stack.Navigator 
+      initialRouteName='InitialScreen' style={{fill:tan}}>
       <Stack.Screen name="MySplashScreen"      component={MySplashScreen} options={HAMBURGER}/>
       <Stack.Screen name="InitialScreen"       component={InitialScreen} options={HAMBURGER}/>
       <Stack.Screen name="LoginScreen"         component={LoginScreen} options={HAMBURGER}/>

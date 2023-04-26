@@ -74,10 +74,11 @@ const ProfileScreen = () => {
               <>
                 <Text style={styles.specialSubtitle}>My Specialty:</Text>
                 <View style={styles.subjectsContainer}>
-                  <Text style={styles.subjects}>{userProfile.selectedSubjects}</Text>
+                  <Text style={[styles.subjects, {fontSize: 17}]}>{userProfile.selectedSubjects}</Text>
                   <Text style={[styles.subtitle, {marginBottom: 5}]}>My Rating:</Text>
                   <StarRating
                   rating={userProfile.rating}
+                  color={tan}
                   />
                 </View>
               </>
