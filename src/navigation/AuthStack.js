@@ -13,6 +13,7 @@ import HomeScreen from '../screens/HomeScreen';
 import SubjectSearchScreen from '../screens/SubjectSearchScreen';
 import AptRequestScreen from '../screens/AptRequestScreen';
 import AppointmentsScreen from '../screens/AppointmentsScreen';
+import AdminTutorEditScreen from '../screens/AdminTutorEditScreen';
 import RateTutorScreen from '../screens/RateTutorScreen';
 import RegisterInfoScreen from '../screens/RegisterInfoScreen';
 import TutorInfo from '../screens/TutorInfo';
@@ -37,12 +38,10 @@ const AuthStack = () => {
       <View style={{paddingHorizontal: 20, flexDirection: "row", justifyContent: 'space-between', padding: 5}}>
         <Ionicons name="bug-outline" color={'#000000'} size={32} 
           onPress={() => {
-            navigation.navigate('RateTutorScreen', {
-              test_argument: "hello"
-            });
+            navigation.navigate('AdminTutorEditScreen');
           }}
         />
-        <Ionicons name="person-remove-outline" color={'#000000'} size={32} 
+        <Ionicons name="exit-outline" color={'#000000'} size={32} 
           onPress={() => {
             signOut(auth);
             navigation.navigate("InitialScreen");
@@ -96,7 +95,7 @@ const AuthStack = () => {
       <Stack.Screen name="TutorInfo"           component={TutorInfo} options={HAMBURGER}/>
       <Stack.Screen name="RateTutorScreen"     component={RateTutorScreen} options={HAMBURGER}/>
       <Stack.Screen name="TutorsListScreen"    component={TutorsListScreen} options={HAMBURGER}/>
-      
+      <Stack.Screen name="AdminTutorEditScreen"component={AdminTutorEditScreen} options={HAMBURGER}/>
       <Stack.Screen name="VerifyEmail"         component={VerifyEmail} options={HAMBURGER}/>
       <Stack.Screen name="SubjectSearchScreen" component={SubjectSearchScreen} options={HAMBURGER}/>
       <Stack.Screen name="ProfileScreen"       component={ProfileScreen} options={HAMBURGER}/>
