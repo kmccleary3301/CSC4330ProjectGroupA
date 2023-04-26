@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SF',
   },
   picker: {
-    height: 35,
+    height: 50,
     borderColor: tan,
     borderWidth: 1,
     borderRadius: 5,
