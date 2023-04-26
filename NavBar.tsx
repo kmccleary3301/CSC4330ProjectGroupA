@@ -34,8 +34,12 @@ const NavBarContainer = () => {
 
   const [userProfile, setUserProfile] = useState({});
   const {currentUser} = useAuthValue();
-  const user = currentUser
+  const user = currentUser;
   const [selectedSubjects, setSelectedSubjects] = useState([]);
+  const userType = user?.displayName;
+
+  console.log("usertype->", userType);
+  
 
   const NavBarItem: React.FC<NavBarItemProps> = ({
     iconSource,
@@ -78,11 +82,12 @@ const NavBarContainer = () => {
         screenName="HomeScreen"
         text="Home"
       />
+      {userType === 'student' &&
       <NavBarItem
         iconSource={require('./src/assets/icons/calender-outline.png')}
         screenName="TutorsListScreen"
         text="Available Tutors"
-      />
+      />}
       <NavBarItem
         iconSource={require('./src/assets/icons/appointments.png')}
         screenName="AppointmentsScreen"
