@@ -4,6 +4,12 @@ import { registerRootComponent } from 'expo';
 
 import App from './App';
 
+import { LocalizationContext } from 'react-native-paper-dates';
+import { en } from 'date-fns/locale';
+
+// Add this line to register the 'en' locale
+LocalizationContext._addLocale('en', en);
+
 import { en, registerTranslation } from 'react-native-paper-dates'
 registerTranslation('en', en)
 

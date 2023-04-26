@@ -15,6 +15,20 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { UserTypeProvider } from './UserTypeContext';
 import { getDoc, doc } from 'firebase/firestore';
 
+import MySplashScreen from './src/screens/MySplashScreen';
+import * as SplashScreen from 'expo-splash-screen';
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
+
+
+async function loadFonts() {
+  await Font.loadAsync({
+    Vikendi: require('./src/assets/fonts/Vikendi.otf'),
+    SF: require('./src/assets/fonts/SF.ttf'),
+    SFBold: require('./src/assets/fonts/SFBold.ttf'),
+    ...Ionicons.font,
+  });
+}
 
 export default function App() {
   const [hideSplashScreen, setHideSplashScreen] = useState(false);
@@ -35,27 +49,29 @@ export default function App() {
         setInitialUserType(userType);
       }
       setLoading(false);
-    })});
-    /*
+    });
+  
     const timer = setTimeout(() => {
       setHideSplashScreen(true);
     }, 1000);
-
+  
     SplashScreen.preventAutoHideAsync().catch(() => { });
-
+  
+    // Call loadFonts function and set fontsLoaded state to true only after the fonts have been loaded
     loadFonts()
       .then(() => {
         setFontsLoaded(true);
         SplashScreen.hideAsync().catch(() => { });
       })
       .catch(console.error);
-
+  
     return () => clearTimeout(timer);
   }, []);
+  
   if (!fontsLoaded || !hideSplashScreen) {
     return <MySplashScreen />;
   }
-  */
+  
 
   return (
     <NavigationContainer>

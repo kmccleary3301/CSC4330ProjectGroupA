@@ -151,6 +151,7 @@ const ScheduleAvailabilityScreen = () => {
         rating: userProfile.rating || 0,
         firstName: userProfile.firstName,
         lastName: userProfile.lastName,
+        email: userProfile.email,
       };
       // Add availability to Firebase
       try {
@@ -310,7 +311,7 @@ const ScheduleAvailabilityScreen = () => {
             >
                 <Picker.Item label="Daily" value="Daily" />
                 <Picker.Item label="Weekly" value="Weekly" />
-                <Picker.Item label="Monthly" value="Monthly" />
+                
             </Picker>
           </View>
           {customFrequency === "Weekly" && (

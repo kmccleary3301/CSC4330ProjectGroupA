@@ -17,7 +17,6 @@ import AdminTutorEditScreen from '../screens/AdminTutorEditScreen';
 import AdminStudentEditScreen from '../screens/AdminStudentEditScreen';
 import RateTutorScreen from '../screens/RateTutorScreen';
 import RegisterInfoScreen from '../screens/RegisterInfoScreen';
-import TutorInfo from '../screens/TutorInfo';
 import TutorsListScreen from '../screens/TutorsListScreen';
 import SubjectAddScreen from '../screens/SubjectAddScreen';
 import VerifyEmail from '../screens/VerifyEmail';
@@ -96,7 +95,6 @@ const AuthStack = () => {
       <Stack.Screen name="SubjectAddScreen"    component={SubjectAddScreen} options={HAMBURGER}/>
       <Stack.Screen name="HomeScreen"          component={HomeScreen} options={HAMBURGER}/>
       <Stack.Screen name="RegisterInfoScreen"  component={RegisterInfoScreen} options={HAMBURGER}/>
-      <Stack.Screen name="TutorInfo"           component={TutorInfo} options={HAMBURGER}/>
       <Stack.Screen name="RateTutorScreen"     component={RateTutorScreen} options={HAMBURGER}/>
       <Stack.Screen name="TutorsListScreen"    component={TutorsListScreen} options={HAMBURGER}/>
       <Stack.Screen name="AdminTutorEditScreen"component={AdminTutorEditScreen} options={HAMBURGER}/>
