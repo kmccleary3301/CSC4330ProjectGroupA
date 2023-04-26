@@ -71,7 +71,7 @@ const StudentTutorEditScreen = () => {
     if (tutorList.length > 0) { return; }
     try {
       const array_tutors_return = [];
-      const tutor_fetch = await getDocs(collection(db, 'tutor'));
+      const tutor_fetch = await getDocs(collection(db, 'student'));
       console.log("Fetching data in availabilities");
       tutor_fetch.forEach((doc_get) => {
         // doc.data() is never undefined for query doc snapshots
@@ -166,7 +166,7 @@ const StudentTutorEditScreen = () => {
     querySnapshot.forEach((doc_get) => {
         var get_data = doc_get.data();
         get_data[field] = new_value;
-        setDoc(doc(db, 'tutor', doc_get.id), get_data);
+        setDoc(doc(db, 'student', doc_get.id), get_data);
     });
   }
 
@@ -210,7 +210,7 @@ const StudentTutorEditScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={[styles.title, { fontSize: 20, marginTop: -45 }]}>Welcome back, {(userProfile.firstName)}</Text>
+        <Text style={[styles.title, { fontSize: 20, marginTop: -45 }]}>Student Edit</Text>
         <Text style={[styles.title, { fontSize: 20, marginTop: -25 }]}> {userType === 'student'
           ? 'Select an Appointment:'
           : 'Upcoming Appointments'}</Text>
@@ -311,7 +311,7 @@ const StudentTutorEditScreen = () => {
           onPress={() => navigation.navigate("AdminTutorEditScreen")}
           color={blue}
         >
-          <Text style={sStyles.buttonText}>Tutors</Text>
+          <Text style={sStyles.buttonText}>Students</Text>
         </Button>
       </View>
       <NavBarContainer />

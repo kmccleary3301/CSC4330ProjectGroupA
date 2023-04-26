@@ -10,6 +10,9 @@ import styles from '../../styles';
 import { Ionicons } from '@expo/vector-icons';
 import NavBarContainer from '../../NavBar';
 import { StyleSheet } from 'react-native';
+import { auth, db } from '../../firebase';
+import {doc, setDoc, getDoc, query, collection, where, getDocs} from "firebase/firestore";
+import { useAuthValue } from "../../AuthContext";
 import { Button } from 'react-native-paper';
 
 const blue = '#182640';
@@ -18,7 +21,8 @@ const lightBlue = '#C9D3FF';
 
 const AppointmentsScreen = () => {
   const navigation = useNavigation();
-
+  const {currentUser} = useAuthValue();
+  const user = currentUser;
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
   // Your mock data for future and past appointments
@@ -36,7 +40,7 @@ const AppointmentsScreen = () => {
     appointmentNotes: 'I need help with Calculus II, specifically integration techniques.',
   };
 
-  const futureAppointments = [
+  const futureAppointments_template = [
     // ...
 
     // Example appointment object
@@ -177,7 +181,43 @@ const AppointmentsScreen = () => {
     setPastAppointments([...pastAppointments]);
   }, 10000);
 
+  const [futureAppointments, setFutureAppointments] = useState([]);
 
+  const get_single_appt = async function(appt_data){
+    const student_data = await getDoc(doc(db, 'student', appt_data["student_id"]));
+    const appt_entry = {
+      student_name: student_data.data()["firstName"]+" "+student_data.data()["lastName"],
+      date: appt_data["date"],
+      subject: appt_data["subject"],
+      time: appt_data["time"],
+      tutor_id: appt_data["tutor_id"]
+    }
+    const new_appts = futureAppointments;
+    new_appts.push(appt_entry);
+    setFutureAppointments([...new_appts]);
+  }
+
+  const get_future_appointments = async function(){
+    if (futureAppointments.length > 0) { return; }
+    var q, querySnapshot;
+    if (user?.displayName == "tutor"){
+      q = query(collection(db, "appointments"), where("tutor_id", "==", user?.uid));
+      querySnapshot = await getDocs(q);
+    } else {
+      q = query(collection(db, "appointments"), where("student_id", "==", user?.uid));
+      querySnapshot = await getDocs(q);
+    }
+    querySnapshot.forEach((doc_get) => {
+        var get_data = doc_get.data();
+        console.log(doc_get.id, "=>", doc_get.data());
+        get_single_appt(get_data);
+        //const appointment_entry = {name: student_data.data()["fir"]};
+        //get_data[field] = new_value;
+        //setDoc(doc(db, 'student', doc_get.id), get_data);
+    });
+  }
+
+  get_future_appointments();
 
   return (
     <View style={{ flex: 1 }}>
@@ -203,26 +243,26 @@ const AppointmentsScreen = () => {
           </View>
           {futureAppointments.map((appointment) => (
             <TouchableOpacity
-              key={appointment.id}
-              onPress={() => onAppointmentPress(appointment.id)}
+              key={appointment.tutor_id}
+              onPress={() => onAppointmentPress(appointment.tutor_id)}
             >
               <View
                 style={
-                  selectedAppointmentId === appointment.id
+                  selectedAppointmentId === appointment.tutor_id
                     ? sStyles.selectedRow
                     : sStyles.tableRow
                 }
               >
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.name}</Text>
+                <View style={selectedAppointmentId === appointment.tutor_id ? sStyles.selectedEntry : sStyles.entry}>
+                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.student_name}</Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
+                <View style={selectedAppointmentId === appointment.tutor_id ? sStyles.selectedEntry : sStyles.entry}>
                   <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.date}</Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
+                <View style={selectedAppointmentId === appointment.tutor_id ? sStyles.selectedEntry : sStyles.entry}>
                   <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.subject}</Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
+                <View style={selectedAppointmentId === appointment.tutor_id ? sStyles.selectedEntry : sStyles.entry}>
                   <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.time}</Text>
                 </View>
               </View>

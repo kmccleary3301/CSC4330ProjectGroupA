@@ -9,8 +9,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import NavBarContainer from '../../NavBar';
 import { auth, db } from '../../firebase';
-import {updateProfile} from 'firebase/auth'
-import {doc, setDoc, getDoc} from "firebase/firestore";
+import {updateProfile} from 'firebase/auth';
+import {doc, setDoc, getDoc, query, collection, where, getDocs} from "firebase/firestore";
 import {useAuthValue} from '../../AuthContext'
 
 const tan = '#FAE8CD';
@@ -51,7 +51,16 @@ const AptRequestScreen = function({route, navigation_tmp}){
   };
 
   const onConfirm = async () => {  
+    
     if (!(params_passed["email"]?params_passed["email"]:false))  { return; }
+    const q = query(collection(db, "tutor"), where("email", "==", params_passed["email"]?params_passed["email"]:false));
+    const querySnapshot_2 = await getDocs(q);
+
+    var tutor_id_get = "";
+    querySnapshot_2.forEach((doc_get)=> {
+      tutor_id_get = doc_get.id;
+    });
+
     console.log("email:", params_passed["email"]?params_passed["email"]:false);
     try{
       const appointmentRef = doc(db, 'mail', user.uid);
@@ -61,6 +70,15 @@ const AptRequestScreen = function({route, navigation_tmp}){
           subject: 'Hello from Firebase!',          
           html: notes + user.uid,
         }
+      });
+
+      await setDoc(doc(db, 'appointments', parseInt(Date.now()).toString()+Math.random().toString(36).substring(7)), {
+        student_id: user?.uid,
+        tutor_email: params_passed["email"]?params_passed["email"]:false,
+        tutor_id: tutor_id_get,
+        time: params_passed?.appt_time?params_passed.appt_time:"10:00 AM",
+        date: Date.now().toString(),
+        subject: "Accounting"
       });
       
     } catch (err) {

@@ -210,7 +210,7 @@ const AdminTutorEditScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={[styles.title, { fontSize: 20, marginTop: -45 }]}>Welcome back, {(userProfile.firstName)}</Text>
+        <Text style={[styles.title, { fontSize: 20, marginTop: -45 }]}>Tutor Edit</Text>
         <Text style={[styles.title, { fontSize: 20, marginTop: -25 }]}> {userType === 'student'
           ? 'Select an Appointment:'
           : 'Upcoming Appointments'}</Text>
@@ -311,7 +311,7 @@ const AdminTutorEditScreen = () => {
           onPress={() => navigation.navigate("AdminStudentEditScreen")}
           color={blue}
         >
-          <Text style={sStyles.buttonText}>Students</Text>
+          <Text style={sStyles.buttonText}>Tutors</Text>
         </Button>
       </View>
       <NavBarContainer />
