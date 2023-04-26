@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,14 +6,17 @@ import {
   TextInput,
   StyleSheet,
   Button,
+    Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
-import { db } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { Ionicons } from "@expo/vector-icons";
 import {Picker} from '@react-native-picker/picker';
 import Checkbox from 'expo-checkbox';
-import { Firestore, doc, getDoc, setDoc, collection } from "firebase/firestore";
+import { Firestore, doc, getDoc, setDoc, collection, updateDoc } from "firebase/firestore";
+import { useAuthValue } from "../../AuthContext";
+import { useUserType } from '../../UserTypeContext';
 
 const blue = '#182640';
 const tan = '#FAE8CD';
@@ -23,7 +26,7 @@ const ScheduleAvailabilityScreen = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-  const [repeatOption, setRepeatOption] = useState(false);
+  const [repeatOption, setRepeatOption] = useState("Never");
   const [customFrequency, setCustomFrequency] = useState("Daily");
   const [selectedDays, setSelectedDays] = useState([]);
   const [selectedDates, setSelectedDates] = useState([]);
@@ -33,6 +36,12 @@ const ScheduleAvailabilityScreen = () => {
   const [toggleCheckbox, setToggleCheckbox] = useState(false)
   const [isConfirmed, setIsConfirmed] = useState(false);
 
+  const {currentUser} = useAuthValue();
+  const user = currentUser
+
+  const [userProfile, setUserProfile] = useState('');
+  
+
   const navigation = useNavigation();
 
   const validateTime = (startTime, endTime) => {
@@ -41,19 +50,56 @@ const ScheduleAvailabilityScreen = () => {
     return duration > 0 && duration <= maxDuration;
   };
 
+  const [layout, setLayout] = useState({
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  });
+
+  useEffect(() => {
+    const getUserProfile = async () => {
+      const type = user?.displayName;
+      const docRef = doc(db, type, user?.uid);
+      const docSnap = await getDoc(docRef);
+      setUserProfile(docSnap.data());
+    };
+    getUserProfile();
+    const handleLayout = () => {
+      setLayout({
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+      });
+    };
+    Dimensions.addEventListener('change', handleLayout);
+    return () => {
+      Dimensions.removeEventListener('change', handleLayout);
+    };
+  }, []);
+
+  const text = 'Schedule Availability';
+  const adjustment = 1.2; // Change this value to adjust the font size
+  const minButtonWidthPercentage = 0.2;
+  const maxButtonWidthPercentage = 0.8;
+
+  const maxWidth = 400; // Set a maximum width for the button
+  const maxFontSize = 30; // Set a maximum font size for the text
+
+  const fontSize = Math.min(maxFontSize, layout.width / Math.max(text.length, 1) * adjustment);
+  const buttonWidth = Math.min(maxButtonWidthPercentage * layout.width, layout.width, maxWidth);
+
+
   const createAppointments = async () => {
     const startDate = selectedDate;
     const endDate = new Date(startDate);
     endDate.setMonth(startDate.getMonth() + 3); // Set a cut-off of 3 months
   
-    let appointmentDates = [];
-    // Generate appointment dates based on the selected repeat option
+    let availabilityDates = [];
+    // Generate availability dates based on the selected repeat option
     if (repeatOption === "Never") {
-      appointmentDates.push(selectedDate);
+      availabilityDates.push(selectedDate);
     } else if (repeatOption === "Every Day") {
       let currentDate = new Date(startDate);
       while (currentDate <= endDate) {
-        appointmentDates.push(new Date(currentDate));
+        availabilityDates.push(new Date(currentDate));
         currentDate.setDate(currentDate.getDate() + 1);
       }
     } else if (repeatOption === "Every Week") {
@@ -61,7 +107,7 @@ const ScheduleAvailabilityScreen = () => {
       while (currentDate <= endDate) {
         const currentDay = currentDate.getDay();
         if (selectedDays.includes(currentDay)) {
-          appointmentDates.push(new Date(currentDate));
+          availabilityDates.push(new Date(currentDate));
         }
         currentDate.setDate(currentDate.getDate() + 1);
       }
@@ -69,7 +115,7 @@ const ScheduleAvailabilityScreen = () => {
       let currentDate = new Date(startDate);
       while (currentDate <= endDate) {
         if (selectedDates.includes(currentDate.getDate())) {
-          appointmentDates.push(new Date(currentDate));
+          availabilityDates.push(new Date(currentDate));
         }
         currentDate.setDate(currentDate.getDate() + 1);
       }
@@ -83,30 +129,39 @@ const ScheduleAvailabilityScreen = () => {
           (customFrequency === "Weekly" && selectedDays.includes(currentDay)) ||
           (customFrequency === "Monthly" && selectedDates.includes(currentDayOfMonth))
         ) {
-          appointmentDates.push(new Date(currentDate));
+          availabilityDates.push(new Date(currentDate));
         }
   
         currentDate.setDate(currentDate.getDate() + 1);
       }
     }
   
-    // Create open appointments in Firebase
-    for (const date of appointmentDates) {
-      // Create appointment object with appropriate details
-      const appointment = {
+    // Create open availabilities in Firebase
+    console.log("Starting loop with availabilityDates:");
+    console.log(availabilityDates);
+    for (const date of availabilityDates) {
+        console.log("Creating availability for date: "+date);
+      // Create availability object with appropriate details
+      const availability = {
         date: date,
         startTime: startTime,
         endTime: endTime,
-        // other necessary details
+        uid: userProfile.uid,
+        selectedSubjects: userProfile.selectedSubjects || 'No Subject',
+        rating: userProfile.rating || 0,
+        firstName: userProfile.firstName,
+        lastName: userProfile.lastName,
       };
-  
-      // Add appointment to Firebase
+      // Add availability to Firebase
       try {
-        //await db.collection("appointments").add(appointment);
-        await setDoc(doc(db, "appointments", "test"+toString(date)), appointment);
+        //await db.collection("availabilities").add(availability);
+        var availability_name = parseInt(Date.now()).toString()+"_"+Math.random().toString(36).substring(7);
+        console.log("Adding availability entry: "+availability_name);
+        console.log(availability);
+        await setDoc(doc(db, "availabilities", availability_name), availability);
         console.log("Appointment added successfully");
       } catch (error) {
-        console.error("Error adding appointment: ", error);
+        console.error("Error adding availability: ", error);
       }
     }
   };
@@ -239,8 +294,8 @@ const ScheduleAvailabilityScreen = () => {
         <Text style={[styles.label, {marginRight:20}]}>Repeat?</Text>
         <Checkbox
         disabled={false}
-        value={repeatOption}
-        onValueChange={(newValue) => setRepeatOption(newValue)}
+        value={repeatOption !== "Never"}
+        onValueChange={(newValue) => setRepeatOption(newValue ? "Every Day" : "Never")}
         />
       </View>
 
