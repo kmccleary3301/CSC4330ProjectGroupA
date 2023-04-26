@@ -11,7 +11,7 @@ import {
 import StarRating from 'react-native-star-rating-widget';
 import NavBarContainer from '../../NavBar';
 import EditProfileScreen from "./EditProfileScreen";
-import { Firestore, doc, getDoc, getDocs, collection } from "firebase/firestore";
+import { Firestore, doc, getDoc, setDoc, getDocs, collection } from "firebase/firestore";
 import { auth, db } from '../../firebase';
 import { StorageError } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
@@ -30,12 +30,31 @@ async function get_tutors() {
 	}
 }
 
+async function set_appointment() {
+	try {
+    console.log("Date.now(): ", parseInt(Date.now()).toString());
+    var test_name = "test_entry_"+parseInt(Date.now()).toString()+"_"+Math.random().toString(36).substring(7);
+		await setDoc(doc(db, 'appointments', test_name), {
+      name: "John Doe",
+      state: "CA",
+      country: "USA"
+    });
+    
+    getDoc(doc(db, 'appointments', test_name));
+
+		console.log("Attempted to add test appointment entry");
+	} catch (error) {
+		console.error('Error adding appointment request: ', error);
+	}
+}
+
 
 const RateTutorScreen = function({route, navigation_param}) {
 	const {test_argument} = route.params;
 	//const tutors = firebase.firestore().collection('users').get();
 	console.log("RateTutorScreen called with argument:", test_argument);
 	get_tutors();
+  //set_appointment();
 
   const navigation = useNavigation();  
   const [selectedSubjects, setSelectedSubjects] = useState([]);
@@ -45,10 +64,8 @@ const RateTutorScreen = function({route, navigation_param}) {
   const user = currentUser;
 
 	const submit_rating = () => {
-
+    return;
 	};
-
-  
 
   const handleUpdateProfile = (updatedUserProfile) => {
     setUserProfile(updatedUserProfile);
@@ -58,9 +75,6 @@ const RateTutorScreen = function({route, navigation_param}) {
   };
 
   const profilePicture = require('../assets/icons/profileAvatar.png');
-
-
-
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
