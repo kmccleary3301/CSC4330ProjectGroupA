@@ -1,0 +1,10 @@
+App is compiled using expo to run on the web.
+Run npm install to install from package-lock.JSON
+it will be a lengthy install
+Finally, run the following:
+    npx expo start
+
+if there are errors, follow the instructions
+and/or suggestions.
+Finally, press w once metro is loaded to launch
+into the web debug.

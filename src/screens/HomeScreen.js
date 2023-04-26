@@ -115,6 +115,16 @@ const HomeScreen = () => {
 
   const styles = getStyles({ buttonWidth, fontSize });
 
+  const AptRequestFromId = async function(uid_in){
+    const docs = await getDocs(collection(db, 'tutor'));
+    docs.forEach((doc_get) => {
+      if (doc_get.id == uid_in) {
+        const email_get = doc_get.data().email;
+        navigation.navigate('AptRequestScreen', { availability: selectedAvailability, email: email_get, uid: uid_in });
+        return;
+      }
+    })
+  };
 
   const formatDateWithoutTimezone = (date) => {
     const d = new Date(date);
@@ -168,12 +178,15 @@ const HomeScreen = () => {
     const selectedAvailability = appointments.find(
     (availability) => availability.id === selectedAvailabilityId
     );
-    navigation.navigate('AptRequestScreen', { availability: selectedAvailability });
+    //navigation.navigate('AptRequestScreen', { availability: selectedAvailability, email: avai });
+    AptRequestFromId(availabilityId);
     setSelectedAvailabilityId(null);
     }
     };
     
     const onAvailabilityPress = (availabilityId) => {
+    AptRequestFromId(availabilityId);
+    console.log("availabilityid:", availabilityId);
     setShowError(false);
     setSelectedAvailabilityId(availabilityId);
     };

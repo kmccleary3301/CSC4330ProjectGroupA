@@ -165,6 +165,16 @@ const TutorsListScreen = () => {
     },
     [setOpen, setSelectedDate, availabilities]
   );
+  const AptRequestFromId = async function(uid_in){
+    const docs = await getDocs(collection(db, 'tutor'));
+    docs.forEach((doc_get) => {
+      if (doc_get.id == uid_in) {
+        const email_get = doc_get.data().email;
+        navigation.navigate('AptRequestScreen', {email: email_get, uid: uid_in });
+        return;
+      }
+    })
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -212,7 +222,7 @@ const TutorsListScreen = () => {
           {tutorList.map((tutor) => (
             <TouchableOpacity
               key={tutor.uid}
-              onPress={() => onTutorPress(tutor.uid)}
+              onPress={() => AptRequestFromId(tutor.uid)}
             >
 
               <View
