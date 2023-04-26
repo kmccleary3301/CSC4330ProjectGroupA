@@ -14,6 +14,7 @@ import { auth, db } from '../../firebase';
 import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { useAuthValue } from '../../AuthContext'
 import { subjectList } from '../utils/subjectList.js';
+import { color } from 'react-native-reanimated';
 
 const RegisterInfoScreen = ({ navigation }) => {
 
@@ -28,6 +29,9 @@ const RegisterInfoScreen = ({ navigation }) => {
       setSelectedSubjects((prev) => [...prev, value]);
     }
   };
+
+  const tan = '#FAE8CD';
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,19 +95,21 @@ const RegisterInfoScreen = ({ navigation }) => {
           : 'expertise'}.
           </Text>
         {selectedSubjects.map((subject) => (
-        <Text key={subject}>{subject}</Text>
+        <Text style={[    
+          {color: tan},
+          {fontFamily: 'SF'},
+          {fontSize: 20},
+          {alignSelf: 'flex-start'}, 
+          {textAlign: 'center'}]}
+         key={subject}>{subject}</Text>
       ))}
       {selectedSubjects.length < 5 && renderPicker()}
-      <TouchableOpacity onPress={handleSubmit}>
-        <Text>Save Changes</Text>
-      </TouchableOpacity>
 
           <TouchableOpacity onPress={handleSubmit}
             style={[styles.button, styles.loginButton, { width: '50%' }]}
           >
             <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
-        {/* </form> */}
         <View style={[styles.linkContainer, { marginTop: 16 }]}>          
           <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>            
           </TouchableOpacity>

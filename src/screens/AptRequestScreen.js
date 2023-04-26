@@ -16,7 +16,9 @@ import {useAuthValue} from '../../AuthContext'
 const tan = '#FAE8CD';
 const blue = '#182640';
 
-const AptRequestScreen =  () => {
+const AptRequestScreen = function({route, navigation_tmp}){
+  
+
   const [notes, setNotes] = useState('');
   const navigation = useNavigation();
   const [firstName, setFirstName] = useState('');
@@ -26,6 +28,10 @@ const AptRequestScreen =  () => {
   const [userProfile, setUserProfile] = useState({});
   const { currentUser } = useAuthValue();
   const user = currentUser;  
+
+  const params_passed= route.params?route.params:null;
+
+
 
   // useEffect(
   //   React.useCallback(() => {
@@ -44,11 +50,13 @@ const AptRequestScreen =  () => {
     navigation.goBack();
   };
 
-  const onConfirm = async () => {    
+  const onConfirm = async () => {  
+    if (!(params_passed["email"]?params_passed["email"]:false))  { return; }
+    console.log("email:", params_passed["email"]?params_passed["email"]:false);
     try{
       const appointmentRef = doc(db, 'mail', user.uid);
       await setDoc(appointmentRef, {
-        to: 'jkinc13@lsu.edu',        
+        to: params_passed?.email,        
         message: {
           subject: 'Hello from Firebase!',          
           html: notes + user.uid,
