@@ -108,11 +108,20 @@ const HomeScreen = () => {
           const availabilityData = doc.data();
           const firstName = availabilityData.firstName;
           const lastName = availabilityData.lastName;
+          const rating = availabilityData.rating;
+          const startTime = availabilityData.startTime;
+          const endTime = availabilityData.endTime;
+          const selectedSubjects = availabilityData.selectedSubjects;
+        
           return {
             ...availabilityData,
             id: doc.id,
             firstName: firstName,
             lastName: lastName,
+            rating: rating,
+            startTime: startTime,
+            endTime: endTime,
+            selectedSubjects: selectedSubjects,
           };
         });
         console.log('Fetched Availabilities:', fetchedAvailabilities);
