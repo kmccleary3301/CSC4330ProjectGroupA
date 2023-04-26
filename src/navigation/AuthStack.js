@@ -42,7 +42,7 @@ const AuthStack = () => {
             });
           }}
         />
-        <Ionicons name="person-remove-outline" color={'#000000'} size={32} 
+        <Ionicons name="exit-outline" color={'#000000'} size={32} 
           onPress={() => {
             signOut(auth);
             navigation.navigate("InitialScreen");
