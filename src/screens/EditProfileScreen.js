@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Pressable, TextInput, Picker } from "react-native";
+import { View, Text, StyleSheet, Pressable, TextInput, Picker, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import NavBarContainer from '../../NavBar';
 import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
@@ -7,6 +7,9 @@ import { auth, db } from '../../firebase';
 import ProfileScreen from "./ProfileScreen";
 import { AuthProvider, useAuthValue } from '../../AuthContext';
 import { subjectList } from '../utils/subjectList.js';
+
+
+
 
 
 
@@ -48,14 +51,38 @@ const EditProfileScreen = () => {
   }, [user]);
 
 
+
+  // const sendEmail = async () => {
+  //   const options = {
+  //     recipients: [userProfile.email],
+  //     subject: 'Profile updated',
+  //     body: 'Your profile has been updated successfully.',
+  //     isHtml: false,
+  //   };
+  
+  //   try {
+  //     await MailComposer.composeAsync(options);
+  //     console.log('Email sent successfully');
+  //   } catch (error) {
+  //     console.log('Error sending email:', error);
+  //   }
+  // };
+  
+
+
   const handlePronounsPress = () => {
     setShowPicker(!showPicker);
+    if (!selectedPronoun && userProfile.pronouns) {
+      setSelectedPronoun(userProfile.pronouns);
+    }
   };
+  
 
   
   const handlePronounChange = (itemValue) => {
     setSelectedPronoun(itemValue);
     setShowPicker(false);
+    setPronouns(itemValue); 
     setUserProfile(prevState => ({
       ...prevState,
       pronouns: itemValue,
@@ -79,6 +106,9 @@ const handleSaveChanges = async () => {
       pronouns: pronouns,
       selectedSubjects: selectedSubjects,
     }));
+
+
+      
     navigation.goBack();
 
   } catch (err) {
@@ -121,6 +151,23 @@ const renderPicker = () => {
   );
 };
 
+const renderPronounPicker = () => {
+  return (
+    <Picker
+      selectedValue={selectedPronoun}
+      onValueChange={handlePronounChange}
+      style={styles.pronounPicker}
+    >
+      {pronounsPicker.map((pronoun, index) => (
+        <Picker.Item key={index} label={pronoun} value={pronoun} />
+      ))}
+    </Picker>
+  );
+};
+
+
+
+
 
 
 
@@ -128,6 +175,8 @@ const renderPicker = () => {
     "She/Her",
     "He/Him",
     "They/Them",
+    "He/They",
+    "She/They",
     "Other"
   ];
   
@@ -158,12 +207,14 @@ const renderPicker = () => {
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
 
+
         <View style={styles.cancelContainer}>
           <Pressable
             onPress={handleCancel}>
             <Text style={styles.cancelText}>Cancel</Text>
           </Pressable>
         </View>
+        <ScrollView>
 
         <View style={styles.profileInfoContainer}>
           <View style={styles.nameContainer}>
@@ -191,31 +242,20 @@ const renderPicker = () => {
               style={styles.profileInfoValue}
               placeholder={userProfile.email}
               onChangeText={(text) => setEmail(text)}
-              
             />
           </View>
+          <View style={styles.nameContainer}>
+            <Text style={styles.profileInfoLabel}>Pronouns: </Text>
+            {showPicker ? (
+              renderPronounPicker()
+            ) : (
+              <Pressable onPress={handlePronounsPress}>
+                <Text style={styles.profileInfoValue}>{userProfile.pronouns || selectedPronoun}</Text>
+              </Pressable>
+            )}
+          </View>
 
-        <View style={styles.nameContainer}>
-         <Text style={styles.profileInfoLabel}>Pronouns: </Text>
-          <Pressable onPress={handlePronounsPress}>
-            <Text style={styles.profileInfoValue}>{userProfile.pronouns || selectedPronoun}</Text>
-          </Pressable>
-        </View>
       </View>
-        {showPicker && (
-        <Picker
-          selectedValue={selectedPronoun}
-          onValueChange={handlePronounChange}
-        >
-          {pronounsPicker.map((pronoun, index) => (
-            <Picker.Item key={index} label={pronoun} value={pronoun} />
-          ))}
-        </Picker>
-      )}
-
-
-
-
         <Text style={styles.subtitle}>My Subjects: </Text>
 
         <View style={styles.subjectsContainer}>
@@ -245,6 +285,7 @@ const renderPicker = () => {
           onPress={handleSaveChanges}>
           <Text style={styles.buttonText}>Save changes</Text>
         </Pressable>
+        </ScrollView>
       </View>
       <NavBarContainer />
     </View>
@@ -343,6 +384,7 @@ const styles = StyleSheet.create({
     color: tan,
     fontFamily: 'SF',
     fontSize: 17,
+    
   },
   nameContainer: {
     flex: 1,
@@ -350,6 +392,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginTop: 15,
+    flexWrap: 'wrap',
   },
   profileInfoContainer: {
     marginTop: 30,
@@ -360,7 +403,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     backgroundColor: tan,
-    marginBottom: 20,
+  },
+  pronounPicker: {
+    height: 30,
+    borderColor: tan,
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: tan,
+    textAlign: 'right',
   },
 });
 

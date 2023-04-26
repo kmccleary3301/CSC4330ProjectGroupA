@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+
 import {
   Image,
   StyleSheet,
@@ -13,9 +14,9 @@ import NavBarContainer from '../../NavBar';
 import EditProfileScreen from "./EditProfileScreen";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase';
-import { StorageError } from "firebase/storage";
-import { updateProfile } from "firebase/auth";
 import { AuthProvider, useAuthValue } from '../../AuthContext';
+import StarRating from 'react-native-star-rating-widget';
+
 
 const ProfileScreen = () => {
   const navigation = useNavigation();  
@@ -57,32 +58,47 @@ const ProfileScreen = () => {
         <Text style={[styles.title]}>My Profile</Text>
   
         <View style={styles.profileContainer}>
-          <View style={styles.pictureContainer}>
+          {/* <View style={styles.pictureContainer}>
             <Image style={styles.profilePic} source={profilePicture} />
-          </View>
+          </View> */}
           <View style={styles.profileInfoContainer}>
             <Text style={styles.profileInfo}>{userProfile.firstName} {userProfile.lastName}</Text>
             <Text style={styles.profileInfo}>{userProfile.pronouns}</Text>
               <Text style={styles.profileInfo}>{userProfile.email}</Text>
               <Text style={styles.userType}>{userProfile.userType}</Text>
-            
-            {/* <Text style={styles.school}>{userProfile.school}</Text> */}
-          </View>
+                    </View>
         </View>
   
-        <Text style={styles.subtitle}>My Subjects:</Text>
-        {userProfile.selectedSubjects ? (
-          <View style={styles.subjectsContainer}>
-            {userProfile.selectedSubjects.map((subject, index) => (
-              <Text key={index} style={styles.subjects}>
-                {subject}
-              </Text>
-            ))}
-          </View>
-        ) : (
-          <Text style={[styles.subjects, {marginTop: 7}]}>Loading...</Text>
-        )}
+
+        {userProfile.userType === "tutor" && (
+              <>
+                <Text style={styles.specialSubtitle}>My Specialty:</Text>
+                <View style={styles.subjectsContainer}>
+                  <Text style={styles.subjects}>{userProfile.selectedSubjects}</Text>
+                  <Text style={[styles.subtitle, {marginBottom: 5}]}>My Rating:</Text>
+                  <StarRating
+                  rating={userProfile.rating}
+                  />
+                </View>
+              </>
+          )}
   
+        {userProfile.userType === "student" && (
+          <>
+            <Text style={styles.subtitle}>My Subjects:</Text>
+            {userProfile.selectedSubjects ? (
+              <View style={styles.subjectsContainer}>
+                {userProfile.selectedSubjects.map((subject, index) => (
+                  <Text key={index} style={styles.subjects}>
+                    {subject}
+                  </Text>
+                ))}
+              </View>
+            ) : (
+              <Text style={[styles.subjects, { marginTop: 7 }]}>Loading...</Text>
+            )}
+          </>
+        )}
         <Pressable
           style={[styles.button, styles.editProfileButton]}
           onPress={handleEditProfile}>
@@ -147,6 +163,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Vikendi',
     marginTop: 50,
   },
+  specialSubtitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: tan,
+    fontFamily: 'Vikendi',
+    marginTop: 20,
+  },
   profileInfo: {
     marginBottom: 5,
     fontWeight: 'bold',
@@ -189,7 +212,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // couldnt get image imports so temporary placeholder
   profilePic: {
     width: 105,
     height: 105,
