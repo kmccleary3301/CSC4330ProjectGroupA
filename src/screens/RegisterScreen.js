@@ -42,9 +42,18 @@ const RegisterScreen = ({ navigation }) => {
     }
     return isValid;
   };
+
+  const validateEmail = () => {
+    const lsuEmailPattern = /^[A-Za-z0-9._%+-]+@lsu\.edu$/;
+    return lsuEmailPattern.test(email);
+  };
     
   const handleRegister = e => {
     e.preventDefault()
+    if (!validateEmail()) {
+      alert('Please use a valid LSU email address.');
+      return;
+    }
     if (validatePassword()) {    
       // Create a new user with email and password using firebase      
       createUserWithEmailAndPassword(auth, email, password)

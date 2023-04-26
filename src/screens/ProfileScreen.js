@@ -162,14 +162,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: tan,
     fontFamily: 'Vikendi',
-    marginTop: 50,
+    marginTop: 25,
   },
   specialSubtitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: tan,
     fontFamily: 'Vikendi',
-    marginTop: 20,
+    marginTop: 5,
   },
   profileInfo: {
     marginBottom: 5,
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   subjectsContainer: {
-    marginTop: 40,
+    marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
