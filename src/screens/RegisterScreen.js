@@ -50,10 +50,10 @@ const RegisterScreen = ({ navigation }) => {
     
   const handleRegister = e => {
     e.preventDefault()
-    if (!validateEmail()) {
-      alert('Please use a valid LSU email address.');
-      return;
-    }
+    // if (!validateEmail()) {
+    //   alert('Please use a valid LSU email address.');
+    //   return;
+    // }
     if (validatePassword()) {    
       // Create a new user with email and password using firebase      
       createUserWithEmailAndPassword(auth, email, password)
