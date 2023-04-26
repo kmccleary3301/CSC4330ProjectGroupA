@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
-
 import {
   Image,
   StyleSheet,
@@ -9,37 +8,64 @@ import {
   View,
   Pressable,
 } from "react-native";
-
+import StarRating from 'react-native-star-rating-widget';
 import NavBarContainer from '../../NavBar';
 import EditProfileScreen from "./EditProfileScreen";
-import { doc, getDoc } from "firebase/firestore";
+import { Firestore, doc, getDoc, setDoc, getDocs, collection } from "firebase/firestore";
 import { auth, db } from '../../firebase';
+import { StorageError } from "firebase/storage";
+import { updateProfile } from "firebase/auth";
 import { AuthProvider, useAuthValue } from '../../AuthContext';
-import StarRating from 'react-native-star-rating-widget';
+//import "firebase/firestore";
+
+async function get_tutors() {
+	try {
+		const tutors = await getDocs(collection(db, 'tutor'));
+		tutors.forEach((doc_get) => {
+			// doc.data() is never undefined for query doc snapshots
+			console.log(doc_get.id, " => ", doc_get.data());
+		});
+	} catch (error) {
+		console.error('Error adding appointment request: ', error);
+	}
+}
+
+async function set_appointment() {
+	try {
+    console.log("Date.now(): ", parseInt(Date.now()).toString());
+    var test_name = "test_entry_"+parseInt(Date.now()).toString()+"_"+Math.random().toString(36).substring(7);
+		await setDoc(doc(db, 'appointments', test_name), {
+      name: "John Doe",
+      state: "CA",
+      country: "USA"
+    });
+    
+    getDoc(doc(db, 'appointments', test_name));
+
+		console.log("Attempted to add test appointment entry");
+	} catch (error) {
+		console.error('Error adding appointment request: ', error);
+	}
+}
 
 
-const ProfileScreen = () => {
+const RateTutorScreen = function({route, navigation_param}) {
+	const {test_argument} = route.params;
+	//const tutors = firebase.firestore().collection('users').get();
+	console.log("RateTutorScreen called with argument:", test_argument);
+	get_tutors();
+  //set_appointment();
+
   const navigation = useNavigation();  
-  
   const [selectedSubjects, setSelectedSubjects] = useState([]);
-
   const [userProfile, setUserProfile] = useState({});
+	const [rating, setRating] = useState(0);
   const { currentUser } = useAuthValue();
-  const user = currentUser;  
-  
-  useFocusEffect(
-    React.useCallback(() => {
-      const getUserProfile = async () => {
-        const type = user?.displayName;
-        const docRef = doc(db, type, user?.uid);
-        const docSnap = await getDoc(docRef);
-        const data = docSnap.data();
-        setUserProfile(data);
-      };
-      getUserProfile();
-    }, [user])
-  );
-  
+  const user = currentUser;
+
+	const submit_rating = () => {
+    return;
+	};
 
   const handleUpdateProfile = (updatedUserProfile) => {
     setUserProfile(updatedUserProfile);
@@ -49,60 +75,46 @@ const ProfileScreen = () => {
   };
 
   const profilePicture = require('../assets/icons/profileAvatar.png');
-
-
-
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={[styles.title]}>My Profile</Text>
-  
+        <Text style={[styles.title]}>RATE TUTOR SCREEN</Text>
         <View style={styles.profileContainer}>
-          {/* <View style={styles.pictureContainer}>
+          <View style={styles.pictureContainer}>
             <Image style={styles.profilePic} source={profilePicture} />
-          </View> */}
+          </View>
           <View style={styles.profileInfoContainer}>
             <Text style={styles.profileInfo}>{userProfile.firstName} {userProfile.lastName}</Text>
             <Text style={styles.profileInfo}>{userProfile.pronouns}</Text>
               <Text style={styles.profileInfo}>{userProfile.email}</Text>
               <Text style={styles.userType}>{userProfile.userType}</Text>
-                    </View>
+            
+            {/* <Text style={styles.school}>{userProfile.school}</Text> */}
+          </View>
         </View>
+				<StarRating
+					rating={rating}
+					onChange={setRating}
+				/>
+				<Text style={styles.rating}>{rating}</Text>
   
-
-        {userProfile.userType === "tutor" && (
-              <>
-                <Text style={styles.specialSubtitle}>My Specialty:</Text>
-                <View style={styles.subjectsContainer}>
-                  <Text style={styles.subjects}>{userProfile.selectedSubjects}</Text>
-                  <Text style={[styles.subtitle, {marginBottom: 5}]}>My Rating:</Text>
-                  <StarRating
-                  rating={userProfile.rating}
-                  />
-                </View>
-              </>
-          )}
-  
-        {userProfile.userType === "student" && (
-          <>
-            <Text style={styles.subtitle}>My Subjects:</Text>
-            {userProfile.selectedSubjects ? (
-              <View style={styles.subjectsContainer}>
-                {userProfile.selectedSubjects.map((subject, index) => (
-                  <Text key={index} style={styles.subjects}>
-                    {subject}
-                  </Text>
-                ))}
-              </View>
-            ) : (
-              <Text style={[styles.subjects, { marginTop: 7 }]}>Loading...</Text>
-            )}
-          </>
+        <Text style={styles.subtitle}>My Subjects:</Text>
+        {userProfile.selectedSubjects ? (
+          <View style={styles.subjectsContainer}>
+            {userProfile.selectedSubjects.map((subject, index) => (
+              <Text key={index} style={styles.subjects}>
+                {subject}
+              </Text>
+            ))}
+          </View>
+        ) : (
+          <Text style={[styles.subjects, {marginTop: 7}]}>Loading...</Text>
         )}
+  
         <Pressable
           style={[styles.button, styles.editProfileButton]}
-          onPress={handleEditProfile}>
-          <Text style={styles.buttonText}>Edit Profile</Text>
+          onPress={submit_rating}>
+          <Text style={styles.buttonText}>Submit</Text>
         </Pressable>
       </View>
       <NavBarContainer />
@@ -156,19 +168,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Vikendi',
     marginBottom: 30,
   },
+	rating: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: tan,
+    fontFamily: 'Vikendi',
+  },
   subtitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: tan,
     fontFamily: 'Vikendi',
     marginTop: 50,
-  },
-  specialSubtitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: tan,
-    fontFamily: 'Vikendi',
-    marginTop: 20,
   },
   profileInfo: {
     marginBottom: 5,
@@ -212,6 +223,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // couldnt get image imports so temporary placeholder
   profilePic: {
     width: 105,
     height: 105,
@@ -226,4 +238,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default ProfileScreen;
+export default RateTutorScreen;

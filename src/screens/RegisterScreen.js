@@ -136,6 +136,8 @@ const RegisterScreen = ({ navigation }) => {
             <Picker.Item label="They/them" value="They/them" />
             <Picker.Item label="He/they" value="He/they" />
             <Picker.Item label="She/they" value="She/they" />
+            <Picker.Item label="Other" value="Other" />
+
           </Picker>
           <Picker
             style={styles.picker}

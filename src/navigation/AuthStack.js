@@ -13,8 +13,10 @@ import HomeScreen from '../screens/HomeScreen';
 import SubjectSearchScreen from '../screens/SubjectSearchScreen';
 import AptRequestScreen from '../screens/AptRequestScreen';
 import AppointmentsScreen from '../screens/AppointmentsScreen';
+import RateTutorScreen from '../screens/RateTutorScreen';
 import RegisterInfoScreen from '../screens/RegisterInfoScreen';
 import TutorInfo from '../screens/TutorInfo';
+import TutorsListScreen from '../screens/TutorsListScreen';
 import SubjectAddScreen from '../screens/SubjectAddScreen';
 import VerifyEmail from '../screens/VerifyEmail';
 import ScheduleAvailabilityScreen from '../screens/ScheduleAvailabilityScreen';
@@ -32,7 +34,14 @@ const AuthStack = () => {
 
   const HAMBURGER ={
     headerRight: () => (
-      <View style={{paddingHorizontal: 20, flexDirection: "row"}}>
+      <View style={{paddingHorizontal: 20, flexDirection: "row", justifyContent: 'space-between', padding: 5}}>
+        <Ionicons name="bug-outline" color={'#000000'} size={32} 
+          onPress={() => {
+            navigation.navigate('RateTutorScreen', {
+              test_argument: "hello"
+            });
+          }}
+        />
         <Ionicons name="person-remove-outline" color={'#000000'} size={32} 
           onPress={() => {
             signOut(auth);
@@ -85,6 +94,9 @@ const AuthStack = () => {
       <Stack.Screen name="HomeScreen"          component={HomeScreen} options={HAMBURGER}/>
       <Stack.Screen name="RegisterInfoScreen"  component={RegisterInfoScreen} options={HAMBURGER}/>
       <Stack.Screen name="TutorInfo"           component={TutorInfo} options={HAMBURGER}/>
+      <Stack.Screen name="RateTutorScreen"     component={RateTutorScreen} options={HAMBURGER}/>
+      <Stack.Screen name="TutorsListScreen"    component={TutorsListScreen} options={HAMBURGER}/>
+      
       <Stack.Screen name="VerifyEmail"         component={VerifyEmail} options={HAMBURGER}/>
       <Stack.Screen name="SubjectSearchScreen" component={SubjectSearchScreen} options={HAMBURGER}/>
       <Stack.Screen name="ProfileScreen"       component={ProfileScreen} options={HAMBURGER}/>
