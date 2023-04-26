@@ -32,17 +32,7 @@ const blue = '#182640';
 const tan = '#FAE8CD';
 const lightBlue = '#C9D3FF';
 
-async function get_tutors() {
-	try {
-		const tutors = await getDocs(collection(db, 'tutor'));
-		tutors.forEach((doc_get) => {
-			// doc.data() is never undefined for query doc snapshots
-			console.log(doc_get.id, " => ", doc_get.data());
-		});
-	} catch (error) {
-		console.error('Error adding appointment request: ', error);
-	}
-}
+
 
 const TutorsListScreen = () => {
   const navigation = useNavigation();
@@ -50,7 +40,47 @@ const TutorsListScreen = () => {
   const [userProfile, setUserProfile] = useState('');
   const [availabilities, setAvailabilities] = useState([]);
 
+  
+  const test_tutor_entry = {
+    pronouns:"He/him",
+    lastName:"Kinchen",
+    uid:"ky7yY10qR4amocPe4UHmsRfBpcn2",
+    userType:"tutor",
+    selectedSubjects:["astronomy"],
+    email:"apwfuzqlynqhwvtqnw@tpwlb.com",
+    firstName:"Jake"
+  };
+  
+  const [tutorList, setTutorList] = useState([]);
 
+  const fetch_tutors = async function() {
+    if (tutorList.length > 0) { return; }
+    try {
+      const array_tutors_return = [];
+      const tutor_fetch = await getDocs(collection(db, 'tutor'));
+      console.log("Fetching data in availabilities");
+      tutor_fetch.forEach((doc_get) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc_get.id, " => ", JSON.stringify(doc_get.data()));
+        //array_tutors_return[array_tutors_return.length] = doc_get.data();
+        //tutor_collection[doc_get.id] = doc_get.data();
+        tutorList.push(doc_get.data());
+        setTutorList([...tutorList]);
+      });
+    } catch (error) {
+      alert('Error getting tutors. Check console.');
+      console.log('Error getting tutors: ', error)
+    }
+  }
+
+
+  fetch_tutors();
+
+
+
+  
+  //const tutor_collection = await fetch_tutors();
+  const tutor_collection = [];
 
   const user = currentUser;
   const getLocalDate = () => {
@@ -59,34 +89,6 @@ const TutorsListScreen = () => {
   };
   const { userType } = useUserType();
 
-
-  const fetch_tutors = async () => {
-    try {
-      const tutors = await getDocs(collection(db, 'tutor'));
-      tutors.forEach((doc_get) => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc_get.id, " => ", doc_get.data());
-      });
-    } catch (error) {
-      alert('Error getting tutors. Check console.');
-      console.log('Error getting tutors: ', error)
-    }
-  }
-
-  fetch_tutors();
-
-  useEffect(() => {
-    const getUserProfile = async () => {
-      const type = user?.displayName;
-      const docRef = doc(db, type, user?.uid);
-      const docSnap = await getDoc(docRef);
-      setUserProfile(docSnap.data());
-      fetchAvailabilities();
-    };
-    getUserProfile();
-  }, 
-  []
-  );
 
   const fetchAvailabilities = async () => {
     // Get the user's selectedSubjects
@@ -116,24 +118,24 @@ const TutorsListScreen = () => {
 
   const formattedSelectedDate = selectedDate.toISOString().substring(0, 10);
 
-  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+  const [selectedTutorId, setSelectedTutorId] = useState(null);
 
-  const onSelectAppointment = () => {
-    if (selectedAppointmentId === null) {
+  const onSelectTutor = () => {
+    if (selectedTutorId === null) {
       setShowError(true);
     } else {
       setShowError(false);
-      const selectedAppointment = appointments.find(
-        (appointment) => appointment.id === selectedAppointmentId
+      const selectedTutor = tutorList.find(
+        (tutor) => tutor.uid === selectedTutorId
       );
-      navigation.navigate('AptRequestScreen', { appointment: selectedAppointment });
-      setSelectedAppointmentId(null);
+      navigation.navigate('AptRequestScreen', { appointment: selectedTutor });
+      setSelectedTutorId(null);
     }
   };
 
-  const onAppointmentPress = (appointmentId) => {
+  const onTutorPress = (tutorId) => {
     setShowError(false);
-    setSelectedAppointmentId(appointmentId);
+    setSelectedTutorId(tutorId);
   };
 
   const onSearchBySubject = () => {
@@ -192,10 +194,10 @@ const TutorsListScreen = () => {
         <ScrollView style={sStyles.table} contentContainerStyle={{ flexGrow: 1 }}>
           <View style={sStyles.tableRow}>
             <View style={sStyles.headerEntry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Instructor Name</Text>
+              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Tutor Name</Text>
             </View>
             <View style={sStyles.headerEntry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Rating</Text>
+              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Email</Text>
             </View>
             <View style={sStyles.headerEntry}>
               <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Subject</Text>
@@ -204,39 +206,43 @@ const TutorsListScreen = () => {
               <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Time Slot</Text>
             </View>
           </View>
-          {appointments.map((appointment) => (
+          {tutorList.map((tutor) => (
             <TouchableOpacity
-              key={appointment.id}
-              onPress={() => onAppointmentPress(appointment.id)}
+              key={tutor.uid}
+              onPress={() => onTutorPress(tutor.uid)}
             >
+
               <View
                 style={
-                  selectedAppointmentId === appointment.id
+                  selectedTutorId === tutor.uid
                     ? sStyles.selectedRow
                     : sStyles.tableRow
                 }
               >
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.name}</Text>
+                <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
+                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{tutor.firstName+" "+tutor.lastName}</Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.rating}</Text>
+                <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
+                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{tutor.email}</Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.subject}</Text>
+                <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
+                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{
+                  tutor.selectedSubjects
+                  }</Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? sStyles.selectedEntry : sStyles.entry}>
-                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.time}</Text>
+                <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
+                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{9999}</Text>
                 </View>
               </View>
             </TouchableOpacity>
+            
           ))}
         </ScrollView>
         <Button
           mode="contained"
           style={sStyles.button}
           contentStyle={sStyles.buttonContent}
-          onPress={onSelectAppointment}
+          onPress={onSelectTutor}
           color={blue}
         >
           <Text style={sStyles.buttonText}>Select</Text>

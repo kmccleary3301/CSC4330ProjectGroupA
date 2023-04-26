@@ -2,17 +2,13 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  Image,
-  FlatList,
   TouchableOpacity,
   ScrollView,
   Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import * as Font from 'expo-font'
 import { Ionicons } from '@expo/vector-icons';
 import NavBarContainer from '../../NavBar';
-import { BarChart } from 'react-native-chart-kit';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { DatePickerModal } from 'react-native-paper-dates';
@@ -44,7 +40,7 @@ const HomeScreen = () => {
 
   const formattedSelectedDate = selectedDate.toISOString().substring(0, 10);
 
-  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+  const [selectedAvailabilityId, setSelectedAvailabilityId] = useState(null);
 
   const user = currentUser;
   const { userType } = useUserType();
@@ -60,7 +56,7 @@ const HomeScreen = () => {
       const docRef = doc(db, type, user?.uid);
       const docSnap = await getDoc(docRef);
       setUserProfile(docSnap.data());
-      fetchAvailabilities();
+      console.log('User Profile:', docSnap.data());
     };
     getUserProfile();
     const handleLayout = () => {
@@ -74,6 +70,14 @@ const HomeScreen = () => {
       Dimensions.removeEventListener('change', handleLayout);
     };
   }, []);
+  
+  // Add a new useEffect for fetching availabilities
+  useEffect(() => {
+    if (userProfile) {
+      fetchAvailabilities();
+    }
+  }, [userProfile]);
+  
 
   const text = 'Schedule Availability';
   const adjustment = 1.2; // Change this value to adjust the font size
@@ -81,56 +85,68 @@ const HomeScreen = () => {
   const maxButtonWidthPercentage = 0.8;
 
   const maxWidth = 400; // Set a maximum width for the button
-const maxFontSize = 30; // Set a maximum font size for the text
-  
-const fontSize = Math.min(maxFontSize, layout.width / Math.max(text.length, 1) * adjustment);
-const buttonWidth = Math.min(maxButtonWidthPercentage * layout.width, layout.width, maxWidth);
+  const maxFontSize = 30; // Set a maximum font size for the text
 
-const styles = getStyles({ buttonWidth, fontSize });
+  const fontSize = Math.min(maxFontSize, layout.width / Math.max(text.length, 1) * adjustment);
+  const buttonWidth = Math.min(maxButtonWidthPercentage * layout.width, layout.width, maxWidth);
+
+  const styles = getStyles({ buttonWidth, fontSize });
 
 
   const fetchAvailabilities = async () => {
-    // Get the user's selectedSubjects
-    const selectedSubjects = userProfile.selectedSubjects;
+    const selectedSubjects = userProfile.selectedSubjects.map(subject => subject.toLowerCase());
   
     if (selectedSubjects && selectedSubjects.length > 0) {
-      // Query the appointments collection for open appointments with matching subjects
-      const appointmentsRef = collection(db, 'appointments');
-      const q = query(appointmentsRef, where('status', '==', 'open'), where('subjects', 'array-contains-any', selectedSubjects));
+      const tutorsRef = collection(db, 'availabilities');
+      const q = query(tutorsRef, where('selectedSubjects', 'array-contains-any', selectedSubjects));
       const querySnapshot = await getDocs(q);
   
-      // Process and store the appointment data
-      const fetchedAvailabilities = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(appointment => {
-        const appointmentDate = new Date(appointment.date);
-        return appointmentDate >= getLocalDate();
+      const fetchedAvailabilities = querySnapshot.docs.map(doc => {
+        const availabilityData = doc.data();
+        const firstName = availabilityData.firstName
+        const lastName = availabilityData.lastName
+        return {
+          ...availabilityData,
+          id: doc.id,
+          firstName: firstName,
+          lastName: lastName,
+        };
       });
-  
+      console.log('Fetched Availabilities:', fetchedAvailabilities);
       setAvailabilities(fetchedAvailabilities);
+  
+      // Filter the availabilities based on the selected date
+      const filteredAppointments = fetchedAvailabilities.filter((availability) => {
+        const availabilityDate = new Date(availability.date.seconds * 1000);
+        return availabilityDate.toISOString().substring(0, 10) === formattedSelectedDate;
+      });
+      console.log('Filtered Appointments:', filteredAppointments);
+      setAppointments(filteredAppointments);
     } else {
       // Handle the case when the selectedSubjects array is undefined or empty
       // You might want to show a message to the user or provide a default list of items
     }
   };
-
-  const onSelectAppointment = () => {
-    if (selectedAppointmentId === null) {
-      setShowError(true);
+  
+    const onSelectAvailability = () => {
+    if (selectedAvailabilityId === null) {
+    setShowError(true);
     } else {
-      setShowError(false);
-      const selectedAppointment = appointments.find(
-        (appointment) => appointment.id === selectedAppointmentId
-      );
-      navigation.navigate('AptRequestScreen', { appointment: selectedAppointment });
-      setSelectedAppointmentId(null);
-    }
-  };
-
-  const onAppointmentPress = (appointmentId) => {
     setShowError(false);
-    setSelectedAppointmentId(appointmentId);
-  };
-
-  const onSearchBySubject = () => {
+    const selectedAvailability = appointments.find(
+    (availability) => availability.id === selectedAvailabilityId
+    );
+    navigation.navigate('AptRequestScreen', { availability: selectedAvailability });
+    setSelectedAvailabilityId(null);
+    }
+    };
+    
+    const onAvailabilityPress = (availabilityId) => {
+    setShowError(false);
+    setSelectedAvailabilityId(availabilityId);
+    };
+    
+    const onSearchBySubject = () => {
     navigation.navigate('SubjectSearchScreen');
     };
     
@@ -143,36 +159,55 @@ const styles = getStyles({ buttonWidth, fontSize });
     const onConfirmSingle = React.useCallback(
     (params) => {
     setOpen(false);
-    const localDate = new Date(params.date.getTime() - params.date.getTimezoneOffset() * 60000);
-    setSelectedDate(localDate);
-  
-       // Filter the availabilities for the selected date
-  const filteredAppointments = availabilities.filter((availability) => {
-    const availabilityDate = new Date(availability.date);
-    return availabilityDate.toISOString().substring(0, 10) === localDate.toISOString().substring(0, 10);
-  });
-
-  setAppointments(filteredAppointments);
-},
-[setOpen, setSelectedDate, availabilities]
-  );
+  },
+  [setOpen, setSelectedDate, availabilities]);
 
   return (
-       <View style={{ flex: 1 }}>
-       <View style={styles.container}>
-        <Text style={[styles.title, { fontSize: 20 }]}>Welcome back, {(userProfile.firstName)}</Text>
+    <View style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Text style={[styles.title, { fontSize: 20 }]}>
+          Welcome back, {userProfile.firstName}
+        </Text>
         {userProfile.userType === 'tutor' && (
-        <Button onPress={() => navigation.navigate('ScheduleAvailabilityScreen')} style={[styles.scheduleButton,{width:buttonWidth}]}>
-        <Text style={[styles.scheduleButtonText, { fontSize: fontSize }]}>Schedule Availability</Text>
-        </Button>
+          <Button
+            onPress={() => navigation.navigate('ScheduleAvailabilityScreen')}
+            style={[styles.scheduleButton, { width: buttonWidth }]}
+          >
+            <Text style={[styles.scheduleButtonText, { fontSize: fontSize }]}>
+              Schedule Availability
+            </Text>
+          </Button>
         )}
-        <Text style={[styles.title, { fontSize: 20, marginTop: userType === 'tutor' ? 5 : 25 }]}> {userType === 'student'
-          ? 'Select an Appointment:'
-          : 'Upcoming Appointments:'}</Text>
+        <Text
+          style={[
+            styles.title,
+            { fontSize: 20, marginTop: userType === 'tutor' ? 5 : 25 },
+          ]}
+        >
+          {userType === 'student'
+            ? 'Select an Availability:'
+            : 'Upcoming Availabilities:'}
+        </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={[styles.title, { fontSize: 20, fontFamily: 'SF', marginBottom:20 }]}>Change Date:</Text>
-          <TouchableOpacity onPress={() => setOpen(true)} uppercase={false} mode="outlined">
-            <Ionicons name="calendar" size={45} color='#FAE8CD' style={{ marginLeft: 20, marginTop: 10 }} />
+          <Text
+            style={[
+              styles.title,
+              { fontSize: 20, fontFamily: 'SF', marginBottom: 20 },
+            ]}
+          >
+            Change Date:
+          </Text>
+          <TouchableOpacity
+            onPress={() => setOpen(true)}
+            uppercase={false}
+            mode="outlined"
+          >
+            <Ionicons
+              name="calendar"
+              size={45}
+              color="#FAE8CD"
+              style={{ marginLeft: 20, marginTop: 10 }}
+            />
           </TouchableOpacity>
           <DatePickerModal
             locale="en"
@@ -182,76 +217,179 @@ const styles = getStyles({ buttonWidth, fontSize });
             date={selectedDate}
             onConfirm={onConfirmSingle}
           />
-
         </View>
-        <Text style={[styles.title, { fontSize: 18, fontFamily: 'SF', marginTop:10 }]}>
-          {selectedDate.toDateString() === new Date().toDateString() ? "Today, " : ""}
-          {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+        <Text
+          style={[
+            styles.title,
+            { fontSize: 18, fontFamily: 'SF', marginTop: 10 },
+          ]}
+        >
+          {selectedDate.toDateString() === new Date().toDateString()
+            ? 'Today, '
+            : ''}
+          {selectedDate.toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+          })}
         </Text>
         {appointments.length === 0 ? (
-        <Text style={styles.noAppointmentsText}>No scheduled appointments for today</Text>
-       ) : (
-        <>
-        <ScrollView style={styles.table} contentContainerStyle={{ flexGrow: 1 }}>
-          <View style={styles.tableRow}>
-            <View style={styles.headerEntry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Instructor Name</Text>
-            </View>
-            <View style={styles.headerEntry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Rating</Text>
-            </View>
-            <View style={styles.headerEntry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Subject</Text>
-            </View>
-            <View style={styles.headerEntry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Time Slot</Text>
-            </View>
-          </View>
-          {appointments.map((appointment) => (
-            <TouchableOpacity
-              key={appointment.id}
-              onPress={() => onAppointmentPress(appointment.id)}
+          <Text style={styles.noAppointmentsText}>
+            No availabilities for today
+          </Text>
+        ) : (
+          <>
+            <ScrollView
+              style={styles.table}
+              contentContainerStyle={{ flexGrow: 1 }}
             >
-              <View
-                style={
-                  selectedAppointmentId === appointment.id
-                    ? styles.selectedRow
-                    : styles.tableRow
-                }
-              >
-                <View style={selectedAppointmentId === appointment.id ? styles.selectedEntry : styles.entry}>
-                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.name}</Text>
+              <View style={styles.tableRow}>
+                <View style={styles.headerEntry}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      textAlignVertical: 'center',
+                    }}
+                  >
+                    Instructor Name
+                  </Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? styles.selectedEntry : styles.entry}>
-                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.rating}</Text>
+                <View style={styles.headerEntry}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      textAlignVertical: 'center',
+                    }}
+                  >
+                    Rating
+                  </Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? styles.selectedEntry : styles.entry}>
-                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.subject}</Text>
+                <View style={styles.headerEntry}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      textAlignVertical: 'center',
+                    }}
+                  >
+                    Subject
+                  </Text>
                 </View>
-                <View style={selectedAppointmentId === appointment.id ? styles.selectedEntry : styles.entry}>
-                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{appointment.time}</Text>
+                <View style={styles.headerEntry}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      textAlignVertical: 'center',
+                    }}
+                  >
+                    Time Slot
+                  </Text>
                 </View>
               </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-        <Button
-          mode="contained"
-          style={styles.button}
-          contentStyle={styles.buttonContent}
-          onPress={onSelectAppointment}
-          color={blue}
-        >
-          <Text style={styles.buttonText}>Select</Text>
-        </Button>
+              {appointments.map((availability) => {
+                const displayName =
+                  availability.firstName.length +
+                    availability.lastName.length >
+                  16
+                    ? `${availability.firstName.charAt(0)}. ${availability.lastName}`
+                    : `${availability.firstName} ${availability.lastName}`;
+  
+                return ( <TouchableOpacity
+                  key={availability.id}
+                  onPress={() => onAvailabilityPress(availability.id)}
+                >
+                  <View
+                    style={
+                      selectedAvailabilityId === availability.id
+                        ? styles.selectedRow
+                        : styles.tableRow
+                    }
+                  >
+                    <View
+                      style={
+                        selectedAvailabilityId === availability.id
+                          ? styles.selectedEntry
+                          : styles.entry
+                      }
+                    >
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          textAlignVertical: 'center',
+                        }}
+                      >
+                        {displayName}
+                      </Text>
+                    </View>
+                    <View
+                      style={
+                        selectedAvailabilityId === availability.id
+                          ? styles.selectedEntry
+                          : styles.entry
+                      }
+                    >
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          textAlignVertical: 'center',
+                        }}
+                      >
+                        {availability.rating}
+                      </Text>
+                    </View>
+                    <View
+                      style={
+                        selectedAvailabilityId === availability.id
+                          ? styles.selectedEntry
+                          : styles.entry
+                      }
+                    >
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          textAlignVertical: 'center',
+                        }}
+                      >
+                        {availability.selectedSubjects}
+                      </Text>
+                    </View>
+                    <View
+                      style={
+                        selectedAvailabilityId === availability.id
+                          ? styles.selectedEntry
+                          : styles.entry
+                      }
+                    >
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          textAlignVertical: 'center',
+                        }}
+                      >
+                        {availability.startTime} - {availability.endTime}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+          <Button
+            mode="contained"
+            style={styles.button}
+            contentStyle={styles.buttonContent}
+            onPress={onSelectAvailability}
+            color={blue}
+          >
+            <Text style={styles.buttonText}>Select</Text>
+          </Button>
         </>
       )}
-      </View>
-      <NavBarContainer />
     </View>
-
-  );
-};
+    <NavBarContainer />
+  </View>
+);
+          };
+     
 
 const getStyles = ({ buttonWidth, fontSize }) => StyleSheet.create({
   container: {
