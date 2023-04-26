@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useNavigation, useFocusEffect} from "@react-navigation/native";
 
 import {
   Image,
@@ -55,6 +55,7 @@ const ProfileScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
+
         <Text style={[styles.title]}>My Profile</Text>
   
         <View style={styles.profileContainer}>
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
   button: {
     width: 175,
     height: 50,
-    marginTop: 50,    //subject to change if styling changes are made
+    marginTop: 20,    //subject to change if styling changes are made
     marginBottom: 10,
     borderRadius: 30,
     borderColor: tan,
@@ -192,8 +193,8 @@ const styles = StyleSheet.create({
   subjects: {
     color: tan,
     fontFamily: 'SF',
-    fontSize: 17,
-    marginBottom: 15,
+    fontSize: 16,
+    marginBottom: 1,
   },
   pronouns: {
     color: tan,

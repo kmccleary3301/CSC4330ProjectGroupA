@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
   subjectsText: {
     color: tan,
     fontFamily: 'SF',
-    fontSize: 20,
+    fontSize: 13,
     alignSelf: 'flex-start',
   },
   subjectContainer: {
@@ -384,7 +384,6 @@ const styles = StyleSheet.create({
     color: tan,
     fontFamily: 'SF',
     fontSize: 17,
-    
   },
   nameContainer: {
     flex: 1,
