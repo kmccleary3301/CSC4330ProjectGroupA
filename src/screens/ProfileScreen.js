@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useNavigation, useFocusEffect} from "@react-navigation/native";
 
 import {
   Image,
@@ -55,6 +55,7 @@ const ProfileScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
+
         <Text style={[styles.title]}>My Profile</Text>
   
         <View style={styles.profileContainer}>
@@ -74,10 +75,11 @@ const ProfileScreen = () => {
               <>
                 <Text style={styles.specialSubtitle}>My Specialty:</Text>
                 <View style={styles.subjectsContainer}>
-                  <Text style={styles.subjects}>{userProfile.selectedSubjects}</Text>
+                  <Text style={[styles.subjects, {fontSize: 17}]}>{userProfile.selectedSubjects}</Text>
                   <Text style={[styles.subtitle, {marginBottom: 5}]}>My Rating:</Text>
                   <StarRating
                   rating={userProfile.rating}
+                  color={tan}
                   />
                 </View>
               </>
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
   button: {
     width: 175,
     height: 50,
-    marginTop: 50,    //subject to change if styling changes are made
+    marginTop: 20,    //subject to change if styling changes are made
     marginBottom: 10,
     borderRadius: 30,
     borderColor: tan,
@@ -161,14 +163,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: tan,
     fontFamily: 'Vikendi',
-    marginTop: 50,
+    marginTop: 25,
   },
   specialSubtitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: tan,
     fontFamily: 'Vikendi',
-    marginTop: 20,
+    marginTop: 5,
   },
   profileInfo: {
     marginBottom: 5,
@@ -191,8 +193,8 @@ const styles = StyleSheet.create({
   subjects: {
     color: tan,
     fontFamily: 'SF',
-    fontSize: 17,
-    marginBottom: 15,
+    fontSize: 16,
+    marginBottom: 1,
   },
   pronouns: {
     color: tan,
@@ -208,7 +210,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   subjectsContainer: {
-    marginTop: 40,
+    marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -20,6 +20,8 @@ import { useAuthValue } from '../../AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../firebase';
 import { getDoc, doc, collection, query, where, getDocs } from 'firebase/firestore';
+import StarRating from 'react-native-star-rating-widget';
+
 
 
 import AptRequestScreen from './AptRequestScreen';
@@ -197,7 +199,7 @@ const TutorsListScreen = () => {
               <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Tutor Name</Text>
             </View>
             <View style={sStyles.headerEntry}>
-              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Email</Text>
+              <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Rating</Text>
             </View>
             <View style={sStyles.headerEntry}>
               <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Subject</Text>
@@ -205,6 +207,7 @@ const TutorsListScreen = () => {
             <View style={sStyles.headerEntry}>
               <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>Time Slot</Text>
             </View>
+
           </View>
           {tutorList.map((tutor) => (
             <TouchableOpacity
@@ -223,7 +226,13 @@ const TutorsListScreen = () => {
                   <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{tutor.firstName+" "+tutor.lastName}</Text>
                 </View>
                 <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
-                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{tutor.email}</Text>
+                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>
+                  <StarRating
+                  rating={tutor.rating}
+                  starSize={20}
+                  color={blue}
+                  />
+                    </Text>
                 </View>
                 <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
                   <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{
@@ -231,7 +240,7 @@ const TutorsListScreen = () => {
                   }</Text>
                 </View>
                 <View style={selectedTutorId === tutor.uid ? sStyles.selectedEntry : sStyles.entry}>
-                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>{9999}</Text>
+                  <Text style={{ textAlign: 'center', textAlignVertical: 'center' }}>10:30 - 11:30</Text>
                 </View>
               </View>
             </TouchableOpacity>
