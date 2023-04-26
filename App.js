@@ -16,6 +16,8 @@ import { UserTypeProvider } from './UserTypeContext';
 import { getDoc, doc } from 'firebase/firestore';
 
 
+
+
 export default function App() {
   const [hideSplashScreen, setHideSplashScreen] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
