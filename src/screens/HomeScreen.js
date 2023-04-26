@@ -57,6 +57,8 @@ const HomeScreen = () => {
       const docSnap = await getDoc(docRef);
       setUserProfile(docSnap.data());
       console.log('User Profile:', docSnap.data());
+      // Call fetchAvailabilities() after setting the userProfile
+      fetchAvailabilities();
     };
     getUserProfile();
     const handleLayout = () => {
@@ -70,8 +72,7 @@ const HomeScreen = () => {
       Dimensions.removeEventListener('change', handleLayout);
     };
   }, []);
-  
-  // Add a new useEffect for fetching availabilities
+
   useEffect(() => {
     if (userProfile) {
       fetchAvailabilities();
@@ -94,37 +95,42 @@ const HomeScreen = () => {
 
 
   const fetchAvailabilities = async () => {
-    const selectedSubjects = userProfile.selectedSubjects.map(subject => subject.toLowerCase());
+    // Check if userProfile and userProfile.selectedSubjects exist
+    if (userProfile && userProfile.selectedSubjects) {
+      const selectedSubjects = userProfile.selectedSubjects.map(subject => subject.toLowerCase());
   
-    if (selectedSubjects && selectedSubjects.length > 0) {
-      const tutorsRef = collection(db, 'availabilities');
-      const q = query(tutorsRef, where('selectedSubjects', 'array-contains-any', selectedSubjects));
-      const querySnapshot = await getDocs(q);
+      if (selectedSubjects && selectedSubjects.length > 0) {
+        const tutorsRef = collection(db, 'availabilities');
+        const q = query(tutorsRef, where('selectedSubjects', 'array-contains-any', selectedSubjects));
+        const querySnapshot = await getDocs(q);
   
-      const fetchedAvailabilities = querySnapshot.docs.map(doc => {
-        const availabilityData = doc.data();
-        const firstName = availabilityData.firstName
-        const lastName = availabilityData.lastName
-        return {
-          ...availabilityData,
-          id: doc.id,
-          firstName: firstName,
-          lastName: lastName,
-        };
-      });
-      console.log('Fetched Availabilities:', fetchedAvailabilities);
-      setAvailabilities(fetchedAvailabilities);
+        const fetchedAvailabilities = querySnapshot.docs.map(doc => {
+          const availabilityData = doc.data();
+          const firstName = availabilityData.firstName;
+          const lastName = availabilityData.lastName;
+          return {
+            ...availabilityData,
+            id: doc.id,
+            firstName: firstName,
+            lastName: lastName,
+          };
+        });
+        console.log('Fetched Availabilities:', fetchedAvailabilities);
+        setAvailabilities(fetchedAvailabilities);
   
-      // Filter the availabilities based on the selected date
-      const filteredAppointments = fetchedAvailabilities.filter((availability) => {
-        const availabilityDate = new Date(availability.date.seconds * 1000);
-        return availabilityDate.toISOString().substring(0, 10) === formattedSelectedDate;
-      });
-      console.log('Filtered Appointments:', filteredAppointments);
-      setAppointments(filteredAppointments);
+        // Filter the availabilities based on the selected date
+        const filteredAppointments = fetchedAvailabilities.filter((availability) => {
+          const availabilityDate = availability.date.toDate();
+          return availabilityDate.toISOString().substring(0, 10) === formattedSelectedDate;
+        });
+        console.log('Filtered Appointments:', filteredAppointments);
+        setAppointments(filteredAppointments);
+      } else {
+        // Handle the case when the selectedSubjects array is undefined or empty
+        // You might want to show a message to the user or provide a default list of items
+      }
     } else {
-      // Handle the case when the selectedSubjects array is undefined or empty
-      // You might want to show a message to the user or provide a default list of items
+      console.log("User profile or selected subjects not found");
     }
   };
   
